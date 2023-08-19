@@ -1,0 +1,4 @@
+﻿User32.lib(USER32.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR уже определен в openGL32.lib(OPENGL32.dll); второе определение пропущено
+Gdi32.lib(GDI32.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR уже определен в openGL32.lib(OPENGL32.dll); второе определение пропущено
+Shell32.lib(SHELL32.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR уже определен в openGL32.lib(OPENGL32.dll); второе определение пропущено
+  glfw.vcxproj -> C:\C++\Libraries\glfw-3.3.8\_out\build\src\Debug\glfw3.lib

@@ -1,0 +1,25 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CC_002B_002B_005CLibraries_005Cglfw_002D3_002E3_002E8_005Cinclude_005CGLFW_005Cglfw3_002Eh/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CC_002B_002B_005CLibraries_005Cglfw_002D3_002E3_002E8_005Cout_005Cbuild_005Cx64_002DDebug_005Cbuild_002Eninja/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CC_002B_002B_005CLibraries_005Cglfw_002D3_002E3_002E8_005Cout_005Cbuild_005Cx64_002DDebug_005Cinstall_005Fmanifest_002Etxt/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CC_002B_002B_005CLibraries_005Cglfw_002D3_002E3_002E8_005Cout_005Cbuild_005Cx64_002DDebug_005Csrc_005Ccmake_005Finstall_002Ecmake/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CC_002B_002B_005CLibraries_005Cglfw_002D3_002E3_002E8_005Cout_005Cbuild_005Cx64_002DDebug_005Csrc_005Cglfw3_002Elib/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CC_002B_002B_005CLibraries_005Cglfw_002D3_002E3_002E8_005Cout_005Cbuild_005Cx64_002DDebug_005Csrc_005Cglfw3_002Epc/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CC_002B_002B_005CLibraries_005Cglfw_002D3_002E3_002E8_005Cout_005Cbuild_005Cx64_002DDebug_005Csrc_005Cglfw3Config_002Ecmake/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CC_002B_002B_005CLibraries_005Cglfw_002D3_002E3_002E8_005Cout_005Cbuild_005Cx64_002DDebug_005Csrc_005Cglfw3ConfigVersion_002Ecmake/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CC_002B_002B_005CLibraries_005Cglfw_002D3_002E3_002E8_005Cout_005Cbuild_005Cx64_002DDebug_005Csrc_005Cglfw_005Fconfig_002Eh/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CC_002B_002B_005CLibraries_005Cglfw_002D3_002E3_002E8_005Cout_005Cinstall_005Cx64_002DDebug_005Cinclude_005CGLFW_005Cglfw3_002Eh/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CC_002B_002B_005CLibraries_005Cglfw_002D3_002E3_002E8_005Cout_005Cinstall_005Cx64_002DDebug_005Clib_005Cglfw3_002Elib/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CC_002B_002B_005CLibraries_005Cglfw_002D3_002E3_002E8_005C_005Fout_005Cbuild_005Csrc_005CDebug_005Cglfw3_002Elib/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CC_002B_002B_005CLibraries_005Cglfw_002D3_002E3_002E8_005C_005Fout_005Cbuild_005Csrc_005CDebug_005Cglfw3_002Epdb/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CC_002B_002B_005CLibraries_005Cglfw_002D3_002E3_002E8_005C_005Fout_005Cbuild_005Csrc_005Cglfw_005Fconfig_002Eh/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CC_002B_002B_005CLibraries_005Cglfw_002D3_002E3_002E8_005C_005Fout_005Cbuild_005Cx64_005CDebug_005CALL_005FBUILD_005CALL_005FBUILD_002Erecipe/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CC_002B_002B_005COpenGL_005COpenGLTester_005COpenGLTester_005Cexternal_005Clib_005Cglfw3_002Elib/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CC_002B_002B_005COpenGL_005COpenGLTester_005COpenGLTester_005Cexternal_005Clib_005Cglfw3_002Epdb/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CC_002B_002B_005COpenGL_005COpenGLTester_005COpenGLTester_005Cexternal_005Clib_005Cpkgconfig_005Cglfw3_002Epc/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CProgram_0020Files_0020_0028x86_0029_005Chidemy_002Ename_0020VPN_005Cconf_002Eini/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CProgram_0020Files_0020_0028x86_0029_005CWindows_0020Kits_005C10_005CLib_005C10_002E0_002E18362_002E0_005Cum_005Cx64_005COpenGL32_002ELib/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CWindows_005CSystem32_005Copengl32_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CWindows_005CSysWOW64_005Copengl32_002Edll/@EntryIndexedValue">True</s:Boolean>
+	
+	</wpf:ResourceDictionary>
