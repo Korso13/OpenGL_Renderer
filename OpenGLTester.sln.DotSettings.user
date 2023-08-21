@@ -27,6 +27,7 @@
 	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CProgram_0020Files_0020_0028x86_0029_005CWindows_0020Kits_005C10_005CLib_005C10_002E0_002E18362_002E0_005Cum_005Cx64_005COpenGL32_002ELib/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CWindows_005CSystem32_005Copengl32_002Edll/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CWindows_005CSysWOW64_005Copengl32_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:String x:Key="/Default/CodeInspection/PencilsConfiguration/ActualSeverity/@EntryValue">INFO</s:String>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=VERTBUF/@EntryIndexedValue">True</s:Boolean>
 	
 	</wpf:ResourceDictionary>
