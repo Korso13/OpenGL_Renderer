@@ -110,6 +110,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp14</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)external/include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -166,12 +167,19 @@
     <ClInclude Include="..\external\include\GLEW\wglew.h" />
     <ClInclude Include="..\external\include\GLFW\glfw3.h" />
     <ClInclude Include="..\external\include\GLFW\glfw3native.h" />
+    <ClInclude Include="source\Utilities\ShaderUtilities.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\external\lib\GLFW\glfw.vcxproj">
       <Project>{3f612c0d-4b4c-38ad-8659-53960988057f}</Project>
       <Name>glfw</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="shaders\stdFS.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="shaders\stdVS.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
