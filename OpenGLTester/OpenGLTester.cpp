@@ -6,6 +6,66 @@
 
 #define TRIANGLE_VERTBUF_SIZE 8
 
+#define COLOR_CYCLE_SPEED 0.01f
+#define GB_BIAS_CYCLE_SPEED 0.005f
+#define COLOR_MIN_VALUE 0.2f
+#define COLOR_GB_BIAS_DEF 0.2f
+#define COLOR_POOL_SIZE 2.0f
+
+// ReSharper disable once CppInconsistentNaming
+struct vec3
+{
+    float x = COLOR_MIN_VALUE;
+    float y = COLOR_MIN_VALUE;
+    float z = COLOR_MIN_VALUE;
+};
+
+/**
+ * global var for cycling color
+ */
+static vec3 used_color{0.f, 0.f, 0.f};
+static float bias = COLOR_GB_BIAS_DEF;
+static bool bBiasIncrement = true;
+static bool bRedIncrement = true;
+
+void cycleRectColor(const GLuint& _shaderProgram)
+{
+    //create color pool
+    float pool = COLOR_POOL_SIZE;
+    //check if need to change color dynamic direction
+    if(used_color.x >= 1.f)
+    {
+        bRedIncrement = false;
+    }
+    else if(used_color.x <= COLOR_MIN_VALUE)
+    {
+        bRedIncrement = true;
+    }
+
+    //calculate new color based on red and color pool
+    used_color.x += (bRedIncrement) ? (COLOR_CYCLE_SPEED) : (-COLOR_CYCLE_SPEED);
+    pool -= used_color.x;
+    used_color.y = pool * bias;
+    pool -= used_color.y;
+    used_color.z = pool;
+
+    //check if need to change green and blue bias change direction
+    if(bias >= 1.f)
+    {
+        bBiasIncrement = false;
+    }
+    else if(bias <= COLOR_GB_BIAS_DEF)
+    {
+        bBiasIncrement = true;
+    }
+    //calculate new bias for frame
+    bias += (bBiasIncrement) ? (GB_BIAS_CYCLE_SPEED) : (-GB_BIAS_CYCLE_SPEED);
+    
+    GLCall(const GLint uColor = glGetUniformLocation(_shaderProgram, "u_Color"));
+    if(uColor != -1)
+        GLCall(glUniform4f(uColor, used_color.x, used_color.y, used_color.z, 1.0f));
+}
+
 
 int main(void)
 {
@@ -84,6 +144,10 @@ int main(void)
     glUseProgram(shader_program);
     PRINT_ERRS;
 
+    GLCall(const GLint uColor = glGetUniformLocation(shader_program, "u_Color"));
+    if(uColor != -1)
+        GLCall(glUniform4f(uColor, 1.f, 0.2f, 0.1f, 1.0f));
+
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
@@ -92,6 +156,7 @@ int main(void)
         
         //glDrawArrays(GL_TRIANGLES, 0, 3);
 
+        cycleRectColor(shader_program);
         GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
         
         /* Swap front and back buffers */
