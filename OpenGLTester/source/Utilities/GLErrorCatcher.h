@@ -67,8 +67,8 @@ static void GLGetAllErrors(const char* _funcName, const int _line)
 #define PRINT_ERRS GLGetAllErrors(__FUNCSIG__, __LINE__ - 1)
 
 #ifdef DEBUG 
-    #define GLCall(x) PRINT_ERRS; x; PRINT_ERRS
+    #define GLCall(func) PRINT_ERRS; func; PRINT_ERRS
 #else DEBUG
-    #define GLCall(x) x
+    #define GLCall(func) func
 #endif
 

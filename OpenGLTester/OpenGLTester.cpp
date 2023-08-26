@@ -4,7 +4,8 @@
 #include "source/Utilities/ShaderUtilities.h"
 #include "source/Utilities/GLErrorCatcher.h"
 
-#define TRIANGLE_VERTBUF_SIZE 8
+#define RECT_VERTBUF_SIZE 8
+#define TRIANGLE_VERTBUF_SIZE 6
 
 #define COLOR_CYCLE_SPEED 0.01f
 #define GB_BIAS_CYCLE_SPEED 0.005f
@@ -69,11 +70,18 @@ void cycleRectColor(const GLuint& _shaderProgram)
 
 int main(void)
 {
+    //Init thingies
+
     GLFWwindow* window;
 
     /* Initialize the library */
     if (!glfwInit())
         return -1;
+
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
     
     /* Create a windowed mode window and its OpenGL context */
     window = glfwCreateWindow(640, 480, "OpenGL Test", NULL, NULL);
@@ -85,7 +93,7 @@ int main(void)
     
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
-    PRINT_ERRS;
+    GLCall(glfwSwapInterval(1));
     
     GLenum GLEWStatus = glewInit();
     if(GLEWStatus != GLEW_OK) //checking if glewInit was ok
@@ -98,24 +106,33 @@ int main(void)
         std::cout << "OpenGL ver: " << glGetString(GL_VERSION) << std::endl;
     }
     PRINT_ERRS;
+
+//============================================================================================================
     
     //creating vertex buffer:
-    float vertex1Verts[TRIANGLE_VERTBUF_SIZE] =     //array of vertices
+    float vertex1Verts[RECT_VERTBUF_SIZE] =     //array of vertices
         {
             -0.5f, -0.5,
              0.5f, -0.5f,
             0.5f, 0.5f,
             -0.5f, 0.5f
         };
-    
-    unsigned int vertex1Buffer; //buffer ID for triangle
+
+    //creating vertex array
+    GLuint vertexArr1;
+    GLCall(glGenVertexArrays(1, &vertexArr1));
+    GLCall(glBindVertexArray(vertexArr1));
+
+    //creating vertex buffer
+    unsigned int vertex1Buffer; //buffer ID for 2 triangles
     glGenBuffers(1, &vertex1Buffer);
     glBindBuffer(GL_ARRAY_BUFFER, vertex1Buffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * TRIANGLE_VERTBUF_SIZE, vertex1Verts, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * RECT_VERTBUF_SIZE, vertex1Verts, GL_STATIC_DRAW);
     PRINT_ERRS;
     
     //creating layout:
     glEnableVertexAttribArray(0);
+    //binging buffer and layout to the 0 index of vertex array (currently vertexArr1)
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
     PRINT_ERRS;
     
@@ -144,10 +161,14 @@ int main(void)
     glUseProgram(shader_program);
     PRINT_ERRS;
 
-    GLCall(const GLint uColor = glGetUniformLocation(shader_program, "u_Color"));
-    if(uColor != -1)
-        GLCall(glUniform4f(uColor, 1.f, 0.2f, 0.1f, 1.0f));
+    //resetting bindings"
+    GLCall(glBindVertexArray(0));
+    GLCall(glUseProgram(0));
+    GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
+    GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
 
+    //============================================================================================================
+ 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
@@ -156,6 +177,10 @@ int main(void)
         
         //glDrawArrays(GL_TRIANGLES, 0, 3);
 
+        //binding back buffers
+        GLCall(glUseProgram(shader_program));
+        GLCall(glBindVertexArray(vertexArr1));
+        
         cycleRectColor(shader_program);
         GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
         
