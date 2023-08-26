@@ -167,6 +167,7 @@
     <ClInclude Include="..\external\include\GLEW\wglew.h" />
     <ClInclude Include="..\external\include\GLFW\glfw3.h" />
     <ClInclude Include="..\external\include\GLFW\glfw3native.h" />
+    <ClInclude Include="source\Utilities\GLErrorCatcher.h" />
     <ClInclude Include="source\Utilities\ShaderUtilities.h" />
   </ItemGroup>
   <ItemGroup>

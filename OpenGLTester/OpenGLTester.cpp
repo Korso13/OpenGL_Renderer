@@ -2,8 +2,10 @@
 #include "../external/include/GLEW/glew.h"
 #include "../external/include/GLFW/glfw3.h"
 #include "source/Utilities/ShaderUtilities.h"
+#include "source/Utilities/GLErrorCatcher.h"
 
 #define TRIANGLE_VERTBUF_SIZE 8
+
 
 int main(void)
 {
@@ -20,9 +22,10 @@ int main(void)
         glfwTerminate();
         return -1;
     }
-
+    
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
+    PRINT_ERRS;
     
     GLenum GLEWStatus = glewInit();
     if(GLEWStatus != GLEW_OK) //checking if glewInit was ok
@@ -34,7 +37,8 @@ int main(void)
     {
         std::cout << "OpenGL ver: " << glGetString(GL_VERSION) << std::endl;
     }
-
+    PRINT_ERRS;
+    
     //creating vertex buffer:
     float vertex1Verts[TRIANGLE_VERTBUF_SIZE] =     //array of vertices
         {
@@ -48,11 +52,13 @@ int main(void)
     glGenBuffers(1, &vertex1Buffer);
     glBindBuffer(GL_ARRAY_BUFFER, vertex1Buffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(float) * TRIANGLE_VERTBUF_SIZE, vertex1Verts, GL_STATIC_DRAW);
-
+    PRINT_ERRS;
+    
     //creating layout:
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
-
+    PRINT_ERRS;
+    
     //creating index buffer:
     unsigned int rect1Indices[3 * 2] =
         {
@@ -63,6 +69,7 @@ int main(void)
     glGenBuffers(1, &index1Buffer);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index1Buffer);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * 3 * 2, rect1Indices, GL_STATIC_DRAW);
+    PRINT_ERRS;
     
     //generating shader
     //first, we extract source code:
@@ -70,25 +77,28 @@ int main(void)
     std::string fragment_shader;
     shaderUtils::GetSrcCode("shaders/stdVS.vs", vertex_shader);
     shaderUtils::GetSrcCode("shaders/stdFS.fs", fragment_shader);
+    PRINT_ERRS;
 
     //now we create shader program
     const GLuint shader_program = shaderUtils::CreateShader(vertex_shader, fragment_shader);
     glUseProgram(shader_program);
+    PRINT_ERRS;
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
         /* Render here */
-        glClear(GL_COLOR_BUFFER_BIT);
-
+        GLCall(glClear(GL_COLOR_BUFFER_BIT));
+        
         //glDrawArrays(GL_TRIANGLES, 0, 3);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+        GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
         
         /* Swap front and back buffers */
-        glfwSwapBuffers(window);
+        GLCall(glfwSwapBuffers(window));
 
         /* Poll for and process events */
-        glfwPollEvents();
+        GLCall(glfwPollEvents());
     }
 
     glDeleteProgram(shader_program);
