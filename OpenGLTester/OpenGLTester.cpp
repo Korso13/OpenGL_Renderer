@@ -1,8 +1,12 @@
+#include <PCH.h>
 #include <cstdio>
-#include "../external/include/GLEW/glew.h"
-#include "../external/include/GLFW/glfw3.h"
+
+#include "BaseClasses/VertexAttributes.h"
 #include "source/Utilities/ShaderUtilities.h"
 #include "source/Utilities/GLErrorCatcher.h"
+#include "source/BaseClasses/IndexBuffer.h"
+#include "source/BaseClasses/VertexBuffer.h"
+#include "source/BaseClasses/VertexAO.h"
 
 #define RECT_VERTBUF_SIZE 8
 #define TRIANGLE_VERTBUF_SIZE 6
@@ -67,7 +71,6 @@ void cycleRectColor(const GLuint& _shaderProgram)
         GLCall(glUniform4f(uColor, used_color.x, used_color.y, used_color.z, 1.0f));
 }
 
-
 int main(void)
 {
     //Init thingies
@@ -110,31 +113,15 @@ int main(void)
 //============================================================================================================
     
     //creating vertex buffer:
-    float vertex1Verts[RECT_VERTBUF_SIZE] =     //array of vertices
+    float rect1_verts[RECT_VERTBUF_SIZE] =     //array of vertices
         {
             -0.5f, -0.5,
              0.5f, -0.5f,
-            0.5f, 0.5f,
-            -0.5f, 0.5f
+             0.5f,  0.5f,
+            -0.5f,  0.5f
         };
 
-    //creating vertex array
-    GLuint vertexArr1;
-    GLCall(glGenVertexArrays(1, &vertexArr1));
-    GLCall(glBindVertexArray(vertexArr1));
-
-    //creating vertex buffer
-    unsigned int vertex1Buffer; //buffer ID for 2 triangles
-    glGenBuffers(1, &vertex1Buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, vertex1Buffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * RECT_VERTBUF_SIZE, vertex1Verts, GL_STATIC_DRAW);
-    PRINT_ERRS;
-    
-    //creating layout:
-    glEnableVertexAttribArray(0);
-    //binging buffer and layout to the 0 index of vertex array (currently vertexArr1)
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
-    PRINT_ERRS;
+    VertexBuffer vBuffer1(&rect1_verts, RECT_VERTBUF_SIZE * sizeof(float));
     
     //creating index buffer:
     unsigned int rect1Indices[3 * 2] =
@@ -142,11 +129,20 @@ int main(void)
             0, 1, 2,
             0, 2, 3
         };
-    unsigned int index1Buffer; //buffer ID for vertex indices
-    glGenBuffers(1, &index1Buffer);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index1Buffer);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * 3 * 2, rect1Indices, GL_STATIC_DRAW);
-    PRINT_ERRS;
+
+    IndexBuffer iBuffer1(rect1Indices, 6);
+
+    //creating vertex attributes\layout
+    VertexAttributes VAttributes1;
+    VAttributes1.addAttribute({GL_FLOAT, 2, GL_FALSE});
+
+    //Packing buffers and attributes into vertex array abstraction object
+    VertexAO* vao1 = new VertexAO();
+    vao1->addBuffer(vBuffer1, iBuffer1, VAttributes1);
+
+    //resetting bindings
+    vao1->unbind();
+    
     
     //generating shader
     //first, we extract source code:
@@ -160,14 +156,8 @@ int main(void)
     const GLuint shader_program = shaderUtils::CreateShader(vertex_shader, fragment_shader);
     glUseProgram(shader_program);
     PRINT_ERRS;
-
-    //resetting bindings"
-    GLCall(glBindVertexArray(0));
-    GLCall(glUseProgram(0));
-    GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
-    GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
-
-    //============================================================================================================
+    
+//============================================================================================================
  
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
@@ -177,10 +167,9 @@ int main(void)
         
         //glDrawArrays(GL_TRIANGLES, 0, 3);
 
-        //binding back buffers
-        GLCall(glUseProgram(shader_program));
-        GLCall(glBindVertexArray(vertexArr1));
-        
+        //binding back buffers-vertex array object
+        vao1->bind();
+
         cycleRectColor(shader_program);
         GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
         
@@ -192,6 +181,7 @@ int main(void)
     }
 
     glDeleteProgram(shader_program);
+    delete vao1;
     glfwTerminate();
 
     return 0;

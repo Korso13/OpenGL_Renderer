@@ -110,7 +110,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp14</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)external/include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)external/include; $(ProjectDir)source</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -159,6 +159,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="OpenGLTester.cpp" />
+    <ClCompile Include="source\BaseClasses\IndexBuffer.cpp" />
+    <ClCompile Include="source\BaseClasses\VertexAO.cpp" />
+    <ClCompile Include="source\BaseClasses\VertexAttributes.cpp" />
+    <ClCompile Include="source\BaseClasses\VertexBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\external\include\GLEW\eglew.h" />
@@ -167,6 +171,11 @@
     <ClInclude Include="..\external\include\GLEW\wglew.h" />
     <ClInclude Include="..\external\include\GLFW\glfw3.h" />
     <ClInclude Include="..\external\include\GLFW\glfw3native.h" />
+    <ClInclude Include="source\BaseClasses\IndexBuffer.h" />
+    <ClInclude Include="source\BaseClasses\VertexAO.h" />
+    <ClInclude Include="source\BaseClasses\VertexAttributes.h" />
+    <ClInclude Include="source\BaseClasses\VertexBuffer.h" />
+    <ClInclude Include="source\PCH.h" />
     <ClInclude Include="source\Utilities\GLErrorCatcher.h" />
     <ClInclude Include="source\Utilities\ShaderUtilities.h" />
   </ItemGroup>
