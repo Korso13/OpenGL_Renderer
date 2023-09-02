@@ -1,8 +1,9 @@
 #include <PCH.h>
+#include <Defines.h>
 #include <cstdio>
 
 #include "BaseClasses/VertexAttributes.h"
-#include "source/Utilities/ShaderUtilities.h"
+#include "source/BaseClasses/Shader.h"
 #include "source/Utilities/GLErrorCatcher.h"
 #include "source/BaseClasses/IndexBuffer.h"
 #include "source/BaseClasses/VertexBuffer.h"
@@ -17,14 +18,6 @@
 #define COLOR_GB_BIAS_DEF 0.2f
 #define COLOR_POOL_SIZE 2.0f
 
-// ReSharper disable once CppInconsistentNaming
-struct vec3
-{
-    float x = COLOR_MIN_VALUE;
-    float y = COLOR_MIN_VALUE;
-    float z = COLOR_MIN_VALUE;
-};
-
 /**
  * global var for cycling color
  */
@@ -33,7 +26,7 @@ static float bias = COLOR_GB_BIAS_DEF;
 static bool bBiasIncrement = true;
 static bool bRedIncrement = true;
 
-void cycleRectColor(const GLuint& _shaderProgram)
+void cycleRectColor(Shader* _shaderProgram)
 {
     //create color pool
     float pool = COLOR_POOL_SIZE;
@@ -65,10 +58,9 @@ void cycleRectColor(const GLuint& _shaderProgram)
     }
     //calculate new bias for frame
     bias += (bBiasIncrement) ? (GB_BIAS_CYCLE_SPEED) : (-GB_BIAS_CYCLE_SPEED);
-    
-    GLCall(const GLint uColor = glGetUniformLocation(_shaderProgram, "u_Color"));
-    if(uColor != -1)
-        GLCall(glUniform4f(uColor, used_color.x, used_color.y, used_color.z, 1.0f));
+
+    vec4 color{used_color.x, used_color.y, used_color.z, 1.0f};
+    _shaderProgram->setUniform("u_Color", color);
 }
 
 int main(void)
@@ -143,19 +135,10 @@ int main(void)
     //resetting bindings
     vao1->unbind();
     
-    
     //generating shader
     //first, we extract source code:
-    std::string vertex_shader;
-    std::string fragment_shader;
-    shaderUtils::GetSrcCode("shaders/stdVS.vs", vertex_shader);
-    shaderUtils::GetSrcCode("shaders/stdFS.fs", fragment_shader);
-    PRINT_ERRS;
-
-    //now we create shader program
-    const GLuint shader_program = shaderUtils::CreateShader(vertex_shader, fragment_shader);
-    glUseProgram(shader_program);
-    PRINT_ERRS;
+    Shader* shader1 = new Shader("shaders/stdVS.vs", "shaders/stdFS.fs");
+    shader1->Bind();
     
 //============================================================================================================
  
@@ -170,7 +153,7 @@ int main(void)
         //binding back buffers-vertex array object
         vao1->bind();
 
-        cycleRectColor(shader_program);
+        cycleRectColor(shader1);
         GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
         
         /* Swap front and back buffers */
@@ -180,7 +163,7 @@ int main(void)
         GLCall(glfwPollEvents());
     }
 
-    glDeleteProgram(shader_program);
+    delete shader1;
     delete vao1;
     glfwTerminate();
 

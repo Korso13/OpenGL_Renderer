@@ -1,11 +1,11 @@
 #pragma once
-#include <PCH.h>
+#include <Defines.h>
 #include <fstream>
 
 namespace shaderUtils
 {
     //compiles provided string with source code into specified type of shader. Returns 0 on error and prints it in console
-    GLuint CompileShader(const std::string& source, GLuint type)
+    static GLuint CompileShader(const std::string& source, GLuint type)
     {
         GLuint shader_id = glCreateShader(type);
         const char* src = source.c_str();
@@ -67,4 +67,75 @@ namespace shaderUtils
         return program;
     }
 
+    //extracts uniform variables from shader source files and returns them as a single struct.
+    static Uniforms GetUniforms(const std::string& _vsPath, const std::string& _fsPath)
+    {
+        Uniforms foundUniforms;
+        std::string sourcePaths[2];
+        sourcePaths[0] = _vsPath;
+        sourcePaths[1] = _fsPath;
+        std::ifstream ShaderSrcFile;
+        std::string line;
+        size_t pos;
+        std::string varName;
+
+        for (size_t i = 0; i < 2; i++)
+        {
+            ShaderSrcFile.open(sourcePaths[i]);
+
+            while(!ShaderSrcFile.eof())
+            {
+                line.clear();
+                std::getline(ShaderSrcFile, line);
+                if(line.substr(0, 7) == "uniform")
+                {
+                    if(line.substr(8, 4) == "vec4")
+                    {
+                        pos = line.find("vec4") + 4 + 1; //symbol after data type plus space
+                        varName = line.substr(pos);
+                        varName.pop_back();
+                        foundUniforms.v4Uniforms.emplace(varName, -1);
+                        continue;
+                    }
+                    else if(line.find("vec3") != std::string::npos)
+                    {
+                        pos = line.find("vec3") + 4 + 1; //symbol after data type plus space
+                        varName = line.substr(pos);
+                        varName.pop_back();
+                        foundUniforms.v3Uniforms.emplace(varName, -1);
+                        continue;
+                    }
+                    else if(line.find("vec2") != std::string::npos)
+                    {
+                        pos = line.find("vec2") + 4 + 1; //symbol after data type plus space
+                        varName = line.substr(pos);
+                        varName.pop_back();
+                        foundUniforms.v2Uniforms.emplace(varName, -1);
+                        continue;
+                    }
+                    else if(line.find("float") != std::string::npos)
+                    {
+                        pos = line.find("float") + 5 + 1; //symbol after data type plus space
+                        varName = line.substr(pos);
+                        varName.pop_back();
+                        foundUniforms.fUniforms.emplace(varName, -1);
+                        continue;
+                    }
+                    else if(line.find("int") != std::string::npos)
+                    {
+                        pos = line.find("int") + 3 + 1; //symbol after data type plus space
+                        varName = line.substr(pos);
+                        varName.pop_back();
+                        foundUniforms.iUniforms.emplace(varName, -1);
+                        continue;
+                    }
+                }
+            } //end of while loop reading file
+            
+            ShaderSrcFile.close();
+        } //end of source files' loop 
+        
+        return foundUniforms;
+    }
+    
 }
