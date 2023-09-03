@@ -4,5 +4,11 @@
    "index": 1,
    "vsPath": "shaders/VS/stdVS.vs",
    "fsPath": "shaders/FS/stdFS.fs"
+ },
+ "TextureShader":
+ {
+   "index": 2,
+   "vsPath": "shaders/VS/stdTextureShader.vs",
+   "fsPath": "shaders/FS/stdTextureShader.fs"
  }
 }

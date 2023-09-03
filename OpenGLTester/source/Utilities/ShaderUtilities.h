@@ -130,6 +130,14 @@ namespace shaderUtils
                         foundUniforms.iUniforms.emplace(varName, -1);
                         continue;
                     }
+                    else if(line.find("sampler2D") != std::string::npos)
+                    {
+                        pos = line.find("sampler2D") + 9 + 1; //symbol after data type plus space
+                        varName = line.substr(pos);
+                        varName.pop_back();
+                        foundUniforms.iUniforms.emplace(varName, -1);
+                        continue;
+                    }
                 }
             } //end of while loop reading file
             

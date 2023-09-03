@@ -2,6 +2,7 @@
 #include <Defines.h>
 #include <cstdio>
 
+#include "BaseClasses/Texture.h"
 #include "BaseClasses/VertexAttributes.h"
 #include "ManagingClasses/Renderer.h"
 #include "source/ManagingClasses/ShaderMachine.h"
@@ -109,15 +110,13 @@ int main(void)
 //============================================================================================================
     
     //creating vertex buffer:
-    float rect1_verts[RECT_VERTBUF_SIZE] =     //array of vertices
+    float rect1_verts[RECT_VERTBUF_SIZE * 2] =     //array of vertices
         {
-            -0.5f, -0.5,
-             0.5f, -0.5f,
-             0.5f,  0.5f,
-            -0.5f,  0.5f
+            -0.5f, -0.5,    0.0, 0.0, //one record. 2 float coordinates of vertice, 2 float UV coordinates
+             0.5f, -0.5f,   1.0, 0.0,
+             0.5f,  0.5f,   1.0, 1.0,
+            -0.5f,  0.5f,   0.0, 1.0
         };
-
-    VertexBuffer vBuffer1(&rect1_verts, RECT_VERTBUF_SIZE * sizeof(float));
     
     //creating index buffer:
     unsigned int rect1Indices[3 * 2] =
@@ -126,25 +125,26 @@ int main(void)
             0, 2, 3
         };
 
+    //creating vertex and index buffer objects
+    VertexBuffer vBuffer1(&rect1_verts, RECT_VERTBUF_SIZE * 2 * sizeof(float));
     IndexBuffer iBuffer1(rect1Indices, 6);
 
     //creating vertex attributes\layout
     VertexAttributes VAttributes1;
-    VAttributes1.addAttribute({GL_FLOAT, 2, GL_FALSE});
+    VAttributes1.addAttribute({GL_FLOAT, 2, GL_FALSE}); //2 float coordinates
+    VAttributes1.addAttribute({GL_FLOAT, 2, GL_FALSE}); //2 float UV coordinates
 
     //Packing buffers and attributes into vertex array abstraction object
     VertexAO* vao1 = new VertexAO();
     vao1->addBuffer(&vBuffer1, &iBuffer1, &VAttributes1);
-
-    //resetting bindings
-    vao1->unbind();
     
     //generating shader
-    //first, we extract source code:
-    ShaderMachine::get()->setShader(ShaderType::SIMPLE);
-    //Shader* shader1 = new Shader("shaders/stdVS.vs", "shaders/stdFS.fs");
-    //shader1->Bind();
+    ShaderMachine::get()->setShader(ShaderType::TEXTURE_STD);
 
+    Texture* texture1 = new Texture("resources/textures/logo.png");
+    texture1->bind(0);
+    ShaderMachine::get()->getShader(ShaderType::TEXTURE_STD)->setUniform("u_Texture", 0);
+    
     //Creating Renderer
     Renderer* renderer = new Renderer;
     
@@ -157,8 +157,9 @@ int main(void)
         renderer->clear();
 
         //setting rectangle color
-        cycleRectColor(ShaderMachine::get()->getShader(ShaderType::SIMPLE));
-        renderer->draw(vao1, ShaderType::SIMPLE);
+        //cycleRectColor(ShaderMachine::get()->getShader(ShaderType::SIMPLE));
+        texture1->bind(0);
+        renderer->draw(vao1, ShaderType::TEXTURE_STD);
         
         /* Swap front and back buffers */
         GLCall(glfwSwapBuffers(window));
@@ -166,8 +167,7 @@ int main(void)
         /* Poll for and process events */
         GLCall(glfwPollEvents());
     }
-
-    //delete shader1;
+    
     delete vao1;
     glfwTerminate();
 

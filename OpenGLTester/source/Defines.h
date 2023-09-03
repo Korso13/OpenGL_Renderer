@@ -15,10 +15,39 @@ using SPTR = std::shared_ptr<Ty>;
 enum class ShaderType
 {
     NONE = 0,
-    SIMPLE = 1
+    SIMPLE = 1,
+    TEXTURE_STD = 2
 };
 
 //structs
+struct ivec2
+{
+    union 
+    {
+        int x;
+        int w;
+    };
+    union
+    {
+        int y;
+        int h;
+    };
+};
+
+struct uivec2
+{
+    union 
+    {
+        unsigned int x;
+        unsigned int w;
+    };
+    union
+    {
+        unsigned int y;
+        unsigned int h;
+    };
+};
+
 struct vec2
 {
     vec2(float _x, float _y) : x(_x), y(_y){}

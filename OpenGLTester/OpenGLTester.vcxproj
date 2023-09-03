@@ -158,9 +158,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\external\include\STB\stb_image.cpp" />
     <ClCompile Include="OpenGLTester.cpp" />
     <ClCompile Include="source\BaseClasses\IndexBuffer.cpp" />
     <ClCompile Include="source\BaseClasses\Shader.cpp" />
+    <ClCompile Include="source\BaseClasses\Texture.cpp" />
     <ClCompile Include="source\BaseClasses\VertexAttributes.cpp" />
     <ClCompile Include="source\BaseClasses\VertexBuffer.cpp" />
     <ClCompile Include="source\ManagingClasses\Renderer.cpp" />
@@ -321,8 +323,10 @@
     <ClInclude Include="..\external\include\GLEW\wglew.h" />
     <ClInclude Include="..\external\include\GLFW\glfw3.h" />
     <ClInclude Include="..\external\include\GLFW\glfw3native.h" />
+    <ClInclude Include="..\external\include\STB\stb_image.h" />
     <ClInclude Include="source\BaseClasses\IndexBuffer.h" />
     <ClInclude Include="source\BaseClasses\Shader.h" />
+    <ClInclude Include="source\BaseClasses\Texture.h" />
     <ClInclude Include="source\BaseClasses\VertexAttributes.h" />
     <ClInclude Include="source\BaseClasses\VertexBuffer.h" />
     <ClInclude Include="source\Defines.h" />
@@ -342,10 +346,14 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="shaders\ShaderList.json" />
+    <Content Include="shaders\VS\stdTextureShader.vs" />
     <Content Include="shaders\VS\stdVS.vs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="shaders\FS\stdFS.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="resources\textures\" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
