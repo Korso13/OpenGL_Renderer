@@ -1,15 +1,24 @@
 #pragma once
 #include <PCH.h>
 
+//macros
+
+//uncomment one of two. Determines whether Renderer class is singlton or allows multiple instances.
+#define MULTIRENDER
+//#define SINGLERENDER
+
+//using and typedefs
 template<typename Ty>
 using SPTR = std::shared_ptr<Ty>;
 
+//enums
 enum class ShaderType
 {
     NONE = 0,
     SIMPLE = 1
 };
 
+//structs
 struct vec2
 {
     vec2(float _x, float _y) : x(_x), y(_y){}

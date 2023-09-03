@@ -3,11 +3,12 @@
 #include <cstdio>
 
 #include "BaseClasses/VertexAttributes.h"
-#include "source/BaseClasses/ShaderMachine.h"
+#include "ManagingClasses/Renderer.h"
+#include "source/ManagingClasses/ShaderMachine.h"
 #include "source/Utilities/GLErrorCatcher.h"
 #include "source/BaseClasses/IndexBuffer.h"
 #include "source/BaseClasses/VertexBuffer.h"
-#include "source/BaseClasses/VertexAO.h"
+#include "source/ManagingClasses/VertexAO.h"
 
 #define RECT_VERTBUF_SIZE 8
 #define TRIANGLE_VERTBUF_SIZE 6
@@ -133,7 +134,7 @@ int main(void)
 
     //Packing buffers and attributes into vertex array abstraction object
     VertexAO* vao1 = new VertexAO();
-    vao1->addBuffer(vBuffer1, iBuffer1, VAttributes1);
+    vao1->addBuffer(&vBuffer1, &iBuffer1, &VAttributes1);
 
     //resetting bindings
     vao1->unbind();
@@ -143,6 +144,9 @@ int main(void)
     ShaderMachine::get()->setShader(ShaderType::SIMPLE);
     //Shader* shader1 = new Shader("shaders/stdVS.vs", "shaders/stdFS.fs");
     //shader1->Bind();
+
+    //Creating Renderer
+    Renderer* renderer = new Renderer;
     
 //============================================================================================================
  
@@ -150,15 +154,11 @@ int main(void)
     while (!glfwWindowShouldClose(window))
     {
         /* Render here */
-        GLCall(glClear(GL_COLOR_BUFFER_BIT));
-        
-        //glDrawArrays(GL_TRIANGLES, 0, 3);
+        renderer->clear();
 
-        //binding back buffers-vertex array object
-        vao1->bind();
-
+        //setting rectangle color
         cycleRectColor(ShaderMachine::get()->getShader(ShaderType::SIMPLE));
-        GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
+        renderer->draw(vao1, ShaderType::SIMPLE);
         
         /* Swap front and back buffers */
         GLCall(glfwSwapBuffers(window));

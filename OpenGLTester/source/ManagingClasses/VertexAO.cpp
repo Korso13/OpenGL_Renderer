@@ -1,8 +1,8 @@
 #include "VertexAO.h"
 
-#include "IndexBuffer.h"
-#include "VertexBuffer.h"
-#include "VertexAttributes.h"
+#include "BaseClasses/IndexBuffer.h"
+#include "BaseClasses/VertexBuffer.h"
+#include "BaseClasses/VertexAttributes.h"
 #include "Utilities/GLErrorCatcher.h"
 
 VertexAO::VertexAO()
@@ -33,22 +33,26 @@ void VertexAO::addBuffer(const VertexBuffer& _vertexBuffer, const VertexAttribut
     }
 }
 
-void VertexAO::addBuffer(const VertexBuffer& _vertexBuffer, const IndexBuffer& _indexBuffer, const VertexAttributes& _vertexAttrib)
+void VertexAO::addBuffer(VertexBuffer* _vertexBuffer, IndexBuffer* _indexBuffer, VertexAttributes* _vertexAttrib)
 {
+    m_vBuffer.push_back(_vertexBuffer);
+    m_iBuffer.push_back(_indexBuffer);
+    m_aBuffer.push_back(_vertexAttrib);
+    
     //binding vertexArrayObject and buffers
     bind();
-    _vertexBuffer.bind(); 
-    _indexBuffer.bind();
+    _vertexBuffer->bind(); 
+    _indexBuffer->bind();
 
     //setting vertex attribute array
-    const auto& attributes = _vertexAttrib.getVertexAttributes();
+    const auto& attributes = _vertexAttrib->getVertexAttributes();
     unsigned int offset = 0;
     for (unsigned int i = 0; i < attributes.size(); i++)
     {
         GLCall(glEnableVertexAttribArray(i)); //setting new vertex attributes array
-        GLCall(glVertexAttribPointer(i, attributes[i].count, attributes[i].type, attributes[i].isNotNormalized, _vertexAttrib.getStride(), (const void*)offset));
+        GLCall(glVertexAttribPointer(i, attributes[i].count, attributes[i].type, attributes[i].isNotNormalized, _vertexAttrib->getStride(), (const void*)offset));
 
-        offset += attributes[i].count * _vertexAttrib.getTypeSize(attributes[i].type);
+        offset += attributes[i].count * _vertexAttrib->getTypeSize(attributes[i].type);
     }
         
 }

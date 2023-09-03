@@ -1,6 +1,5 @@
 #pragma once
-#include "Shader.h"
-#include "Utilities/ShaderLib.h"
+#include "BaseClasses/Shader.h"
 
 class ShaderMachine
 {
