@@ -3,7 +3,7 @@
 #include <cstdio>
 
 #include "BaseClasses/VertexAttributes.h"
-#include "source/BaseClasses/Shader.h"
+#include "source/BaseClasses/ShaderMachine.h"
 #include "source/Utilities/GLErrorCatcher.h"
 #include "source/BaseClasses/IndexBuffer.h"
 #include "source/BaseClasses/VertexBuffer.h"
@@ -28,6 +28,9 @@ static bool bRedIncrement = true;
 
 void cycleRectColor(Shader* _shaderProgram)
 {
+    if(!_shaderProgram)
+        return;
+
     //create color pool
     float pool = COLOR_POOL_SIZE;
     //check if need to change color dynamic direction
@@ -137,8 +140,9 @@ int main(void)
     
     //generating shader
     //first, we extract source code:
-    Shader* shader1 = new Shader("shaders/stdVS.vs", "shaders/stdFS.fs");
-    shader1->Bind();
+    ShaderMachine::get()->setShader(ShaderType::SIMPLE);
+    //Shader* shader1 = new Shader("shaders/stdVS.vs", "shaders/stdFS.fs");
+    //shader1->Bind();
     
 //============================================================================================================
  
@@ -153,7 +157,7 @@ int main(void)
         //binding back buffers-vertex array object
         vao1->bind();
 
-        cycleRectColor(shader1);
+        cycleRectColor(ShaderMachine::get()->getShader(ShaderType::SIMPLE));
         GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
         
         /* Swap front and back buffers */
@@ -163,7 +167,7 @@ int main(void)
         GLCall(glfwPollEvents());
     }
 
-    delete shader1;
+    //delete shader1;
     delete vao1;
     glfwTerminate();
 

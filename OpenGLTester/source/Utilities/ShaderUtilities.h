@@ -67,7 +67,8 @@ namespace shaderUtils
         return program;
     }
 
-    //extracts uniform variables from shader source files and returns them as a single struct.
+    //extracts uniform variables (int, float, vec2,3,4) from shader source files and returns them as a single struct.
+    //does not support uniform declarations followed by a comment or ending in any way different from a semicolon!
     static Uniforms GetUniforms(const std::string& _vsPath, const std::string& _fsPath)
     {
         Uniforms foundUniforms;

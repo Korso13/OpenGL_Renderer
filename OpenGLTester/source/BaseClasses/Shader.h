@@ -32,9 +32,7 @@ private:
 private:
 
     GLuint m_RendererID;
+    
     //holds uniform names and locations
     Uniforms m_uniforms;
-
-    std::string m_vsSource;
-    std::string m_fsSource;
 };

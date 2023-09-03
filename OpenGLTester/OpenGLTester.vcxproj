@@ -165,6 +165,7 @@
     <ClCompile Include="source\BaseClasses\VertexAO.cpp" />
     <ClCompile Include="source\BaseClasses\VertexAttributes.cpp" />
     <ClCompile Include="source\BaseClasses\VertexBuffer.cpp" />
+    <ClCompile Include="source\Utilities\ShaderLib.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\external\include\GLEW\eglew.h" />
@@ -182,6 +183,7 @@
     <ClInclude Include="source\Defines.h" />
     <ClInclude Include="source\PCH.h" />
     <ClInclude Include="source\Utilities\GLErrorCatcher.h" />
+    <ClInclude Include="source\Utilities\ShaderLib.h" />
     <ClInclude Include="source\Utilities\ShaderUtilities.h" />
   </ItemGroup>
   <ItemGroup>
@@ -191,10 +193,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="shaders\stdFS.fs" />
+    <Content Include="shaders\ShaderList.json" />
+    <Content Include="shaders\VS\stdVS.vs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="shaders\stdVS.vs" />
+    <Compile Include="shaders\FS\stdFS.fs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

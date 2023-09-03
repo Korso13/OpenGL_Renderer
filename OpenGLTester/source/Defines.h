@@ -1,6 +1,15 @@
 #pragma once
 #include <PCH.h>
 
+template<typename Ty>
+using SPTR = std::shared_ptr<Ty>;
+
+enum class ShaderType
+{
+    NONE = 0,
+    SIMPLE = 1
+};
+
 struct vec2
 {
     vec2(float _x, float _y) : x(_x), y(_y){}
@@ -30,10 +39,10 @@ struct vec4
 
 struct Uniforms
 {
-    std::unordered_map<std::string, int> iUniforms;
-    std::unordered_map<std::string, int> fUniforms;
-    std::unordered_map<std::string, int> v2Uniforms;
-    std::unordered_map<std::string, int> v3Uniforms;
-    std::unordered_map<std::string, int> v4Uniforms;
+    std::unordered_map<std::string, GLint> iUniforms;
+    std::unordered_map<std::string, GLint> fUniforms;
+    std::unordered_map<std::string, GLint> v2Uniforms;
+    std::unordered_map<std::string, GLint> v3Uniforms;
+    std::unordered_map<std::string, GLint> v4Uniforms;
 };
 

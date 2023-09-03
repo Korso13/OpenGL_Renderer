@@ -5,17 +5,24 @@
 Shader::Shader(const std::string& _vsPath, const std::string& _fsPath)
     : m_RendererID(0)
 {
-    shaderUtils::GetSrcCode(_vsPath, m_vsSource);
-    shaderUtils::GetSrcCode(_fsPath, m_fsSource);
+    std::string vsSource;
+    std::string fsSource;
+    shaderUtils::GetSrcCode(_vsPath, vsSource);
+    shaderUtils::GetSrcCode(_fsPath, fsSource);
     m_uniforms = shaderUtils::GetUniforms(_vsPath, _fsPath);
 
-    m_RendererID = shaderUtils::CreateShader(m_vsSource, m_fsSource);
+    m_RendererID = shaderUtils::CreateShader(vsSource, fsSource);
     cacheUniformLocations();
 }
 
 Shader::~Shader()
 {
     GLCall(glDeleteProgram(m_RendererID));
+    m_uniforms.fUniforms.clear();
+    m_uniforms.iUniforms.clear();
+    m_uniforms.v2Uniforms.clear();
+    m_uniforms.v3Uniforms.clear();
+    m_uniforms.v4Uniforms.clear();
 }
 
 void Shader::Bind() const

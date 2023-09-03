@@ -1,0 +1,8 @@
+{
+ "Simple":
+ {
+   "index": 1,
+   "vsPath": "shaders/VS/stdVS.vs",
+   "fsPath": "shaders/FS/stdFS.fs"
+ }
+}
