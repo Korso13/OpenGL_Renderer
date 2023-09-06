@@ -1,5 +1,6 @@
 #pragma once
 #include "Utilities/ShaderUtilities.h"
+#include "GLM/glm.hpp"
 
 //shader program wrapper class
 class Shader
@@ -20,6 +21,7 @@ public:
     void setUniform(const std::string& _uniformName, vec2 _value);
     void setUniform(const std::string& _uniformName, vec3 _value);
     void setUniform(const std::string& _uniformName, vec4 _value);
+    void setUniform(const std::string& _uniformName, const glm::mat4& _value);
     
 private:
     

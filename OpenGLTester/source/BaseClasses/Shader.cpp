@@ -1,4 +1,8 @@
 #include "Shader.h"
+#include "Shader.h"
+#include "Shader.h"
+#include "Shader.h"
+#include "Shader.h"
 #include "Utilities/GLErrorCatcher.h"
 
 
@@ -130,6 +134,25 @@ void Shader::setUniform(const std::string& _uniformName, vec4 _value)
     }
 }
 
+void Shader::setUniform(const ::std::string& _uniformName, const glm::mat4& _value)
+{
+    if(m_uniforms.m4Uniforms.find(_uniformName) != m_uniforms.m4Uniforms.end())
+    {
+        if(m_uniforms.m4Uniforms.at(_uniformName) != -1)
+        {
+            GLCall(glUniformMatrix4fv(m_uniforms.m4Uniforms[_uniformName], 1, GL_FALSE, &_value[0][0]));
+        }
+        else
+        {
+            std::cout << "No uniform var " << _uniformName << " found in compiled shader!" << std::endl;
+        }
+    }
+    else
+    {
+        std::cout << "No uniform named "<< _uniformName << " found in shader!" << std::endl;;
+    }
+}
+
 GLint Shader::getUniformLocation(const std::string& name)
 {
     return GLCall(glGetUniformLocation(m_RendererID, name.c_str()));
@@ -159,6 +182,11 @@ void Shader::cacheUniformLocations()
     }
     //vec4
     for (auto& [varName, value] : m_uniforms.v4Uniforms)
+    {
+        value = getUniformLocation(varName);
+    }
+    //mat4
+    for (auto& [varName, value] : m_uniforms.m4Uniforms)
     {
         value = getUniformLocation(varName);
     }

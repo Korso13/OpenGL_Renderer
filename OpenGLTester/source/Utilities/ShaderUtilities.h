@@ -138,6 +138,14 @@ namespace shaderUtils
                         foundUniforms.iUniforms.emplace(varName, -1);
                         continue;
                     }
+                    else if(line.find("mat4") != std::string::npos)
+                    {
+                        pos = line.find("mat4") + 4 + 1; //symbol after data type plus space
+                        varName = line.substr(pos);
+                        varName.pop_back();
+                        foundUniforms.m4Uniforms.emplace(varName, -1);
+                        continue;
+                    }
                 }
             } //end of while loop reading file
             

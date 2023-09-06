@@ -11,6 +11,9 @@
 #include "source/BaseClasses/VertexBuffer.h"
 #include "source/ManagingClasses/VertexAO.h"
 
+#include "GLM/glm.hpp"
+#include "GLM/gtc/matrix_transform.hpp"
+
 #define RECT_VERTBUF_SIZE 8
 #define TRIANGLE_VERTBUF_SIZE 6
 
@@ -107,6 +110,10 @@ int main(void)
     }
     PRINT_ERRS;
 
+    //blend function
+    GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+    GLCall(glEnable(GL_BLEND));
+    
 //============================================================================================================
     
     //creating vertex buffer:
@@ -137,6 +144,9 @@ int main(void)
     //Packing buffers and attributes into vertex array abstraction object
     VertexAO* vao1 = new VertexAO();
     vao1->addBuffer(&vBuffer1, &iBuffer1, &VAttributes1);
+
+    //projection matrix
+    glm::mat4 projection = glm::ortho(-2.f, 2.f, -1.5f, 1.5f, -1.f, 1.f);
     
     //generating shader
     ShaderMachine::get()->setShader(ShaderType::TEXTURE_STD);
@@ -144,6 +154,7 @@ int main(void)
     Texture* texture1 = new Texture("resources/textures/logo.png");
     texture1->bind(0);
     ShaderMachine::get()->getShader(ShaderType::TEXTURE_STD)->setUniform("u_Texture", 0);
+    ShaderMachine::get()->getShader(ShaderType::TEXTURE_STD)->setUniform("u_MVP", projection);
     
     //Creating Renderer
     Renderer* renderer = new Renderer;

@@ -82,5 +82,6 @@ struct Uniforms
     std::unordered_map<std::string, GLint> v2Uniforms;
     std::unordered_map<std::string, GLint> v3Uniforms;
     std::unordered_map<std::string, GLint> v4Uniforms;
+    std::unordered_map<std::string, GLint> m4Uniforms;
 };
 
