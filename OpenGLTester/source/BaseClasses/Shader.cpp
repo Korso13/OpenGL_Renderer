@@ -1,8 +1,5 @@
 #include "Shader.h"
-#include "Shader.h"
-#include "Shader.h"
-#include "Shader.h"
-#include "Shader.h"
+#include "Utilities/ShaderUtilities.h"
 #include "Utilities/GLErrorCatcher.h"
 
 

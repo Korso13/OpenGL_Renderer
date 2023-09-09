@@ -1,5 +1,6 @@
 #pragma once
-#include "Utilities/ShaderUtilities.h"
+#include <PCH.h>
+#include <Defines.h>
 #include "GLM/glm.hpp"
 
 //shader program wrapper class

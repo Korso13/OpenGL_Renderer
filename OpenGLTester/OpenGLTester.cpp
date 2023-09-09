@@ -17,60 +17,6 @@
 #define RECT_VERTBUF_SIZE 8
 #define TRIANGLE_VERTBUF_SIZE 6
 
-#define COLOR_CYCLE_SPEED 0.01f
-#define GB_BIAS_CYCLE_SPEED 0.005f
-#define COLOR_MIN_VALUE 0.2f
-#define COLOR_GB_BIAS_DEF 0.2f
-#define COLOR_POOL_SIZE 2.0f
-
-/**
- * global var for cycling color
- */
-static vec3 used_color{0.f, 0.f, 0.f};
-static float bias = COLOR_GB_BIAS_DEF;
-static bool bBiasIncrement = true;
-static bool bRedIncrement = true;
-
-void cycleRectColor(Shader* _shaderProgram)
-{
-    if(!_shaderProgram)
-        return;
-
-    //create color pool
-    float pool = COLOR_POOL_SIZE;
-    //check if need to change color dynamic direction
-    if(used_color.x >= 1.f)
-    {
-        bRedIncrement = false;
-    }
-    else if(used_color.x <= COLOR_MIN_VALUE)
-    {
-        bRedIncrement = true;
-    }
-
-    //calculate new color based on red and color pool
-    used_color.x += (bRedIncrement) ? (COLOR_CYCLE_SPEED) : (-COLOR_CYCLE_SPEED);
-    pool -= used_color.x;
-    used_color.y = pool * bias;
-    pool -= used_color.y;
-    used_color.z = pool;
-
-    //check if need to change green and blue bias change direction
-    if(bias >= 1.f)
-    {
-        bBiasIncrement = false;
-    }
-    else if(bias <= COLOR_GB_BIAS_DEF)
-    {
-        bBiasIncrement = true;
-    }
-    //calculate new bias for frame
-    bias += (bBiasIncrement) ? (GB_BIAS_CYCLE_SPEED) : (-GB_BIAS_CYCLE_SPEED);
-
-    vec4 color{used_color.x, used_color.y, used_color.z, 1.0f};
-    _shaderProgram->setUniform("u_Color", color);
-}
-
 int main(void)
 {
     //Init thingies
@@ -87,7 +33,7 @@ int main(void)
     //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
     
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(640, 480, "OpenGL Test", NULL, NULL);
+    window = glfwCreateWindow(960, 540, "OpenGL Test", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
@@ -119,10 +65,10 @@ int main(void)
     //creating vertex buffer:
     float rect1_verts[RECT_VERTBUF_SIZE * 2] =     //array of vertices
         {
-            -0.5f, -0.5,    0.0, 0.0, //one record. 2 float coordinates of vertice, 2 float UV coordinates
-             0.5f, -0.5f,   1.0, 0.0,
-             0.5f,  0.5f,   1.0, 1.0,
-            -0.5f,  0.5f,   0.0, 1.0
+            200.0, 200.0,   0.0, 0.0, //one record. 2 float coordinates of vertice, 2 float UV coordinates
+            300.0, 200.0,   1.0, 0.0,
+            300.0, 300.0,   1.0, 1.0,
+            200.0, 300.0,   0.0, 1.0
         };
     
     //creating index buffer:
@@ -145,8 +91,16 @@ int main(void)
     VertexAO* vao1 = new VertexAO();
     vao1->addBuffer(&vBuffer1, &iBuffer1, &VAttributes1);
 
-    //projection matrix
-    glm::mat4 projection = glm::ortho(-2.f, 2.f, -1.5f, 1.5f, -1.f, 1.f);
+    //making MVP matrix
+    glm::mat4 projection = glm::ortho(0.f, 960.f, 0.0f, 540.0f, -1.f, 1.f);
+
+    glm::mat4 view = glm::mat4(1.f);
+    view = glm::translate(view, glm::vec3(-200.f, 0.f, 0.f));
+
+    glm::mat4 model = glm::mat4(1.f);
+    model = glm::translate(model, glm::vec3(400.f, 0.f, 0.f));
+    
+    glm::mat4 MVP =  projection * view * model;
     
     //generating shader
     ShaderMachine::get()->setShader(ShaderType::TEXTURE_STD);
@@ -154,7 +108,7 @@ int main(void)
     Texture* texture1 = new Texture("resources/textures/logo.png");
     texture1->bind(0);
     ShaderMachine::get()->getShader(ShaderType::TEXTURE_STD)->setUniform("u_Texture", 0);
-    ShaderMachine::get()->getShader(ShaderType::TEXTURE_STD)->setUniform("u_MVP", projection);
+    ShaderMachine::get()->getShader(ShaderType::TEXTURE_STD)->setUniform("u_MVP", MVP);
     
     //Creating Renderer
     Renderer* renderer = new Renderer;

@@ -1,6 +1,61 @@
 #pragma once
 #include <Defines.h>
+#include "BaseClasses/Shader.h"
 #include <fstream>
+
+/**
+ * global vars and macros for cycling color
+ */
+#define COLOR_CYCLE_SPEED 0.01f
+#define GB_BIAS_CYCLE_SPEED 0.005f
+#define COLOR_MIN_VALUE 0.2f
+#define COLOR_GB_BIAS_DEF 0.2f
+#define COLOR_POOL_SIZE 2.0f
+
+static vec3 used_color{0.f, 0.f, 0.f};
+static float bias = COLOR_GB_BIAS_DEF;
+static bool bBiasIncrement = true;
+static bool bRedIncrement = true;
+
+void cycleRectColor(Shader* _shaderProgram)
+{
+    if(!_shaderProgram)
+        return;
+
+    //create color pool
+    float pool = COLOR_POOL_SIZE;
+    //check if need to change color dynamic direction
+    if(used_color.x >= 1.f)
+    {
+        bRedIncrement = false;
+    }
+    else if(used_color.x <= COLOR_MIN_VALUE)
+    {
+        bRedIncrement = true;
+    }
+
+    //calculate new color based on red and color pool
+    used_color.x += (bRedIncrement) ? (COLOR_CYCLE_SPEED) : (-COLOR_CYCLE_SPEED);
+    pool -= used_color.x;
+    used_color.y = pool * bias;
+    pool -= used_color.y;
+    used_color.z = pool;
+
+    //check if need to change green and blue bias change direction
+    if(bias >= 1.f)
+    {
+        bBiasIncrement = false;
+    }
+    else if(bias <= COLOR_GB_BIAS_DEF)
+    {
+        bBiasIncrement = true;
+    }
+    //calculate new bias for frame
+    bias += (bBiasIncrement) ? (GB_BIAS_CYCLE_SPEED) : (-GB_BIAS_CYCLE_SPEED);
+
+    vec4 color{used_color.x, used_color.y, used_color.z, 1.0f};
+    _shaderProgram->setUniform("u_Color", color);
+}
 
 namespace shaderUtils
 {
