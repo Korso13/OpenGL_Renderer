@@ -1,6 +1,8 @@
 #include <PCH.h>
 #include <Defines.h>
 #include <cstdio>
+#include <ImGUI/imgui.h>
+#include <ImGUI/imgui_impl_glfw.h>
 
 #include "BaseClasses/Texture.h"
 #include "BaseClasses/VertexAttributes.h"
@@ -13,6 +15,7 @@
 
 #include "GLM/glm.hpp"
 #include "GLM/gtc/matrix_transform.hpp"
+#include "ImGUI/imgui_impl_opengl3.h"
 
 #define RECT_VERTBUF_SIZE 8
 #define TRIANGLE_VERTBUF_SIZE 6
@@ -26,7 +29,7 @@ int main(void)
     /* Initialize the library */
     if (!glfwInit())
         return -1;
-
+    
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -95,10 +98,10 @@ int main(void)
     glm::mat4 projection = glm::ortho(0.f, 960.f, 0.0f, 540.0f, -1.f, 1.f);
 
     glm::mat4 view = glm::mat4(1.f);
-    view = glm::translate(view, glm::vec3(-200.f, 0.f, 0.f));
+    view = glm::translate(view, glm::vec3(0.f, 0.f, 0.f));
 
     glm::mat4 model = glm::mat4(1.f);
-    model = glm::translate(model, glm::vec3(400.f, 0.f, 0.f));
+    model = glm::translate(model, glm::vec3(0.f, 0.f, 0.f));
     
     glm::mat4 MVP =  projection * view * model;
     
@@ -112,7 +115,16 @@ int main(void)
     
     //Creating Renderer
     Renderer* renderer = new Renderer;
-    
+
+    //Creating ImGUI debugger
+    ImGui::CreateContext();
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplOpenGL3_Init();
+    ImGui::StyleColorsDark();
+    bool show_demo_window = true;
+    bool show_another_window = false;
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    glm::vec3 position(0.f, 0.f, 0.f);
 //============================================================================================================
  
     /* Loop until the user closes the window */
@@ -120,11 +132,36 @@ int main(void)
     {
         /* Render here */
         renderer->clear();
+        
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
 
+        // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
+        {
+            static float f = 0.0f;
+            static int counter = 0;
+            //ImGui::ShowDemoWindow();
+            ImGui::Begin("Tester");                
+            ImGui::Text("Plane position:");            
+            ImGui::SliderFloat2("float", &position.x, 0.0f, 960.0f);           
+
+            ImGui::SeparatorText("Useful data");
+            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
+            ImGui::End();
+        }
+
+        model = glm::translate(glm::mat4(1.f), position);
+        glm::mat4 MVP =  projection * view * model;
+        ShaderMachine::get()->getShader(ShaderType::TEXTURE_STD)->setUniform("u_MVP", MVP);
+        
         //setting rectangle color
         //cycleRectColor(ShaderMachine::get()->getShader(ShaderType::SIMPLE));
         texture1->bind(0);
         renderer->draw(vao1, ShaderType::TEXTURE_STD);
+
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         
         /* Swap front and back buffers */
         GLCall(glfwSwapBuffers(window));
@@ -132,6 +169,10 @@ int main(void)
         /* Poll for and process events */
         GLCall(glfwPollEvents());
     }
+
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
     
     delete vao1;
     glfwTerminate();

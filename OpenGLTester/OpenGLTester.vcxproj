@@ -159,6 +159,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\external\include\GLM\detail\glm.cpp" />
+    <ClCompile Include="..\external\include\ImGUI\imgui.cpp" />
+    <ClCompile Include="..\external\include\ImGUI\imgui_demo.cpp" />
+    <ClCompile Include="..\external\include\ImGUI\imgui_draw.cpp" />
+    <ClCompile Include="..\external\include\ImGUI\imgui_impl_glfw.cpp" />
+    <ClCompile Include="..\external\include\ImGUI\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="..\external\include\ImGUI\imgui_tables.cpp" />
+    <ClCompile Include="..\external\include\ImGUI\imgui_widgets.cpp" />
     <ClCompile Include="..\external\include\STB\stb_image.cpp" />
     <ClCompile Include="OpenGLTester.cpp" />
     <ClCompile Include="source\BaseClasses\IndexBuffer.cpp" />
@@ -742,6 +749,15 @@
     <ClInclude Include="..\external\include\GLM\vec3.hpp" />
     <ClInclude Include="..\external\include\GLM\vec4.hpp" />
     <ClInclude Include="..\external\include\GLM\vector_relational.hpp" />
+    <ClInclude Include="..\external\include\ImGUI\imconfig.h" />
+    <ClInclude Include="..\external\include\ImGUI\imgui.h" />
+    <ClInclude Include="..\external\include\ImGUI\imgui_impl_glfw.h" />
+    <ClInclude Include="..\external\include\ImGUI\imgui_impl_opengl3.h" />
+    <ClInclude Include="..\external\include\ImGUI\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="..\external\include\ImGUI\imgui_internal.h" />
+    <ClInclude Include="..\external\include\ImGUI\imstb_rectpack.h" />
+    <ClInclude Include="..\external\include\ImGUI\imstb_textedit.h" />
+    <ClInclude Include="..\external\include\ImGUI\imstb_truetype.h" />
     <ClInclude Include="..\external\include\STB\stb_image.h" />
     <ClInclude Include="source\BaseClasses\IndexBuffer.h" />
     <ClInclude Include="source\BaseClasses\Shader.h" />
