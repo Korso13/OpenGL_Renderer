@@ -323,6 +323,7 @@
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
     <ClCompile Include="source\Utilities\ImG_debuger.cpp" />
+    <ClInclude Include="source\Utilities\ImG_templateImpl.h" />
     <ClCompile Include="source\Utilities\ShaderLib.cpp" />
   </ItemGroup>
   <ItemGroup>
