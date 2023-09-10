@@ -322,6 +322,7 @@
       <AdditionalIncludeDirectories>C:\C++\OpenGL\OpenGLTester\OpenGLTester\external/include; C:\C++\OpenGL\OpenGLTester\OpenGLTester\OpenGLTester\source</AdditionalIncludeDirectories>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
+    <ClCompile Include="source\Utilities\ImG_debuger.cpp" />
     <ClCompile Include="source\Utilities\ShaderLib.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -770,6 +771,7 @@
     <ClInclude Include="source\ManagingClasses\VertexAO.h" />
     <ClInclude Include="source\PCH.h" />
     <ClInclude Include="source\Utilities\GLErrorCatcher.h" />
+    <ClInclude Include="source\Utilities\ImG_debuger.h" />
     <ClInclude Include="source\Utilities\ShaderLib.h" />
     <ClInclude Include="source\Utilities\ShaderUtilities.h" />
   </ItemGroup>
