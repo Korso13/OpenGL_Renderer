@@ -322,7 +322,13 @@
       <AdditionalIncludeDirectories>C:\C++\OpenGL\OpenGLTester\OpenGLTester\external/include; C:\C++\OpenGL\OpenGLTester\OpenGLTester\OpenGLTester\source</AdditionalIncludeDirectories>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
+    <ClCompile Include="source\Menu\ClearColorTest.cpp" />
+    <ClCompile Include="source\Menu\MainMenuItem.cpp" />
+    <ClCompile Include="source\Menu\TextureRenderTest.cpp" />
     <ClCompile Include="source\Utilities\ImG_debuger.cpp" />
+    <ClInclude Include="source\Menu\ClearColorTest.h" />
+    <ClInclude Include="source\Menu\MainMenuItem.h" />
+    <ClInclude Include="source\Menu\TextureRenderTest.h" />
     <ClInclude Include="source\Utilities\ImG_templateImpl.h" />
     <ClCompile Include="source\Utilities\ShaderLib.cpp" />
   </ItemGroup>

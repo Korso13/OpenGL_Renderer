@@ -7,6 +7,7 @@
 //uncomment one of two. Determines whether Renderer class is singlton or allows multiple instances.
 #define MULTIRENDER
 //#define SINGLERENDER
+
 #define DEBUG_UI ImG_debuger::get()
 
 //using and typedefs

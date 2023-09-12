@@ -8,7 +8,8 @@ enum class DebugDataType
     FLOAT,
     COLOR,
     INT,
-    BOOL
+    BOOL,
+    BUTTON
 };
 
 enum class ImGUI_ToolType
@@ -45,6 +46,7 @@ struct ImGUI_folder
     std::unordered_map<std::string, elementData<float>> colors;
     std::unordered_map<std::string, elementData<int>>   ints;
     std::unordered_map<std::string, elementData<bool>>  bools;
+    std::unordered_map<std::string, std::function<void()>>  buttons;
 
     std::map<size_t, std::pair<DebugDataType, std::string>> renderOrder;
 };
@@ -69,6 +71,7 @@ public:
 
     bool folderExists(const std::string& _folderName);
     void addFolder(std::string&& _folderName);
+    void addMainMenuItem(const std::string& _menuName, std::function<void()>&& _menuActivationCB);
     
     template<typename T>
     void addDebugValueToFolder(
@@ -76,25 +79,28 @@ public:
         DebugDataType _type,
         std::string _debugValueCaption,
         T* _valueRef,
-        const size_t _valuesCount,
-        ImGUI_ToolType _editToolType,
+        const size_t _valuesCount = 1,
+        ImGUI_ToolType _editToolType = ImGUI_ToolType::SLIDER,
         const T _rangeMin = 0,
         const T _rangeMax = 0
         )
     {
         ADDDEBUGVALUE_IMPL
     }
+
+    void addDebugButtonToFolder(const std::string& _folder, const std::string& _buttonName, std::function<void()>&& _btnActivationCB);
     
 private:
     
     ImG_debuger();
-
+    
     void generateImGUIContent();
     void handleFloatElement(const std::string& _folder, const std::string& _name);
     void handleIntElement(const std::string& _folder, const std::string& _name);
     void handleColorElement(const std::string& _folder, const std::string& _name);
     void handleBoolElement(const std::string& _folder, const std::string& _name);
-
+    void handleButtonElement(const std::string& _folder, const std::string& _name);
+    
 private:
     
     static ImG_debuger* m_instance;

@@ -15,6 +15,19 @@ ImG_debuger::ImG_debuger()
     : io(getIOContext())
 {
     (void)io;
+    addFolder("Main menu");
+}
+
+void ImG_debuger::addDebugButtonToFolder(const std::string& _folder, const std::string& _buttonName, std::function<void()>&& _btnActivationCB)
+{
+    if(!folderExists(_folder))
+        addFolder(std::string(_folder));
+
+    m_imguiFolders[_folder].buttons.emplace(_buttonName, _btnActivationCB);
+
+    //registering in render index
+    size_t renderIndex = m_imguiFolders[_folder].renderOrder.size();
+    m_imguiFolders[_folder].renderOrder.emplace(renderIndex, std::pair(DebugDataType::BUTTON, _buttonName));
 }
 
 void ImG_debuger::initImGUI(GLFWwindow* _window)
@@ -53,6 +66,9 @@ void ImG_debuger::generateImGUIContent()
                     break;
                 case DebugDataType::BOOL:
                     handleBoolElement(folder.first, Record.second);
+                    break;
+                case DebugDataType::BUTTON:
+                    handleButtonElement(folder.first, Record.second);
                     break;
                 default:
                     break;
@@ -182,6 +198,17 @@ void ImG_debuger::handleBoolElement(const std::string& _folder, const std::strin
     ImGui::Checkbox(_name.c_str(), m_imguiFolders[_folder].bools[_name].values);
 }
 
+void ImG_debuger::handleButtonElement(const std::string& _folder, const std::string& _name)
+{
+    if(!m_imguiFolders[_folder].buttons[_name])
+        return;
+
+    if(ImGui::Button(_name.c_str()))
+    {
+        m_imguiFolders[_folder].buttons[_name]();
+    }
+}
+
 void ImG_debuger::imGUI_Render()
 {
     ImGui_ImplOpenGL3_NewFrame();
@@ -209,3 +236,13 @@ void ImG_debuger::addFolder(std::string&& _folderName)
 {
     m_imguiFolders.emplace(_folderName, ImGUI_folder());
 }
+
+void ImG_debuger::addMainMenuItem(const std::string& _menuName, std::function<void()>&& _menuActivationCB)
+{
+    addDebugButtonToFolder(
+        "Main menu",
+        _menuName,
+        std::forward<std::function<void()>>(_menuActivationCB)
+    );
+}
+
