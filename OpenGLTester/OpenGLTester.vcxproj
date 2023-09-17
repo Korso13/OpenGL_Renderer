@@ -169,6 +169,9 @@
     <ClCompile Include="..\external\include\STB\stb_image.cpp" />
     <ClCompile Include="OpenGLTester.cpp" />
     <ClCompile Include="source\BaseClasses\IndexBuffer.cpp" />
+    <ClCompile Include="source\BaseClasses\RenderObjects\Multipolygon.cpp" />
+    <ClCompile Include="source\BaseClasses\RenderObjects\Quad.cpp" />
+    <ClCompile Include="source\BaseClasses\RenderObjects\RenderPrimitive.cpp" />
     <ClCompile Include="source\BaseClasses\Shader.cpp" />
     <ClCompile Include="source\BaseClasses\Texture.cpp" />
     <ClCompile Include="source\BaseClasses\VertexAttributes.cpp" />
@@ -322,10 +325,16 @@
       <AdditionalIncludeDirectories>C:\C++\OpenGL\OpenGLTester\OpenGLTester\external/include; C:\C++\OpenGL\OpenGLTester\OpenGLTester\OpenGLTester\source</AdditionalIncludeDirectories>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
+    <ClCompile Include="source\Menu\BatchRenderTest.cpp" />
     <ClCompile Include="source\Menu\ClearColorTest.cpp" />
     <ClCompile Include="source\Menu\MainMenuItem.cpp" />
     <ClCompile Include="source\Menu\TextureRenderTest.cpp" />
     <ClCompile Include="source\Utilities\ImG_debuger.cpp" />
+    <ClInclude Include="source\BaseClasses\RenderObjects\Multipolygon.h" />
+    <ClInclude Include="source\BaseClasses\RenderObjects\Quad.h" />
+    <ClInclude Include="source\BaseClasses\RenderObjects\RenderObject.h" />
+    <ClInclude Include="source\BaseClasses\RenderObjects\RenderPrimitive.h" />
+    <ClInclude Include="source\Menu\BatchRenderTest.h" />
     <ClInclude Include="source\Menu\ClearColorTest.h" />
     <ClInclude Include="source\Menu\MainMenuItem.h" />
     <ClInclude Include="source\Menu\TextureRenderTest.h" />

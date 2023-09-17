@@ -7,5 +7,6 @@
 #include <iostream>
 #include <unordered_map>
 #include <map>
+#include <array>
 #include "STB/stb_image.h"
 #include <functional>

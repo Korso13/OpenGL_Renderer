@@ -9,10 +9,12 @@
 //#define SINGLERENDER
 
 #define DEBUG_UI ImG_debuger::get()
+#define M_SPTR std::make_shared
 
 //using and typedefs
 template<typename Ty>
 using SPTR = std::shared_ptr<Ty>;
+
 
 //enums
 enum class ShaderType
@@ -88,3 +90,11 @@ struct Uniforms
     std::unordered_map<std::string, GLint> m4Uniforms;
 };
 
+struct Vertex
+{
+    glm::vec3 Position;
+    glm::vec4 Color;
+    glm::vec2 UV;
+    unsigned int TextureID = 0;
+    unsigned int VertexIndex = 0;
+};

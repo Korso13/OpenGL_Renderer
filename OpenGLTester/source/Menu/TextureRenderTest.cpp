@@ -129,6 +129,10 @@ void TextureRenderTest::prepareTextures()
     ShaderMachine::get()->getShader(ShaderType::TEXTURE_STD)->setUniform("u_Texture", 0);
     ShaderMachine::get()->getShader(ShaderType::TEXTURE_STD)->setUniform("u_MVP", m_MVP);
 
+    //setting blend functions
+    GLCall(glEnable(GL_BLEND));
+    GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+    
     //Creating Renderer
     m_renderer = new Renderer;
 }
