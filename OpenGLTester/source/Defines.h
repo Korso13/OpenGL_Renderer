@@ -21,7 +21,8 @@ enum class ShaderType
 {
     NONE = 0,
     SIMPLE = 1,
-    TEXTURE_STD = 2
+    TEXTURE_STD = 2,
+    BATCH_RENDER = 3
 };
 
 //structs
@@ -88,13 +89,14 @@ struct Uniforms
     std::unordered_map<std::string, GLint> v3Uniforms;
     std::unordered_map<std::string, GLint> v4Uniforms;
     std::unordered_map<std::string, GLint> m4Uniforms;
+    std::unordered_map<std::string, std::pair<GLint, int>> ivUniforms;
 };
 
 struct Vertex
 {
     glm::vec3 Position;
-    glm::vec4 Color;
+    glm::vec4 Color = {1.f, 1.f, 1.f, 1.f};
     glm::vec2 UV;
-    unsigned int TextureID = 0;
+    int TextureID = 0;
     unsigned int VertexIndex = 0;
 };

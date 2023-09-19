@@ -1,6 +1,6 @@
 #include "Shader.h"
-#include "Utilities/ShaderUtilities.h"
 #include "Utilities/GLErrorCatcher.h"
+#include "Utilities/ShaderUtilities.h"
 
 
 Shader::Shader(const std::string& _vsPath, const std::string& _fsPath)
@@ -51,7 +51,32 @@ void Shader::setUniform(const std::string& _uniformName, int _value)
     }
     else
     {
-        std::cout << "No uniform named "<< _uniformName << " found in shader!" << std::endl;;
+        std::cout << "No uniform named "<< _uniformName << " found in shader!" << std::endl;
+    }
+}
+
+void Shader::setUniform(const std::string& _uniformName, int* _value, int count)
+{
+    if(m_uniforms.ivUniforms.find(_uniformName) != m_uniforms.ivUniforms.end())
+    {
+        if(m_uniforms.ivUniforms.at(_uniformName).second < count)
+        {
+            std::cout << "Passed too many values for uniform " << _uniformName << "!" << std::endl;
+            return;
+        }
+        
+        if(m_uniforms.ivUniforms.at(_uniformName).first != -1)
+        {
+            GLCall(glUniform1iv(m_uniforms.ivUniforms.at(_uniformName).first, count, _value));
+        }
+        else
+        {
+            std::cout << "No uniform var " << _uniformName << " found in compiled shader!" << std::endl;
+        }
+    }
+    else
+    {
+        std::cout << "No uniform named "<< _uniformName << " found in shader!" << std::endl;
     }
 }
 
@@ -70,7 +95,7 @@ void Shader::setUniform(const std::string& _uniformName, float _value)
     }
     else
     {
-        std::cout << "No uniform named "<< _uniformName << " found in shader!" << std::endl;;
+        std::cout << "No uniform named "<< _uniformName << " found in shader!" << std::endl;
     }
 }
 
@@ -89,7 +114,7 @@ void Shader::setUniform(const std::string& _uniformName, vec2 _value)
     }
     else
     {
-        std::cout << "No uniform named "<< _uniformName << " found in shader!" << std::endl;;
+        std::cout << "No uniform named "<< _uniformName << " found in shader!" << std::endl;
     }
 }
 
@@ -108,7 +133,7 @@ void Shader::setUniform(const std::string& _uniformName, vec3 _value)
     }
     else
     {
-        std::cout << "No uniform named "<< _uniformName << " found in shader!" << std::endl;;
+        std::cout << "No uniform named "<< _uniformName << " found in shader!" << std::endl;
     }
 }
 
@@ -127,7 +152,7 @@ void Shader::setUniform(const std::string& _uniformName, vec4 _value)
     }
     else
     {
-        std::cout << "No uniform named "<< _uniformName << " found in shader!" << std::endl;;
+        std::cout << "No uniform named "<< _uniformName << " found in shader!" << std::endl;
     }
 }
 
@@ -146,7 +171,7 @@ void Shader::setUniform(const ::std::string& _uniformName, const glm::mat4& _val
     }
     else
     {
-        std::cout << "No uniform named "<< _uniformName << " found in shader!" << std::endl;;
+        std::cout << "No uniform named "<< _uniformName << " found in shader!" << std::endl;
     }
 }
 
@@ -161,6 +186,11 @@ void Shader::cacheUniformLocations()
     for (auto& [varName, value] : m_uniforms.iUniforms)
     {
         value = getUniformLocation(varName);
+    }
+    //Int vectors
+    for (auto& [varName, value] : m_uniforms.ivUniforms)
+    {
+        value.first = getUniformLocation(varName);
     }
     //floats
     for (auto& [varName, value] : m_uniforms.fUniforms)

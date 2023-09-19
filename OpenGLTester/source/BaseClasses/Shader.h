@@ -18,6 +18,7 @@ public:
     const Uniforms& getAllUniforms() const {return m_uniforms;}
     
     void setUniform(const std::string& _uniformName, int _value);
+    void setUniform(const std::string& _uniformName, int* _value, int count);
     void setUniform(const std::string& _uniformName, float _value);
     void setUniform(const std::string& _uniformName, vec2 _value);
     void setUniform(const std::string& _uniformName, vec3 _value);

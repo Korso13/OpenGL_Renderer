@@ -187,11 +187,27 @@ namespace shaderUtils
                     }
                     else if(line.find("sampler2D") != std::string::npos)
                     {
-                        pos = line.find("sampler2D") + 9 + 1; //symbol after data type plus space
-                        varName = line.substr(pos);
-                        varName.pop_back();
-                        foundUniforms.iUniforms.emplace(varName, -1);
-                        continue;
+                        //checking for array of samplers aka multiple textures
+                        if(line.find('[') != std::string::npos)
+                        {
+                            size_t size;
+                            pos = line.find('[') + 1;
+                            size = std::atoi(line.substr(pos).c_str());
+                            pos = line.find(']') + 2;
+                            varName = line.substr(pos);
+                            varName.pop_back();
+                            foundUniforms.ivUniforms.emplace(varName, std::pair<GLint, size_t>{-1, size});
+                            continue;
+                        }
+                        else
+                        {
+                           //singular sampler case:
+                           pos = line.find("sampler2D") + 9 + 1; //symbol after data type plus space
+                           varName = line.substr(pos);
+                           varName.pop_back();
+                           foundUniforms.iUniforms.emplace(varName, -1);
+                           continue;
+                        }
                     }
                     else if(line.find("mat4") != std::string::npos)
                     {

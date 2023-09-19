@@ -10,5 +10,11 @@
    "index": 2,
    "vsPath": "shaders/VS/stdTextureShader.vs",
    "fsPath": "shaders/FS/stdTextureShader.fs"
+ },
+ "BatchRender":
+ {
+   "index": 3,
+   "vsPath": "shaders/VS/batchRender.vs",
+   "fsPath": "shaders/FS/batchRender.fs"
  }
 }

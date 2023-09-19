@@ -43,10 +43,10 @@ void Quad::makeQuad(glm::uvec2 _size, glm::vec3 _position, unsigned int _texture
     v4->VertexIndex = 3;
     m_vertices.push_back(v4);
     
-    m_indices.emplace_back(
+    m_indices = {
         0, 1, 2,
         0, 2, 3
-    );
+    };
 }
 
 void Quad::setPosition(glm::vec3& _newPosition)

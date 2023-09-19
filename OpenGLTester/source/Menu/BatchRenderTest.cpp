@@ -76,14 +76,14 @@ void BatchRenderTest::prepareTextures()
     m_vAttributes->addAttribute({GL_FLOAT, 3, GL_FALSE});
     m_vAttributes->addAttribute({GL_FLOAT, 4, GL_FALSE});
     m_vAttributes->addAttribute({GL_FLOAT, 2, GL_FALSE});
-    m_vAttributes->addAttribute({GL_UNSIGNED_INT, 1, GL_FALSE});
+    m_vAttributes->addAttribute({GL_INT, 1, GL_FALSE});
     m_vAttributes->addAttribute({GL_UNSIGNED_INT, 1, GL_FALSE});
 
     m_vao = M_SPTR<VertexAO>(*(new VertexAO()));
     //TODO:: transition all buffer wrappers to SPTR
     m_vao->addBuffer(m_vBuffer.get(), m_iBuffer.get(), m_vAttributes.get());
 
-    //TODO:: write new shader that can take batch-rendering attributes, multiple texture samplers
+    //TODO:: rewrite to use new shader that takes batch-rendering attributes, multiple texture samplers
     //generating shader
     ShaderMachine::get()->setShader(ShaderType::TEXTURE_STD);
     m_texture1 = new Texture("resources/textures/logo.png");
