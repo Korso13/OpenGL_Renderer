@@ -13,6 +13,7 @@ Shader::Shader(const std::string& _vsPath, const std::string& _fsPath)
     m_uniforms = shaderUtils::GetUniforms(_vsPath, _fsPath);
 
     m_RendererID = shaderUtils::CreateShader(vsSource, fsSource);
+    Bind();
     cacheUniformLocations();
 }
 
@@ -21,6 +22,7 @@ Shader::~Shader()
     GLCall(glDeleteProgram(m_RendererID));
     m_uniforms.fUniforms.clear();
     m_uniforms.iUniforms.clear();
+    m_uniforms.ivUniforms.clear();
     m_uniforms.v2Uniforms.clear();
     m_uniforms.v3Uniforms.clear();
     m_uniforms.v4Uniforms.clear();
@@ -46,7 +48,13 @@ void Shader::setUniform(const std::string& _uniformName, int _value)
         }
         else
         {
-            std::cout << "No uniform var " << _uniformName << " found in compiled shader!" << std::endl;
+            GLint loc = getUniformLocation(_uniformName);
+            if(loc == -1)
+                std::cout << "No uniform var " << _uniformName << " found in compiled shader!" << std::endl;
+            else
+            {
+                std::cout << "Uniform var " << _uniformName << " found in compiled shader after 2nd attempt!" << std::endl;
+            }
         }
     }
     else
@@ -71,12 +79,19 @@ void Shader::setUniform(const std::string& _uniformName, int* _value, int count)
         }
         else
         {
-            std::cout << "No uniform var " << _uniformName << " found in compiled shader!" << std::endl;
+            GLint loc = getUniformLocation(_uniformName);
+            if(loc == -1)
+                std::cout << "No uniform var " << _uniformName << " for int arrays found in compiled shader!" << std::endl;
+            else
+            {
+                std::cout << "Uniform var " << _uniformName << " for int arrays found in compiled shader after 2nd attempt!" << std::endl;
+            }
         }
+
     }
     else
     {
-        std::cout << "No uniform named "<< _uniformName << " found in shader!" << std::endl;
+        std::cout << "No uniform named "<< _uniformName << " for int arrays found in shader!" << std::endl;
     }
 }
 
@@ -166,7 +181,13 @@ void Shader::setUniform(const ::std::string& _uniformName, const glm::mat4& _val
         }
         else
         {
-            std::cout << "No uniform var " << _uniformName << " found in compiled shader!" << std::endl;
+            GLint loc = getUniformLocation(_uniformName);
+            if(loc == -1)
+                std::cout << "No uniform var " << _uniformName << " for mat4 found in compiled shader!" << std::endl;
+            else
+            {
+                std::cout << "Uniform var " << _uniformName << " for mat4 found in compiled shader after 2nd attempt!" << std::endl;
+            }
         }
     }
     else

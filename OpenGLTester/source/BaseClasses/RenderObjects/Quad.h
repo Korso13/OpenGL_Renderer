@@ -35,5 +35,5 @@ private:
     
     glm::uvec2 m_size;
     glm::vec3 m_position;
-    unsigned int m_textureID;
+    float m_textureID;
 };

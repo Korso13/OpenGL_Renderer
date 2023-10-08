@@ -95,8 +95,8 @@ struct Uniforms
 struct Vertex
 {
     glm::vec3 Position;
-    glm::vec4 Color = {1.f, 1.f, 1.f, 1.f};
+    glm::vec4 Color /*= {1.f, 1.f, 1.f, 1.f}*/;
     glm::vec2 UV;
-    int TextureID = 0;
+    float TextureID = 0.f;
     unsigned int VertexIndex = 0;
 };

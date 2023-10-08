@@ -23,6 +23,7 @@ private:
 
     void prepareMVP();
     void prepareTextures();
+    void updateQuadsTranslations();
     
 private:
 
@@ -43,8 +44,6 @@ private:
     SPTR<VertexAttributes> m_vAttributes;
     SPTR<VertexAO> m_vao;
     
-    glm::vec3 m_logo1Pos = glm::vec3(60.f, 60.f, 0.f);
-    glm::mat4 m_logo1Trans = glm::mat4(1.f);
+    glm::vec3 m_logo1Pos = glm::vec3(40.f, 60.f, 0.f);
     glm::vec3 m_logo2Pos = glm::vec3(60.f, 60.f, 0.f);
-    glm::mat4 m_logo2Trans = glm::mat4(1.f);
 };

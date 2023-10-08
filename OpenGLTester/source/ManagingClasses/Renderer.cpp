@@ -13,7 +13,14 @@ void Renderer::draw(VertexAO* _vertexArray, const ShaderType _shaderType, GLint 
     if(!_vertexArray)
         return;
     
-    ShaderMachine::get()->setShader(_shaderType);
+    if(!ShaderMachine::get()->setShader(_shaderType))
+    {
+        std::cout << "Renderer::draw error - shader "
+                    << std::to_string(static_cast<int>(_shaderType))
+                    << " not found!"
+                    << std::endl;
+        return;
+    }
     _vertexArray->bind(); //binds vertex buffer, index buffer and vertex attributes
     const int indexSize = (_vertexArray->getIndexBuffers().empty()) ? (6) : (_vertexArray->getIndexBuffers()[0]->getCount()); //precaution against vertexAO without index buffer
     GLCall(glDrawElements(renderPrimitiveType, indexSize, GL_UNSIGNED_INT, 0));

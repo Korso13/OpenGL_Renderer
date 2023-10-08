@@ -31,8 +31,8 @@ TextureRenderTest::TextureRenderTest()
         &m_viewTranslation.x,
         2,
         ImGUI_ToolType::SLIDER,
-        -1000.f,
-        1000.f);
+        -300.f,
+        300.f);
     DEBUG_UI->addDebugValueToFolder<float>(
         "Texture Render Test",
         DebugDataType::FLOAT,
@@ -41,7 +41,7 @@ TextureRenderTest::TextureRenderTest()
         2,
         ImGUI_ToolType::SLIDER,
         0.f,
-        1000.f);
+        500.f);
     DEBUG_UI->addDebugValueToFolder<float>(
         "Texture Render Test",
         DebugDataType::FLOAT,
@@ -50,7 +50,7 @@ TextureRenderTest::TextureRenderTest()
         2,
         ImGUI_ToolType::SLIDER,
         0.f,
-        1000.f);
+        500.f);
 }
 
 TextureRenderTest::~TextureRenderTest()
@@ -79,7 +79,13 @@ void TextureRenderTest::onRender()
     m_logo1Trans = glm::translate(glm::mat4(1.f), m_logo1Pos);
     m_view = glm::translate(glm::mat4(1.f), m_viewTranslation);
     glm::mat4 MVP1 =  m_projection * m_view * m_logo1Trans;
-    ShaderMachine::get()->getShader(ShaderType::TEXTURE_STD)->setUniform("u_MVP", MVP1);
+    auto shader = ShaderMachine::get()->getShader(ShaderType::TEXTURE_STD);
+    if(!shader)
+    {
+        std::cout << "Shader TEXTURE_STD not found!" << std::endl;
+        return;
+    }
+    shader->setUniform("u_MVP", MVP1);
 
     //making a draw call
     m_texture1->bind(0); //binding texture
@@ -91,7 +97,7 @@ void TextureRenderTest::onRender()
         m_logo2Trans = glm::translate(glm::mat4(1.f), m_logo2Pos);
         m_view = glm::translate(glm::mat4(1.f), m_viewTranslation);
         glm::mat4 MVP2 =  m_projection * m_view * m_logo2Trans;
-        ShaderMachine::get()->getShader(ShaderType::TEXTURE_STD)->setUniform("u_MVP", MVP2);
+        shader->setUniform("u_MVP", MVP2);
 
         //making a draw call
         m_renderer->draw(m_vao1, ShaderType::TEXTURE_STD);
@@ -126,8 +132,14 @@ void TextureRenderTest::prepareTextures()
     ShaderMachine::get()->setShader(ShaderType::TEXTURE_STD);
     m_texture1 = new Texture("resources/textures/logo.png");
     m_texture1->bind(0);
-    ShaderMachine::get()->getShader(ShaderType::TEXTURE_STD)->setUniform("u_Texture", 0);
-    ShaderMachine::get()->getShader(ShaderType::TEXTURE_STD)->setUniform("u_MVP", m_MVP);
+    auto shader = ShaderMachine::get()->getShader(ShaderType::TEXTURE_STD);
+    if(!shader)
+    {
+        std::cout << "Shader TEXTURE_STD not found during preparation of textures!" << std::endl;
+        return;
+    }
+    shader->setUniform("u_Texture", 0);
+    shader->setUniform("u_MVP", m_MVP);
 
     //setting blend functions
     GLCall(glEnable(GL_BLEND));

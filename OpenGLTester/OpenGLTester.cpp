@@ -6,15 +6,62 @@
 #include <ImGUI/imgui.h>
 #include <ImGUI/imgui_impl_glfw.h>
 #include "ImGUI/imgui_impl_opengl3.h"
+#include "Menu/BatchRenderTest.h"
 #include "Menu/ClearColorTest.h"
 #include "Menu/TextureRenderTest.h"
 #include "source/Utilities/GLErrorCatcher.h"
 
 enum class MMSelector
 {
+    NONE,
     TEXTURE_RENDER,
-    CLEAR_COLOR
+    CLEAR_COLOR,
+    BATCH_RENDER
 };
+
+static MMSelector RenderSelector = MMSelector::NONE;
+static TextureRenderTest* TextureRender = nullptr;
+static ClearColorTest* ClearColor = nullptr;
+static BatchRenderTest* BatchRender = nullptr;
+
+static void switchTesters(MMSelector tester)
+{
+    switch (RenderSelector)
+    {
+    case MMSelector::NONE:
+        break;
+    case MMSelector::TEXTURE_RENDER:
+        delete TextureRender;
+        break;
+    case MMSelector::CLEAR_COLOR:
+        delete ClearColor;
+        break;
+    case MMSelector::BATCH_RENDER:
+        delete BatchRender;
+        break;
+    default:
+        break;
+    }
+
+    RenderSelector = tester;
+    
+    switch (tester)
+    {
+    case MMSelector::NONE:
+        break;
+    case MMSelector::TEXTURE_RENDER:
+        TextureRender = new TextureRenderTest();
+        break;
+    case MMSelector::CLEAR_COLOR:
+        ClearColor = new ClearColorTest();
+        break;
+    case MMSelector::BATCH_RENDER:
+        BatchRender = new BatchRenderTest();
+        break;
+    default: 
+        break;
+    }
+}
 
 int main(void)
 {
@@ -64,19 +111,21 @@ int main(void)
     //Creating ImGUI debugger
     DEBUG_UI->initImGUI(window);
 
-    TextureRenderTest* TextureRender = new TextureRenderTest();
-    ClearColorTest* ClearColor = new ClearColorTest();
-
     //setting up main menu buttons-selectors
-   MMSelector RenderSelector;
-    DEBUG_UI->addMainMenuItem("Texture render tester", [&RenderSelector]()
+    DEBUG_UI->addMainMenuItem("Texture render tester",
+        []()
     {
-        RenderSelector = MMSelector::TEXTURE_RENDER;
-        
+        switchTesters(MMSelector::TEXTURE_RENDER);
     });
-    DEBUG_UI->addMainMenuItem("Clear color tester", [&RenderSelector]()
+    DEBUG_UI->addMainMenuItem("Clear color tester",
+    []()
     {
-        RenderSelector = MMSelector::CLEAR_COLOR;
+        switchTesters(MMSelector::CLEAR_COLOR);
+    });
+    DEBUG_UI->addMainMenuItem("Batch render tester",
+    []()
+    {
+        switchTesters(MMSelector::BATCH_RENDER);
     });
 //============================================================================================================
  
@@ -88,10 +137,15 @@ int main(void)
         switch (RenderSelector)
         {
         case MMSelector::TEXTURE_RENDER:
-            TextureRender->onRender();
+            if(TextureRender)TextureRender->onRender();
             break;
         case MMSelector::CLEAR_COLOR:
-            ClearColor->onRender();
+            if(ClearColor)ClearColor->onRender();
+            break;
+        case MMSelector::BATCH_RENDER:
+            if(BatchRender)BatchRender->onRender();
+            break;
+        case MMSelector::NONE:
             break;
         default:
             break;

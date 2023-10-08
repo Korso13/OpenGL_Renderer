@@ -2,19 +2,19 @@
  "Simple":
  {
    "index": 1,
-   "vsPath": "shaders/VS/stdVS.vs",
-   "fsPath": "shaders/FS/stdFS.fs"
+   "vsPath": "shaders/VS/stdVS.vert",
+   "fsPath": "shaders/FS/stdFS.frag"
  },
  "TextureShader":
  {
    "index": 2,
-   "vsPath": "shaders/VS/stdTextureShader.vs",
-   "fsPath": "shaders/FS/stdTextureShader.fs"
+   "vsPath": "shaders/VS/stdTextureShader.vert",
+   "fsPath": "shaders/FS/stdTextureShader.frag"
  },
  "BatchRender":
  {
    "index": 3,
-   "vsPath": "shaders/VS/batchRender.vs",
-   "fsPath": "shaders/FS/batchRender.fs"
+   "vsPath": "shaders/VS/batchRender.vert",
+   "fsPath": "shaders/FS/batchRender.frag"
  }
 }

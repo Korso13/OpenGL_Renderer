@@ -1,5 +1,6 @@
 #pragma once
 #include <Defines.h>
+#include "Utilities/GLErrorCatcher.h"
 #include "BaseClasses/Shader.h"
 #include <fstream>
 
@@ -60,12 +61,12 @@ void cycleRectColor(Shader* _shaderProgram)
 namespace shaderUtils
 {
     //compiles provided string with source code into specified type of shader. Returns 0 on error and prints it in console
-    static GLuint CompileShader(const std::string& source, GLuint type)
+    inline GLuint CompileShader(const std::string& source, GLuint type)
     {
-        GLuint shader_id = glCreateShader(type);
+        GLuint shader_id = GLCall(glCreateShader(type));
         const char* src = source.c_str();
-        glShaderSource(shader_id, 1, &src, nullptr);
-        glCompileShader(shader_id);
+        GLCall(glShaderSource(shader_id, 1, &src, nullptr));
+        GLCall(glCompileShader(shader_id));
 
         //error handling:
         int result;
@@ -88,7 +89,7 @@ namespace shaderUtils
     }
 
     //reads source code from provided path to shader source code and writes it into provided string (_srcString)
-    static void GetSrcCode(const std::string& _path, std::string& _srcString)
+    inline void GetSrcCode(const std::string& _path, std::string& _srcString)
     {
         std::ifstream ShaderSrcFile;
         ShaderSrcFile.open(_path);
@@ -105,26 +106,26 @@ namespace shaderUtils
     }
 
     //creates shader program build using provided source code for vertex and fragment shaders. Returns program id
-    static GLuint CreateShader(const std::string& _vertexShader, const std::string& _fragmentShader)
+    inline GLuint CreateShader(const std::string& _vertexShader, const std::string& _fragmentShader)
     {
-        GLuint program = glCreateProgram();
+        GLuint program = GLCall(glCreateProgram());
         GLuint vs = shaderUtils::CompileShader(_vertexShader, GL_VERTEX_SHADER);
         GLuint fs = shaderUtils::CompileShader(_fragmentShader, GL_FRAGMENT_SHADER);
 
-        glAttachShader(program, vs);
-        glAttachShader(program, fs);
-        glLinkProgram(program);
-        glValidateProgram(program);
+        GLCall(glAttachShader(program, vs));
+        GLCall(glAttachShader(program, fs));
+        GLCall(glLinkProgram(program));
+        GLCall(glValidateProgram(program));
 
-        glDeleteShader(vs);
-        glDeleteShader(fs);
+        GLCall(glDeleteShader(vs));
+        GLCall(glDeleteShader(fs));
     
         return program;
     }
 
     //extracts uniform variables (int, float, vec2,3,4) from shader source files and returns them as a single struct.
     //does not support uniform declarations followed by a comment or ending in any way different from a semicolon!
-    static Uniforms GetUniforms(const std::string& _vsPath, const std::string& _fsPath)
+    inline Uniforms GetUniforms(const std::string& _vsPath, const std::string& _fsPath)
     {
         Uniforms foundUniforms;
         std::string sourcePaths[2];
@@ -190,12 +191,19 @@ namespace shaderUtils
                         //checking for array of samplers aka multiple textures
                         if(line.find('[') != std::string::npos)
                         {
+                            //extracting array size
                             size_t size;
                             pos = line.find('[') + 1;
                             size = std::atoi(line.substr(pos).c_str());
-                            pos = line.find(']') + 2;
+
+                            //extracting name
+                            pos = line.find("sampler2D") + 9 + 1;
                             varName = line.substr(pos);
-                            varName.pop_back();
+                            int pops = (size < 10) ? (4) : 5;
+                            for (int i = 0; i < pops; i++)
+                            {
+                                varName.pop_back();
+                            }
                             foundUniforms.ivUniforms.emplace(varName, std::pair<GLint, size_t>{-1, size});
                             continue;
                         }

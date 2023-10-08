@@ -47,7 +47,7 @@ private:
     };
     //index buffer:
     unsigned int rect1Indices[3 * 2] =
-        {
+    {
         0, 1, 2,
         0, 2, 3
     };

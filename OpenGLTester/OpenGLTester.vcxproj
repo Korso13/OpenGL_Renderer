@@ -799,15 +799,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\external\include\GLM\CMakeLists.txt" />
+    <Content Include="shaders\FS\batchRender.frag" />
+    <Content Include="shaders\FS\stdFS.frag" />
+    <Content Include="shaders\FS\stdTextureShader.frag" />
     <Content Include="shaders\ShaderList.json" />
-    <Content Include="shaders\VS\batchRender.vs" />
-    <Content Include="shaders\VS\stdTextureShader.vs" />
-    <Content Include="shaders\VS\stdVS.vs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="shaders\FS\batchRender.fs" />
-    <Compile Include="shaders\FS\stdFS.fs" />
-    <Compile Include="shaders\FS\stdTextureShader.fs" />
+    <Content Include="shaders\VS\batchRender.vert" />
+    <Content Include="shaders\VS\stdTextureShader.vert" />
+    <Content Include="shaders\VS\stdVS.vert" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="resources\textures\" />
