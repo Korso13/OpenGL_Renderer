@@ -37,13 +37,17 @@ void VertexBuffer::removeRenderObject(const std::string& _name)
 
 void VertexBuffer::bind() const
 {
+    GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_rendererId));
+    
     if(!m_renderPool.empty())
     {
         Vertex* vertices = new Vertex[m_VerticesToDraw];
+        float* verticesAlt = new float[m_VerticesToDraw*12];
         size_t VertexCounter = 0;
+        size_t VertexCounterAlt = 0;
         for(auto& object : m_renderPool)
         {
-            for(auto& vertex : object.second->getVertexes())
+            for(auto& vertex : object.second->getVertices())
             {
                 if(VertexCounter > (m_VerticesToDraw - 1))
                 {
@@ -53,6 +57,21 @@ void VertexBuffer::bind() const
                 
                 //filling vertices array with data from Vertex structs provided by renderable objects
                 vertices[VertexCounter] = *vertex.get();
+                std::cout << "Debug vertex " << VertexCounter << " data. Vertex index: " << vertices[VertexCounter].VertexIndex << std::endl;
+                //std::cout << "Debug vertex origin data. Vertex index: " << vertex.get()->VertexIndex << std::endl;
+                verticesAlt[VertexCounterAlt] = vertex->Position.x;
+                verticesAlt[VertexCounterAlt+1] = vertex->Position.y;
+                verticesAlt[VertexCounterAlt+2] = vertex->Position.z;
+                verticesAlt[VertexCounterAlt+3] = vertex->Position.a;
+                verticesAlt[VertexCounterAlt+4] = vertex->Color.x;
+                verticesAlt[VertexCounterAlt+5] = vertex->Color.y;
+                verticesAlt[VertexCounterAlt+6] = vertex->Color.z;
+                verticesAlt[VertexCounterAlt+7] = vertex->Color.a;
+                verticesAlt[VertexCounterAlt+8] = vertex->UV.x;
+                verticesAlt[VertexCounterAlt+9] = vertex->UV.y;
+                verticesAlt[VertexCounterAlt+10] = vertex->TextureID;
+                verticesAlt[VertexCounterAlt+11] = static_cast<float>(vertex->VertexIndex);
+                VertexCounterAlt +=12;
                 VertexCounter++;
             }
         }
@@ -60,7 +79,6 @@ void VertexBuffer::bind() const
         GLCall(glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(Vertex) * m_VerticesToDraw, vertices));
     }
     
-    GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_rendererId));
 }
 
 void VertexBuffer::unbind() const

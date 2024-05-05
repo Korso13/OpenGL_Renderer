@@ -22,6 +22,10 @@ unsigned VertexAttributes::getTypeSize(GLenum _type) const
         case(GL_UNSIGNED_BYTE): return sizeof(unsigned char);
         case(GL_BYTE):          return sizeof(char);
         
-        default: return 0;
+        default:
+            {
+                std::cout << "[VertexAttributes::getTypeSize] Tried to get unsupported type size!" << std::endl;
+                return 0;
+            }
     }
 }

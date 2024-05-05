@@ -56,15 +56,18 @@ void BatchRenderTest::onRender()
     if(!m_renderer)
         return;
 
+    //setting logos' transforms
+    updateQuadsTranslations();
+    m_vBuffer->bind(); //memo: bugs out the orange field
+    
     GLCall(glClearColor(m_clearColor.r, m_clearColor.g, m_clearColor.b, m_clearColor.a));
     m_renderer->clear();
 
-    //setting logos' transforms
-    updateQuadsTranslations();
-
     //calculating MVP
     m_view = glm::translate(glm::mat4(1.f), m_viewTranslation);
+    //auto transform = glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.f, 0.f));
     m_MVP =  m_projection * m_view * glm::mat4(1.f);
+    //m_MVP =  m_projection * m_view * transform;
     auto shader = ShaderMachine::get()->getShader(ShaderType::BATCH_RENDER);
     if(!shader)
     {
@@ -75,33 +78,38 @@ void BatchRenderTest::onRender()
 
     //making a single draw call
     m_texture1->bind(0); 
-    m_texture2->bind(1); 
+    m_texture2->bind(1);
     m_renderer->draw(m_vao.get(), ShaderType::BATCH_RENDER);
 }
 
 void BatchRenderTest::prepareMVP()
 {
     //making starting MVP matrix
+    /*m_view = glm::translate(glm::mat4(1.f), m_viewTranslation);
+    m_MVP =  m_projection * m_view * glm::mat4(1.f);*/
+
     m_view = glm::translate(glm::mat4(1.f), m_viewTranslation);
-    m_MVP =  m_projection * m_view * glm::mat4(1.f);
+    auto transform = glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.f, 0.f));
+    //m_MVP =  m_projection * m_view * glm::mat4(1.f);
+    m_MVP =  m_projection * m_view * transform;
 }
 
 void BatchRenderTest::prepareTextures()
 {
     m_vBuffer = M_SPTR<VertexBuffer>(*(new VertexBuffer));
     m_logoPlane1 = M_SPTR<Quad>(*(new Quad));
-    m_logoPlane1->makeQuad({200,200}, m_logo1Pos, 0);
-    m_logoPlane2 = M_SPTR<Quad>(*(new Quad));
-    m_logoPlane1->makeQuad({300,300}, m_logo2Pos, 1);
+    m_logoPlane1->makeQuad({300,300}, m_logo1Pos, 0);
+    /*m_logoPlane2 = M_SPTR<Quad>(*(new Quad));
+    m_logoPlane2->makeQuad({300,300}, m_logo2Pos, 1);*/
     m_vBuffer->addRenderObject("Logo1", m_logoPlane1);
-    m_vBuffer->addRenderObject("Logo2", m_logoPlane2);
+    //m_vBuffer->addRenderObject("Logo2", m_logoPlane2);
     
     m_iBuffer = M_SPTR<IndexBuffer>(*(new IndexBuffer));
     m_iBuffer->push_back_drawIndices(m_logoPlane1);
-    m_iBuffer->push_back_drawIndices(m_logoPlane2);
+    //m_iBuffer->push_back_drawIndices(m_logoPlane2);
 
     m_vAttributes = M_SPTR<VertexAttributes>(*(new VertexAttributes));
-    m_vAttributes->addAttribute({GL_FLOAT, 3, GL_FALSE});
+    m_vAttributes->addAttribute({GL_FLOAT, 4, GL_FALSE});
     m_vAttributes->addAttribute({GL_FLOAT, 4, GL_FALSE});
     m_vAttributes->addAttribute({GL_FLOAT, 2, GL_FALSE});
     m_vAttributes->addAttribute({GL_FLOAT, 1, GL_FALSE});
@@ -132,8 +140,6 @@ void BatchRenderTest::prepareTextures()
     }
     shader->Bind();
     shader->setUniform("u_Texture", textures, 2);
-    //shader->setUniform("u_TextureFallback", 0);
-    //shader->setUniform("u_Texture1", 1);
     shader->setUniform("u_MVP", m_MVP);
 
     //setting blend functions
@@ -146,6 +152,6 @@ void BatchRenderTest::prepareTextures()
 
 void BatchRenderTest::updateQuadsTranslations()
 {
-    m_logoPlane1->setPosition(m_logo1Pos);
-    m_logoPlane2->setPosition(m_logo2Pos);
+    if(m_logoPlane1)m_logoPlane1->setPosition(m_logo1Pos);
+    if(m_logoPlane2)m_logoPlane2->setPosition(m_logo2Pos);
 }

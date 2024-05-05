@@ -8,7 +8,7 @@ class RenderPrimitive : public RenderObject
 public:
     RenderPrimitive() = default;
 
-    std::vector<SPTR<Vertex>> getVertexes() override {return m_polygonData;}
+    std::vector<SPTR<Vertex>> getVertices() override {return m_polygonData;}
     size_t getVertexCount() const override {return m_polygonData.size();}
     
     void addVertex(SPTR<Vertex> _vertex) override;
