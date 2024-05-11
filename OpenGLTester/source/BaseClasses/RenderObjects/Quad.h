@@ -13,7 +13,7 @@ public:
     Quad(glm::uvec2 _size, glm::vec3 _position, unsigned int _textureID);
 
     void makeQuad(glm::uvec2 _size, glm::vec3 _position, unsigned int _textureID);
-    vec4 getPosition() const {return m_position;}
+    vec3 getPosition() const {return m_position;}
     void setPosition(glm::vec3& _newPosition);
     
     void addPolygon(SPTR<RenderPrimitive> _polygon);
@@ -27,13 +27,13 @@ public:
 
 private:
 
-    vec4 getOffsetFromCenter(const unsigned int& index);
+    vec3 getOffsetFromCenter(const unsigned int& index);
     
 private:
     std::vector<SPTR<Vertex>> m_vertices;
     std::vector<unsigned int> m_indices;
     
     glm::uvec2 m_size;
-    vec4 m_position;
-    float m_textureID;
+    vec3 m_position;
+    unsigned int m_textureID;
 };

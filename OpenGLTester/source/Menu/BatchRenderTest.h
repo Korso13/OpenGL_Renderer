@@ -31,10 +31,10 @@ private:
     
     Texture* m_texture1;
     Texture* m_texture2;
-    glm::mat4 m_projection = glm::ortho(0.f, 960.f, 0.0f, 540.0f, -1.f, 1.f);
-    glm::mat4 m_view;
-    glm::vec3 m_viewTranslation;
-    glm::mat4 m_MVP;
+    glm::mat4 m_projection = glm::ortho(0.f, 1280.f, 0.0f, 800.0f, -1.f, 1.f); //boundaries of virtual space(viewport) in ortho projection
+    glm::mat4 m_view;               //Camera projection(vertices shift from camera fustrum)
+    glm::vec3 m_viewTranslation;    //Camera position
+    glm::mat4 m_MVP;                //Model View Projection
     glm::vec4 m_clearColor{0.f, 0.f, 0.f, 1.f};
 
     SPTR<Quad> m_logoPlane1;
@@ -45,5 +45,5 @@ private:
     SPTR<VertexAO> m_vao;
     
     glm::vec3 m_logo1Pos = glm::vec3(60.f, 60.f, 0.f);
-    glm::vec3 m_logo2Pos = glm::vec3(60.f, 60.f, 0.f);
+    glm::vec3 m_logo2Pos = glm::vec3(90.f, 60.f, 0.f);
 };

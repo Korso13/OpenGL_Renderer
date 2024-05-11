@@ -9,10 +9,10 @@ VertexAttributes::VertexAttributes()
 void VertexAttributes::addAttribute(VertexBufferElement _inVBElement)
 {
     m_vertexAttributes.push_back(_inVBElement); //adding new element to the vertex attributes list
-    m_stride += getTypeSize(_inVBElement.type) * _inVBElement.count; //modifying stride size - the size of record about vertex attributes
+    m_stride += getTypeSize(_inVBElement.type) * static_cast<GLsizei>(_inVBElement.count); //modifying stride size - the size of record about vertex attributes
 }
 
-unsigned VertexAttributes::getTypeSize(GLenum _type) const
+GLsizei VertexAttributes::getTypeSize(GLenum _type) const
 {
     switch (_type)
     {

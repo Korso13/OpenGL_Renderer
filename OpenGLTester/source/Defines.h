@@ -65,11 +65,21 @@ struct vec2
 struct vec3
 {
     vec3(float _x, float _y, float _z) : x(_x), y(_y), z(_z){}
+    vec3(glm::vec3& vec3) : x(vec3.x), y(vec3.y), z(vec3.z) {}
     vec3() = default;
     float x = 0.f;
     float y = 0.f;
     float z = 0.f;
 };
+
+inline vec3 operator+(vec3 _first, vec3 _second)
+{
+    vec3 result;
+    result.x = _first.x + _second.x;
+    result.y = _first.y + _second.y;
+    result.z = _first.z + _second.z;
+    return result;
+}
 
 struct vec4
 {
@@ -105,9 +115,9 @@ struct Uniforms
 
 struct Vertex
 {
-    vec4 Position;
+    vec3 Position;
     vec4 Color /*= {1.f, 1.f, 1.f, 1.f}*/;
     vec2 UV;
-    float TextureID = 0.f;
+    unsigned int TextureID = 0;
     unsigned int VertexIndex = 0;
 };

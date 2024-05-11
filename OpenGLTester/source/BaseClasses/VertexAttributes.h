@@ -21,7 +21,7 @@ public:
     void addAttribute(VertexBufferElement _inVBElement);
 
     GLsizei getStride() const {return m_stride;}
-    unsigned int getTypeSize(GLenum _type) const;
+    GLsizei getTypeSize(GLenum _type) const;
     const std::vector<VertexBufferElement> getVertexAttributes() const {return m_vertexAttributes;}
 
 private:
