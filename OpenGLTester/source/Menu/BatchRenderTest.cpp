@@ -44,6 +44,14 @@ BatchRenderTest::BatchRenderTest()
         ImGUI_ToolType::SLIDER,
         0.f,
         600.f);
+    DEBUG_UI->addDebugButtonToFolder(
+        "Batch Render Test",
+        "Recache shader",
+        [this]()
+        {
+            auto shader =  ShaderMachine::get()->getShader(ShaderType::BATCH_RENDER);
+            if(shader) shader->debugRecacheUniforms();
+        });
 }
 
 void BatchRenderTest::onUpdate(float dt)
@@ -73,7 +81,7 @@ void BatchRenderTest::onRender()
         std::cout << "Shader BATCH_RENDER not found!" << std::endl;
         return;
     }
-    shader->setUniform("u_MVP", m_MVP);
+    //shader->setUniform("u_MVP", m_MVP);
 
     //making a single draw call
     if(m_texture1) m_texture1->bind(0); 
@@ -92,22 +100,25 @@ void BatchRenderTest::prepareMVP()
 void BatchRenderTest::prepareTextures()
 {
     m_vBuffer = M_SPTR<VertexBuffer>(*(new VertexBuffer));
+    m_iBuffer = M_SPTR<IndexBuffer>(*(new IndexBuffer));
+
     m_logoPlane1 = M_SPTR<Quad>(*(new Quad));
     m_logoPlane1->makeQuad({300,300}, m_logo1Pos, 0);
+    //m_logoPlane1->setColor(glm::vec4(1, 0, 0, 1));
+    m_vBuffer->addRenderObject("Logo1", m_logoPlane1);
+    m_iBuffer->push_back_drawIndices(m_logoPlane1);
+
     m_logoPlane2 = M_SPTR<Quad>(*(new Quad));
     m_logoPlane2->makeQuad({300,300}, m_logo2Pos, 1);
-    m_vBuffer->addRenderObject("Logo1", m_logoPlane1);
+    //m_logoPlane2->setColor(glm::vec4(0, 0, 1, 1));
     m_vBuffer->addRenderObject("Logo2", m_logoPlane2);
-    
-    m_iBuffer = M_SPTR<IndexBuffer>(*(new IndexBuffer));
-    m_iBuffer->push_back_drawIndices(m_logoPlane1);
     m_iBuffer->push_back_drawIndices(m_logoPlane2);
 
     m_vAttributes = M_SPTR<VertexAttributes>(*(new VertexAttributes));
     m_vAttributes->addAttribute({GL_FLOAT, 3, GL_FALSE});
     m_vAttributes->addAttribute({GL_FLOAT, 4, GL_FALSE});
     m_vAttributes->addAttribute({GL_FLOAT, 2, GL_FALSE});
-    m_vAttributes->addAttribute({GL_UNSIGNED_INT, 1, GL_FALSE});
+    m_vAttributes->addAttribute({GL_INT, 1, GL_FALSE});
     m_vAttributes->addAttribute({GL_UNSIGNED_INT, 1, GL_FALSE});
 
     m_vao = M_SPTR<VertexAO>(*(new VertexAO()));
@@ -123,10 +134,9 @@ void BatchRenderTest::prepareTextures()
     m_texture1 = new Texture("resources/textures/logo.png");
     m_texture2 = new Texture("resources/textures/logo2.png");
     m_texture1->bind(0);
-     if(m_texture2) m_texture2->bind(1);
-    int* textures = new int[2];
-    textures[0] = 1;
-    textures[1] = 2;
+    if(m_texture2) m_texture2->bind(1);
+    int textures[2] = {0, 1};
+
     auto shader =  ShaderMachine::get()->getShader(ShaderType::BATCH_RENDER);
     if(!shader)
     {
@@ -134,12 +144,9 @@ void BatchRenderTest::prepareTextures()
         return;
     }
     shader->Bind();
-    //shader->setUniform("u_Textures", &textures[0], 2);
-    //shader->setUniform("u_Textures", textures, 2);
-    shader->setUniform("u_Texture0", 0);
-    shader->setUniform("u_Texture1", 1);
+    shader->setUniform("u_Textures", textures, 2);
     shader->setUniform("u_MVP", m_MVP);
-
+    
     //setting blend functions
     GLCall(glEnable(GL_BLEND));
     GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));

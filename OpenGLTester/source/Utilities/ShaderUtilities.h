@@ -186,6 +186,14 @@ namespace shaderUtils
                         foundUniforms.iUniforms.emplace(varName, -1);
                         continue;
                     }
+                    else if(line.find("bool") != std::string::npos)
+                    {
+                        pos = line.find("bool") + 4 + 1; //symbol after data type plus space
+                        varName = line.substr(pos);
+                        varName.pop_back();
+                        foundUniforms.iUniforms.emplace(varName, -1);
+                        continue;
+                    }
                     else if(line.find("sampler2D") != std::string::npos)
                     {
                         //checking for array of samplers aka multiple textures

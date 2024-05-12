@@ -84,7 +84,8 @@ inline vec3 operator+(vec3 _first, vec3 _second)
 struct vec4
 {
     vec4(float _x, float _y, float _z, float _a) : x(_x), y(_y), z(_z), a(_a){}
-    vec4(glm::vec3& vec3, float _a) : x(vec3.x), y(vec3.y), z(vec3.z), a(_a){}
+    vec4(const glm::vec3& vec3, float _a) : x(vec3.x), y(vec3.y), z(vec3.z), a(_a){}
+    vec4(const glm::vec4& vec4) : x(vec4.x), y(vec4.y), z(vec4.z), a(vec4.a){}
     vec4() = default;
     float x = 0.f;
     float y = 0.f;
@@ -116,8 +117,8 @@ struct Uniforms
 struct Vertex
 {
     vec3 Position;
-    vec4 Color /*= {1.f, 1.f, 1.f, 1.f}*/;
+    vec4 Color = {1.f, 1.f, 1.f, 1.f};
     vec2 UV;
-    unsigned int TextureID = 0;
+    int TextureID = -1;
     unsigned int VertexIndex = 0;
 };

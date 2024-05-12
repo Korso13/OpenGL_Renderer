@@ -63,6 +63,31 @@ void Shader::setUniform(const std::string& _uniformName, int _value)
     }
 }
 
+void Shader::setUniform(const std::string& _uniformName, bool _value)
+{
+    if(m_uniforms.iUniforms.find(_uniformName) != m_uniforms.iUniforms.end())
+    {
+        if(m_uniforms.iUniforms.at(_uniformName) != -1)
+        {
+            GLCall(glUniform1i(m_uniforms.iUniforms.at(_uniformName), static_cast<int>(_value)));
+        }
+        else
+        {
+            GLint loc = getUniformLocation(_uniformName);
+            if(loc == -1)
+                std::cout << "No uniform var " << _uniformName << " found in compiled shader!" << std::endl;
+            else
+            {
+                std::cout << "Uniform var " << _uniformName << " found in compiled shader after 2nd attempt!" << std::endl;
+            }
+        }
+    }
+    else
+    {
+        std::cout << "No uniform named "<< _uniformName << " found in shader!" << std::endl;
+    }
+}
+
 void Shader::setUniform(const std::string& _uniformName, int* _value, int count)
 {
     if(m_uniforms.ivUniforms.find(_uniformName) != m_uniforms.ivUniforms.end())

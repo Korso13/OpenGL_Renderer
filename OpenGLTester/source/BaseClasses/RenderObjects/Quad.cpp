@@ -2,12 +2,12 @@
 #include "RenderPrimitive.h"
 
 
-Quad::Quad(glm::uvec2 _size, glm::vec3 _position, unsigned int _textureID)
+Quad::Quad(glm::uvec2 _size, glm::vec3 _position, int _textureID)
 {
     makeQuad(_size, _position, _textureID);
 }
 
-void Quad::makeQuad(glm::uvec2 _size, glm::vec3 _position, unsigned int _textureID)
+void Quad::makeQuad(glm::uvec2 _size, glm::vec3 _position, int _textureID)
 {
     m_size = _size;
     m_position = vec3(_position);
@@ -60,6 +60,14 @@ void Quad::setPosition(glm::vec3& _newPosition)
             getOffsetFromCenter(i) +
             vec3(_newPosition);
         i++;
+    }
+}
+
+void Quad::setColor(glm::vec4 newColor)
+{
+    for(auto& vertex : m_vertices)
+    {
+        vertex->Color = vec4(newColor);
     }
 }
 

@@ -10,11 +10,12 @@ class Quad : public RenderObject
 public:
 
     Quad() = default;
-    Quad(glm::uvec2 _size, glm::vec3 _position, unsigned int _textureID);
+    Quad(glm::uvec2 _size, glm::vec3 _position, int _textureID = -1);
 
-    void makeQuad(glm::uvec2 _size, glm::vec3 _position, unsigned int _textureID);
+    void makeQuad(glm::uvec2 _size, glm::vec3 _position, int _textureID = -1);
     vec3 getPosition() const {return m_position;}
     void setPosition(glm::vec3& _newPosition);
+    void setColor(glm::vec4 newColor);
     
     void addPolygon(SPTR<RenderPrimitive> _polygon);
     void addVertex(SPTR<Vertex> _vertex) override;
