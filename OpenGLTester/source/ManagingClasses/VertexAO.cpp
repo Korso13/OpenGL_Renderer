@@ -45,16 +45,7 @@ void VertexAO::addBuffer(VertexBuffer* _vertexBuffer, IndexBuffer* _indexBuffer,
     _indexBuffer->bind();
 
     //setting vertex attribute array
-    const auto& attributes = _vertexAttrib->getVertexAttributes();
-    unsigned int offset = 0;
-    for (unsigned int i = 0; i < attributes.size(); i++)
-    {
-        GLCall(glEnableVertexAttribArray(i)); //setting new vertex attributes array
-        GLCall(glVertexAttribPointer(i, attributes[i].count, attributes[i].type, attributes[i].isNotNormalized, _vertexAttrib->getStride(), (const void*)offset));
-
-        offset += attributes[i].count * _vertexAttrib->getTypeSize(attributes[i].type);
-    }
-        
+    setVertexAtributesTyped<Vertex>();
 }
 
 void VertexAO::bind() const

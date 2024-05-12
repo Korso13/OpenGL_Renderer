@@ -335,6 +335,7 @@
     <ClInclude Include="source\BaseClasses\RenderObjects\Quad.h" />
     <ClInclude Include="source\BaseClasses\RenderObjects\RenderObject.h" />
     <ClInclude Include="source\BaseClasses\RenderObjects\RenderPrimitive.h" />
+    <ClInclude Include="source\ManagingClasses\VertexAO.inl" />
     <ClInclude Include="source\Menu\BatchRenderTest.h" />
     <ClInclude Include="source\Menu\ClearColorTest.h" />
     <ClInclude Include="source\Menu\MainMenuItem.h" />

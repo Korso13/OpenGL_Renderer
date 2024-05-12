@@ -7,7 +7,7 @@ class VertexBuffer
 public:
 
     VertexBuffer(const void* _data, const unsigned int _size, GLenum _memUsageType = GL_STATIC_DRAW);
-    VertexBuffer(const unsigned int _size = 100);
+    VertexBuffer(const unsigned int _size = sizeof(Vertex)*1024);
     ~VertexBuffer();
 
     //Registers renderable object in the specific vertex buffer for batch-rendering

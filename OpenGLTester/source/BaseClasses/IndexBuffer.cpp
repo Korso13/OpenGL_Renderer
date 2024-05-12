@@ -31,10 +31,12 @@ void IndexBuffer::push_back_drawIndices(std::vector<unsigned int> _indices)
     m_count = static_cast<unsigned>(m_vertexIndicesPool.size());
 }
 
-void IndexBuffer::push_back_drawIndices(const SPTR<RenderObject>& _RenderObject)
+void IndexBuffer::addRenderObject(const SPTR<RenderObject>& _RenderObject)
 {
-    _RenderObject->adjustIndices(m_vertexIndicesPool.size());
-    push_back_drawIndices(_RenderObject->getIndices());
+    _RenderObject->adjustIndices(m_adjustment);
+    m_adjustment += _RenderObject->getVertexCount();
+    auto indices = _RenderObject->getIndices();
+    m_vertexIndicesPool.insert(m_vertexIndicesPool.end(), indices.begin(), indices.end());
     m_count = static_cast<unsigned>(m_vertexIndicesPool.size());
 }
 
@@ -43,16 +45,7 @@ void IndexBuffer::bind() const
     GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_rendererId));
     if(!m_vertexIndicesPool.empty())
     {
-        unsigned int* Indices = new unsigned int[m_vertexIndicesPool.size()];
-        size_t i = 0;
-        for (auto index : m_vertexIndicesPool)
-        {
-            Indices[i] = index;
-            //std::cout << "Debug vertex index " << i << " data. Vertex index: " << Indices[i] << std::endl;
-            i++;
-        }
-
-        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, m_vertexIndicesPool.size() * sizeof(GLuint), Indices);
+        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, static_cast<GLsizeiptr>(m_vertexIndicesPool.size()) * sizeof(GLuint), m_vertexIndicesPool.data());
     }
 
 }

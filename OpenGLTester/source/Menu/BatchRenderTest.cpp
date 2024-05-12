@@ -52,6 +52,15 @@ BatchRenderTest::BatchRenderTest()
             auto shader =  ShaderMachine::get()->getShader(ShaderType::BATCH_RENDER);
             if(shader) shader->debugRecacheUniforms();
         });
+    DEBUG_UI->addDebugValueToFolder<int>(
+        "Batch Render Test",
+        DebugDataType::INT,
+        "u_debugTexIndex value (texIndex below triggers coloring)",
+        &m_debugTexIndex,
+        1,
+        ImGUI_ToolType::SLIDER,
+        -10.f,
+        20.f);
 }
 
 void BatchRenderTest::onUpdate(float dt)
@@ -81,7 +90,8 @@ void BatchRenderTest::onRender()
         std::cout << "Shader BATCH_RENDER not found!" << std::endl;
         return;
     }
-    //shader->setUniform("u_MVP", m_MVP);
+    shader->setUniform("u_MVP", m_MVP);
+    shader->setUniform("u_debugTexIndex", m_debugTexIndex);
 
     //making a single draw call
     if(m_texture1) m_texture1->bind(0); 
@@ -99,31 +109,32 @@ void BatchRenderTest::prepareMVP()
 
 void BatchRenderTest::prepareTextures()
 {
+    m_texture1 = new Texture("resources/textures/logo.png");
+    m_texture2 = new Texture("resources/textures/logo2.png");
+    if(m_texture2)
+        m_texture2->bind(0);
+    m_texture1->bind(1);
+    int textures[2] = {0, 1};
+    
     m_vBuffer = M_SPTR<VertexBuffer>(*(new VertexBuffer));
     m_iBuffer = M_SPTR<IndexBuffer>(*(new IndexBuffer));
 
     m_logoPlane1 = M_SPTR<Quad>(*(new Quad));
+    //TODO:: replace data type for size and get it from texture
     m_logoPlane1->makeQuad({300,300}, m_logo1Pos, 0);
     //m_logoPlane1->setColor(glm::vec4(1, 0, 0, 1));
     m_vBuffer->addRenderObject("Logo1", m_logoPlane1);
-    m_iBuffer->push_back_drawIndices(m_logoPlane1);
+    m_iBuffer->addRenderObject(m_logoPlane1);
 
     m_logoPlane2 = M_SPTR<Quad>(*(new Quad));
     m_logoPlane2->makeQuad({300,300}, m_logo2Pos, 1);
     //m_logoPlane2->setColor(glm::vec4(0, 0, 1, 1));
     m_vBuffer->addRenderObject("Logo2", m_logoPlane2);
-    m_iBuffer->push_back_drawIndices(m_logoPlane2);
-
-    m_vAttributes = M_SPTR<VertexAttributes>(*(new VertexAttributes));
-    m_vAttributes->addAttribute({GL_FLOAT, 3, GL_FALSE});
-    m_vAttributes->addAttribute({GL_FLOAT, 4, GL_FALSE});
-    m_vAttributes->addAttribute({GL_FLOAT, 2, GL_FALSE});
-    m_vAttributes->addAttribute({GL_INT, 1, GL_FALSE});
-    m_vAttributes->addAttribute({GL_UNSIGNED_INT, 1, GL_FALSE});
+    m_iBuffer->addRenderObject(m_logoPlane2);
 
     m_vao = M_SPTR<VertexAO>(*(new VertexAO()));
     //TODO:: transition all buffer wrappers to SPTR
-    m_vao->addBuffer(m_vBuffer.get(), m_iBuffer.get(), m_vAttributes.get());
+    m_vao->addBufferTyped<Vertex>(m_vBuffer.get(), m_iBuffer.get());
     
     //generating shader
     if(!ShaderMachine::get()->setShader(ShaderType::BATCH_RENDER))
@@ -131,11 +142,6 @@ void BatchRenderTest::prepareTextures()
         std::cout << "Setting shader BATCH_RENDER failed, shader not found!" << std::endl;
         return;
     }
-    m_texture1 = new Texture("resources/textures/logo.png");
-    m_texture2 = new Texture("resources/textures/logo2.png");
-    m_texture1->bind(0);
-    if(m_texture2) m_texture2->bind(1);
-    int textures[2] = {0, 1};
 
     auto shader =  ShaderMachine::get()->getShader(ShaderType::BATCH_RENDER);
     if(!shader)

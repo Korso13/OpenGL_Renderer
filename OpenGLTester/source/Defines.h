@@ -15,7 +15,6 @@
 template<typename Ty>
 using SPTR = std::shared_ptr<Ty>;
 
-
 //enums
 enum class ShaderType
 {
@@ -119,6 +118,6 @@ struct Vertex
     vec3 Position;
     vec4 Color = {1.f, 1.f, 1.f, 1.f};
     vec2 UV;
-    int TextureID = -1;
+    float TextureID = -1.f;
     unsigned int VertexIndex = 0;
 };

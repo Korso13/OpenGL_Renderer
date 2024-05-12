@@ -18,28 +18,28 @@ void Quad::makeQuad(glm::uvec2 _size, glm::vec3 _position, int _textureID)
     SPTR<Vertex> v1 = std::make_shared<Vertex>(*(new Vertex));
     v1->Position = m_position + vec3(-(_size.x/2.f), -(_size.y/2.f), 0.f);
     v1->UV = vec2(0.f, 0.f);
-    v1->TextureID = _textureID;
+    v1->TextureID = static_cast<float>(_textureID);
     v1->VertexIndex = 0;
     m_vertices.push_back(v1);
     
     SPTR<Vertex> v2 = std::make_shared<Vertex>(*(new Vertex));
     v2->Position = m_position + vec3(-(_size.x/2.f), (_size.y/2.f), 0.f);
     v2->UV = vec2(0.f, 1.f);
-    v2->TextureID = _textureID;
+    v2->TextureID = static_cast<float>(_textureID);
     v2->VertexIndex = 1;
     m_vertices.push_back(v2);
         
     SPTR<Vertex> v3 = std::make_shared<Vertex>(*(new Vertex));
     v3->Position = m_position + vec3((_size.x/2.f), (_size.y/2.f), 0.f);
     v3->UV = vec2(1.f, 1.f);
-    v3->TextureID = _textureID;
+    v3->TextureID = static_cast<float>(_textureID);
     v3->VertexIndex = 2;
     m_vertices.push_back(v3);
     
     SPTR<Vertex> v4 = std::make_shared<Vertex>(*(new Vertex));
     v4->Position = m_position + vec3((_size.x/2.f), -(_size.y/2.f), 0.f);
     v4->UV = vec2(1.f, 0.f);
-    v4->TextureID = _textureID;
+    v4->TextureID = static_cast<float>(_textureID);
     v4->VertexIndex = 3;
     m_vertices.push_back(v4);
     
