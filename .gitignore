@@ -1,5 +1,11 @@
+.idea
+*.obj
+x64/Debug/*
+external/lib/GLFW/glfw.dir
 bin/
 obj/
 /packages/
 riderModule.iml
 /_ReSharper.Caches/
+OpenGLTester/x64/*
+OpenGLTester/imgui.ini
