@@ -1,0 +1,6 @@
+﻿  Building Custom Rule C:/C++/Libraries/glfw-3.3.8/tests/CMakeLists.txt
+  monitors.c
+  getopt.c
+  glad_gl.c
+  Создание кода...
+  monitors.vcxproj -> C:\C++\Libraries\glfw-3.3.8\_out\build\tests\Debug\monitors.exe

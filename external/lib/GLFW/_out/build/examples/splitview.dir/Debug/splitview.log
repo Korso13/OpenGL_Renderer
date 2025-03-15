@@ -1,0 +1,5 @@
+﻿  Building Custom Rule C:/C++/Libraries/glfw-3.3.8/examples/CMakeLists.txt
+  splitview.c
+  glad_gl.c
+  Создание кода...
+  splitview.vcxproj -> C:\C++\Libraries\glfw-3.3.8\_out\build\examples\Debug\splitview.exe

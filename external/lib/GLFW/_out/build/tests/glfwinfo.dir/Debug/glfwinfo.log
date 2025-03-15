@@ -1,0 +1,7 @@
+﻿  Building Custom Rule C:/C++/Libraries/glfw-3.3.8/tests/CMakeLists.txt
+  glfwinfo.c
+  getopt.c
+  glad_gl.c
+  glad_vulkan.c
+  Создание кода...
+  glfwinfo.vcxproj -> C:\C++\Libraries\glfw-3.3.8\_out\build\tests\Debug\glfwinfo.exe

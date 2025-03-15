@@ -1,0 +1,5 @@
+﻿  Building Custom Rule C:/C++/Libraries/glfw-3.3.8/examples/CMakeLists.txt
+  heightmap.c
+  glad_gl.c
+  Создание кода...
+  heightmap.vcxproj -> C:\C++\Libraries\glfw-3.3.8\_out\build\examples\Debug\heightmap.exe

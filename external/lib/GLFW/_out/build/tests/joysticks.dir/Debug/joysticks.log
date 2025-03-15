@@ -1,0 +1,5 @@
+﻿  Building Custom Rule C:/C++/Libraries/glfw-3.3.8/tests/CMakeLists.txt
+  joysticks.c
+  glad_gl.c
+  Создание кода...
+  joysticks.vcxproj -> C:\C++\Libraries\glfw-3.3.8\_out\build\tests\Debug\joysticks.exe
