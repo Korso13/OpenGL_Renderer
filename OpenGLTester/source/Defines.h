@@ -15,6 +15,9 @@
 template<typename Ty>
 using SPTR = std::shared_ptr<Ty>;
 
+#define CAST_SPTR std::dynamic_pointer_cast
+
+
 //enums
 enum class ShaderType
 {
@@ -56,6 +59,9 @@ struct uivec2
 struct vec2
 {
     vec2(float _x, float _y) : x(_x), y(_y){}
+    vec2(const float _oneSize) : x(_oneSize), y(_oneSize){}
+    vec2(const vec2& _vec2) : x(_vec2.x), y(_vec2.y) {}
+    void operator= (const vec2& _vec2) { x = _vec2.x; y = _vec2.y;}
     vec2() = default;
     float x = 0.f;
     float y = 0.f;
@@ -63,28 +69,22 @@ struct vec2
 
 struct vec3
 {
-    vec3(float _x, float _y, float _z) : x(_x), y(_y), z(_z){}
-    vec3(glm::vec3& vec3) : x(vec3.x), y(vec3.y), z(vec3.z) {}
+    vec3(const float _x, const float _y, const float _z) : x(_x), y(_y), z(_z){}
+    vec3(const float _oneSize) : x(_oneSize), y(_oneSize), z(_oneSize){}
+    explicit vec3(const glm::vec3& _vec3) : x(_vec3.x), y(_vec3.y), z(_vec3.z) {}
+    void operator= (const vec3& _vec3) { x = _vec3.x; y = _vec3.y; z = _vec3.z;}
     vec3() = default;
     float x = 0.f;
     float y = 0.f;
     float z = 0.f;
 };
 
-inline vec3 operator+(vec3 _first, vec3 _second)
-{
-    vec3 result;
-    result.x = _first.x + _second.x;
-    result.y = _first.y + _second.y;
-    result.z = _first.z + _second.z;
-    return result;
-}
-
 struct vec4
 {
-    vec4(float _x, float _y, float _z, float _a) : x(_x), y(_y), z(_z), a(_a){}
-    vec4(const glm::vec3& vec3, float _a) : x(vec3.x), y(vec3.y), z(vec3.z), a(_a){}
-    vec4(const glm::vec4& vec4) : x(vec4.x), y(vec4.y), z(vec4.z), a(vec4.a){}
+    vec4(const float _x, const float _y, const float _z, const float _a) : x(_x), y(_y), z(_z), a(_a){}
+    explicit vec4(const glm::vec3& _vec3, const float _a) : x(_vec3.x), y(_vec3.y), z(_vec3.z), a(_a){}
+    explicit vec4(const glm::vec4& _vec4) : x(_vec4.x), y(_vec4.y), z(_vec4.z), a(_vec4.a){}
+    void operator= (const vec4& _vec4) { x = _vec4.x; y = _vec4.y; z = _vec4.z; a = _vec4.a;}
     vec4() = default;
     float x = 0.f;
     float y = 0.f;
@@ -120,4 +120,26 @@ struct Vertex
     vec2 UV;
     float TextureID = -1.f;
     unsigned int VertexIndex = 0;
+};
+
+class Node;
+class Transform
+{
+    friend Node;
+public:
+
+    Transform() = default;
+    [[nodiscard]] const vec3& getTranslation() const { return m_translation; }
+    [[nodiscard]] const vec3& getScale() const { return m_scale; }
+    
+    Transform operator+(const Transform& _other) const;
+    Transform operator-(const Transform& _other) const;
+    Transform operator*(const Transform& _other) const;
+    Transform operator/(const Transform& _other) const;
+
+private:
+
+    vec3 m_translation = vec3(0.f);
+    vec3 m_scale = vec3(1.f);
+    //todo: add rotation, once you figure out and write quaternions...
 };

@@ -4,12 +4,22 @@
 #include "BaseClasses/Public/IndexBuffer.h"
 #include "Utilities/Public/GLErrorCatcher.h"
 #include "BaseClasses/Public/RendererBatch.h"
+#include "../Public/ShaderMachine.h"
+#include "BaseClasses/Nodes/Public/Node.h"
 
 #ifdef SINGLERENDER
 Renderer* Renderer::m_instance = nullptr;
 #endif
 
-void Renderer::draw(VertexAO* _vertexArray, const ShaderType _shaderType, GLint renderPrimitiveType) const
+Renderer::Renderer()
+{
+    GLCall(glGetIntegerv(GL_MAX_TEXTURE_SIZE, &m_maxBatchSize));
+    std::cout << "[Init][Renderer] Batch max size: " << std::to_string(m_maxBatchSize) << std::endl;
+    ShaderMachine::get();//forces shaders to precompile
+    m_rootNode = M_SPTR<Node>("RenderRootNode");
+}
+
+void Renderer::draw(const VertexAO* _vertexArray, const ShaderType _shaderType, GLint _renderPrimitiveType) const
 {
     if(!_vertexArray)
         return;
@@ -24,15 +34,14 @@ void Renderer::draw(VertexAO* _vertexArray, const ShaderType _shaderType, GLint 
     }
     _vertexArray->bind(); //binds vertex buffer, index buffer and vertex attributes
     const int indexSize = (_vertexArray->getIndexBuffers().empty()) ? (6) : (_vertexArray->getIndexBuffers()[0]->getCount()); //precaution against vertexAO without index buffer
-    GLCall(glDrawElements(renderPrimitiveType, indexSize, GL_UNSIGNED_INT, 0));
+    GLCall(glDrawElements(_renderPrimitiveType, indexSize, GL_UNSIGNED_INT, 0));
 }
 
 void Renderer::render()
 {
     clear(); //clearing buffer
-
-    //todo:collect batches
-    
+    m_sortedRenderPriority.clear();
+    m_rootNode->traversal(std::bind(&Renderer::checkNodeForRender, this, std::placeholders::_1), true);
     //rendering collected batches and clearing queue
     for(const auto& batch : m_currentBatchQueue)
     {
@@ -46,7 +55,26 @@ void Renderer::clear() const
     GLCall(glClear(GL_COLOR_BUFFER_BIT));
 }
 
-void Renderer::drawBatch(SPTR<RendererBatch> batch)
+SPTR<Node> Renderer::getRoot()
+{
+    return m_rootNode;
+}
+
+void Renderer::drawBatch(SPTR<RendererBatch> _batch)
 {
     //todo: batch render logic
+}
+
+void Renderer::checkNodeForRender(SPTR<Node> _node)
+{
+    if(!_node || !_node->isEnabled() || !_node->isInFrustum())
+        return;
+
+    float distance_to_camera = 0.f;
+    //todo: add distance to camera check!
+    SPTR<RenderObject> renderableObject = CAST_SPTR<RenderObject>(_node);
+    if(!renderableObject)
+        return;
+
+    m_sortedRenderPriority[distance_to_camera][renderableObject->getRenderOrder()] = renderableObject;
 }

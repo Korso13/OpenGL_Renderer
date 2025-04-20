@@ -10,3 +10,6 @@
 #include <array>
 #include "STB/stb_image.h"
 #include <functional>
+#include <cstdint>
+#include <utility>
+#include <optional>

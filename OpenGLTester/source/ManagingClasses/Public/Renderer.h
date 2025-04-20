@@ -2,6 +2,8 @@
 #include "Defines.h"
 #include "Utilities/Public/GLErrorCatcher.h"
 
+class RenderObject;
+class Node;
 class RendererBatch;
 class VertexAO;
 
@@ -10,46 +12,42 @@ class Renderer
 //defines constructor depending on what type of instantiation we want
 #ifdef MULTIRENDER
 public:
-    Renderer()
-    {
-        GLCall(glGetIntegerv(GL_MAX_TEXTURE_SIZE, &m_maxBatchSize));
-    }
+    Renderer();
 #endif
 #ifdef SINGLERENDER
 private:
-    Renderer()
-    {
-        GLCall(glGetIntegerv(GL_MAX_TEXTURE_SIZE, &m_maxBatchSize));
-    }
+    Renderer();
     static Renderer* m_instance;
-    ~Renderer() = default; //prevents calling delete() on Renderer pointer
-    
 public:
     static Renderer* get()
     {
-        if(!m_instance)
-            m_instance = new Renderer();
-
+        if(!m_instance) m_instance = new Renderer();
         return m_instance;
     }
 #endif
 //end of constructor definitions
     
 public:
-    //todo: depricate
-    void draw(VertexAO* _vertexArray, const ShaderType _shaderType, GLint renderPrimitiveType = GL_TRIANGLES) const;
+    //todo: depricate once batch-rendering refactoring complete
+    void draw(const VertexAO* _vertexArray, const ShaderType _shaderType, GLint _renderPrimitiveType = GL_TRIANGLES) const;
     
     //Main rendering function - assembles all batches and renders them.
     //Do not call yourself! Should only be called from main program loop (todo: consider making private, adding friendly iGame and impl to call it)
     void render();
     void clear() const;
 
+    SPTR<Node> getRoot();
+    
 private:
 
-    void drawBatch(SPTR<RendererBatch> batch);
+    ~Renderer() = default; //prevents calling delete() on Renderer pointer
+    void drawBatch(SPTR<RendererBatch> _batch);
+    void checkNodeForRender(SPTR<Node> _node);
     
 private:
 
     GLint m_maxBatchSize = 1;
+    SPTR<Node> m_rootNode = nullptr;
+    std::map<float, std::map<uint32_t, SPTR<RenderObject>>> m_sortedRenderPriority;
     std::vector<SPTR<RendererBatch>> m_currentBatchQueue;
 };

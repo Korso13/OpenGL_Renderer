@@ -1,0 +1,53 @@
+#pragma once
+#include "Defines.h"
+#include "pch.h"
+#include "Utilities/Public/Utilities.h"
+
+class Renderer;
+
+class Node : public Object, public std::enable_shared_from_this<Node>
+{
+    friend Renderer;
+    
+public:
+    explicit Node(const std::string& _name);
+    ~Node() override;
+    
+    virtual void setEnabled(const bool _isEnabled){m_isEnabled = _isEnabled;}
+    [[nodiscard]] virtual bool isEnabled() const {return m_isEnabled;}
+    virtual bool isInFrustum() const;
+    
+    void addChild(const SPTR<Node>& _child, bool _bResetTransforms = false);
+    void removeChild(const SPTR<Node>& _child);
+    SPTR<Node> getParent() {return m_parent;}
+    [[nodiscard]] const std::unordered_map<std::string, SPTR<Node>>& getAllChildren() const {return m_children;}
+
+    //iterate over node and its children with _nodeVisitor
+    void traversal(std::function<void(SPTR<Node>)> _nodeVisitor, bool _bEnabledOnly = false);
+    void traverseChildren(std::function<void(SPTR<Node>)> _nodeVisitor, bool _bEnabledOnly = false);
+
+    //todo: add transforms
+    Transform& getTransform() {return m_transform;}
+    [[nodiscard]] vec3 getWorldPos() const {return m_transform.getTranslation();}
+    [[nodiscard]] vec3 getWorldScale() const {return m_transform.getScale();}
+    [[nodiscard]] vec3 getLocalPos() const;
+    [[nodiscard]] vec3 getLocalScale() const;
+    
+private:
+
+    //Handles situations, where a child node changes its name
+    void handleChildNameChange(SubscriberEventPayload eventInfo);
+    //used to recursively iterate down the Node hierarchy
+    //static void recursiveVisitor(Node& _node, std::function<void(SPTR<Node>)>& _nodeVisitor);
+    static void recursiveVisitor(SPTR<Node> _node, std::function<void(SPTR<Node>)>& _nodeVisitor, bool _bEnabledOnly = false);
+    
+protected:
+    
+    SPTR<Node> m_parent = nullptr;
+    
+private:
+
+    bool m_isEnabled = true;
+    Transform m_transform;
+    std::unordered_map<std::string, SPTR<Node>> m_children; //consider switching to UIDs as keys if level info can be saved without it
+};

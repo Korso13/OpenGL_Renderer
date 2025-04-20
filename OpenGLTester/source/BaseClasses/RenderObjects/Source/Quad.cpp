@@ -1,6 +1,6 @@
 #include "../Public/Quad.h"
 #include "../Public/RenderPrimitive.h"
-
+#include "Utilities/Public/Math.h"
 
 Quad::Quad(glm::uvec2 _size, glm::vec3 _position, int _textureID)
 {
