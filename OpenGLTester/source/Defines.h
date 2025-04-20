@@ -1,12 +1,12 @@
 #pragma once
-#include <PCH.h>
-#include "Utilities/ImG_debuger.h"
+#include <pch.h>
+#include "Utilities/Public/ImG_debuger.h"
 
 //macros
 
 //uncomment one of two. Determines whether Renderer class is singlton or allows multiple instances.
-#define MULTIRENDER
-//#define SINGLERENDER
+//#define MULTIRENDER
+#define SINGLERENDER
 
 #define DEBUG_UI ImG_debuger::get()
 #define M_SPTR std::make_shared

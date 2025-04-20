@@ -1,15 +1,15 @@
 #include <algorithm>
-#include <PCH.h>
+#include <pch.h>
 #include <Defines.h>
 #include <cstdio>
 
 #include <ImGUI/imgui.h>
 #include <ImGUI/imgui_impl_glfw.h>
 #include "ImGUI/imgui_impl_opengl3.h"
-#include "Menu/BatchRenderTest.h"
-#include "Menu/ClearColorTest.h"
-#include "Menu/TextureRenderTest.h"
-#include "source/Utilities/GLErrorCatcher.h"
+#include "Menu/Public/BatchRenderTest.h"
+#include "Menu/Public/ClearColorTest.h"
+#include "Menu/Public/TextureRenderTest.h"
+#include "source/Utilities/Public/GLErrorCatcher.h"
 
 enum class MMSelector
 {
