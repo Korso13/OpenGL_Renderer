@@ -5,13 +5,14 @@
 #include "ManagingClasses/Public/ShaderMachine.h"
 #include "Utilities/Public/Utilities.h"
 
+class MaterialInstance;
 //forward declarations
 class MaterialLibrary;
 
 //=================================================================================
 //Wrapper+Interface class for holding all materials in one container
 //=================================================================================
-class Material
+class Material : public EngineInternal
 {
     friend MaterialLibrary;
     
@@ -21,23 +22,21 @@ public:
     //returns SPTR to underlying MaterialImpl (without the need to cast to specific MaterialImpl first)
     virtual SPTR<Material> getImpl() = 0; //might need default impl((
 
+    virtual SPTR<MaterialInstance> createInstance();
+    
     //Getters:
-    [[nodiscard]] uint32_t getUID() const {return m_id;}
-    [[nodiscard]] const std::string& getName() const;
     [[nodiscard]] ShaderType getUnderlyingShaderType() const;
 
 protected:
     Material() = delete;
-    explicit Material(uint32_t _id, std::string _name) : m_id(_id), m_name(std::move(_name)) {}
-    explicit Material(uint32_t _id, std::string _name, ShaderType _underlyingShader)
-        : m_id(_id), m_name(std::move(_name)), m_underlyingShaderType(_underlyingShader) {}
+    explicit Material(std::string _name) : EngineInternal(std::move(_name)) {}
+    explicit Material(std::string _name, ShaderType _underlyingShader)
+        : EngineInternal(std::move(_name)), m_underlyingShaderType(_underlyingShader) {}
 
     virtual bool bindMaterialShader() = 0; 
     
 protected:
     
-    const uint32_t m_id;
-    std::string m_name;
     ShaderType m_underlyingShaderType = ShaderType::NONE;
 };
 
@@ -46,13 +45,13 @@ protected:
 //Singleton Material itself
 //=================================================================================
 template<ShaderType ShaderT>
-class MaterialImpl : public Material
+class MaterialImpl final : public Material
 {
     friend MaterialLibrary;
     
 public:
 
-    static SPTR<Material> get()
+    constexpr static SPTR<Material> get()
     {
         if(!m_implInstance)
         {
@@ -63,11 +62,12 @@ public:
     }
     
     SPTR<Material> getImpl() override {return m_implInstance;}
-    bool bindMaterialShader() override;
+    //SPTR<MaterialInstance> createInstance() override;
     
 protected:
     
     explicit MaterialImpl(ShaderType = ShaderT);
+    bool bindMaterialShader() override;
 
 private:
     
@@ -80,7 +80,7 @@ private:
 };
 
 //=================================================================================
-//Template implementations //todo: consider moving to separate .impl file
+//Template implementations //todo: consider moving to separate .tpp file
 //=================================================================================
 template <ShaderType ShaderT>
 bool MaterialImpl<ShaderT>::bindMaterialShader()
@@ -88,10 +88,15 @@ bool MaterialImpl<ShaderT>::bindMaterialShader()
     return ShaderMachine::get()->setShader(ShaderT);
 }
 
+// template <ShaderType ShaderT>
+// SPTR<MaterialInstance> MaterialImpl<ShaderT>::createInstance()
+// {
+//     return SPTR(new MaterialInstance(getName() + "_Instance", ShaderT)); //todo: implement
+// }
+
 template <ShaderType ShaderT>
 MaterialImpl<ShaderT>::MaterialImpl(ShaderType)
 :
-    Material(utils::Utilities::getInternalUID(), 
-        "Material_" + std::to_string(static_cast<int>(ShaderT)), //todo: change it after implementing enum to string conversions
-        ShaderT)
+    Material("Material_" + std::to_string(static_cast<int>(ShaderT)), //todo: change it after implementing enum to string conversions
+            ShaderT)
 {}

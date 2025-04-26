@@ -1,8 +1,13 @@
 #include "../Public/Material.h"
+#include "../Public/MaterialInstance.h"
 
-const std::string& Material::getName() const
+SPTR<MaterialInstance> Material::createInstance()
 {
-    return m_name;
+    if(m_underlyingShaderType == ShaderType::NONE)
+        return nullptr;
+
+    auto newMatInst = SPTR<MaterialInstance>(new MaterialInstance(getName() + "_Instance", m_underlyingShaderType));
+    return newMatInst;
 }
 
 ShaderType Material::getUnderlyingShaderType() const

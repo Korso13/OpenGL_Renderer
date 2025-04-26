@@ -1,6 +1,7 @@
 #pragma once
 #include "Defines.h"
 #include <pch.h>
+#include "BaseClasses/Materials/Public/MaterialInstance.h"
 
 class RenderObject
 {
@@ -16,8 +17,11 @@ public:
 
     virtual uint32_t getRenderOrder() {return m_renderOrder;}
     virtual void setRenderOrder(uint32_t _newRo) {m_renderOrder = _newRo;}
+
+    virtual SPTR<MaterialInstance> getMatInst() {return m_materialInstance;}
     
-private:
+protected:
 
     uint32_t m_renderOrder = 0;
+    SPTR<MaterialInstance> m_materialInstance = nullptr;
 };

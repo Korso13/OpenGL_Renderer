@@ -8,15 +8,19 @@
 //#define MULTIRENDER
 #define SINGLERENDER
 
+//Shortcuts
 #define DEBUG_UI ImG_debuger::get()
 #define M_SPTR std::make_shared
+#define CAST_SPTR std::dynamic_pointer_cast
+#define MAT_LIB MaterialLibrary::get()
+
+#define CAST_I static_cast<int>
+#define CAST_SZ static_cast<size_t>
+#define CAST_F static_cast<float>
 
 //using and typedefs
 template<typename Ty>
 using SPTR = std::shared_ptr<Ty>;
-
-#define CAST_SPTR std::dynamic_pointer_cast
-
 
 //enums
 enum class ShaderType
@@ -24,7 +28,8 @@ enum class ShaderType
     NONE = 0,
     SIMPLE = 1,
     TEXTURE_STD = 2,
-    BATCH_RENDER = 3
+    BATCH_RENDER = 3,
+    SIZE
 };
 
 //structs

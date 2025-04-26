@@ -1044,6 +1044,7 @@
     <Content Include="shaders\VS\batchRender.vert" />
     <Content Include="shaders\VS\stdTextureShader.vert" />
     <Content Include="shaders\VS\stdVS.vert" />
+    <ClInclude Include="source\Utilities\Source\MaterialList.inl" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="resources\textures\" />

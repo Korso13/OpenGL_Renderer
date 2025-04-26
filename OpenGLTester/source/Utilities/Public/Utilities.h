@@ -43,3 +43,20 @@ private:
     std::string m_name;
     const uint32_t m_id;
 };
+
+class EngineInternal
+{
+public:
+    
+    EngineInternal() = delete;
+    explicit EngineInternal(std::string _name);
+    virtual ~EngineInternal() = default;
+    
+    [[nodiscard]] const std::string& getName() const {return m_name;}
+    [[nodiscard]] uint32_t getUID() const {return m_id;}
+    
+private:
+
+    const uint32_t m_id;
+    std::string m_name;
+};

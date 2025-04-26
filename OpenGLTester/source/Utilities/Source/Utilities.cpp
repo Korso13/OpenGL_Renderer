@@ -28,3 +28,10 @@ void Object::setName(std::string _newName)
     m_name = std::move(_newName);
     triggerEvent("onNameChange", evt_payload);
 }
+
+EngineInternal::EngineInternal(std::string _name)
+    :
+    m_id(utils::Utilities::getInternalUID()), m_name(std::move(_name))
+{
+    
+}

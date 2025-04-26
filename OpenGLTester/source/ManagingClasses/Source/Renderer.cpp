@@ -42,12 +42,33 @@ void Renderer::render()
     clear(); //clearing buffer
     m_sortedRenderPriority.clear();
     m_rootNode->traversal(std::bind(&Renderer::checkNodeForRender, this, std::placeholders::_1), true);
+
+    //todo: add alternative, togglable batch assembly pipelines that ignore RenderOrders or z pos (2 std::function for checkNodeForRender and code below, that are switched on pipeline changes)
+    //assembling m_sortedRenderPriority into ordered Renderer Batches
+    for (auto TopLevelIt = m_sortedRenderPriority.rbegin(); TopLevelIt != m_sortedRenderPriority.rend(); TopLevelIt++)
+    {
+        auto roContainer =  (*TopLevelIt).second;
+        for (auto MidLevelIt = roContainer.begin(); MidLevelIt != roContainer.end(); MidLevelIt++)
+        {
+            auto MIContainer =  (*MidLevelIt).second;
+            for (auto& [MatInstUid, RenderObjContainer] : MIContainer)
+            {
+                for (auto render_obj : RenderObjContainer)
+                {
+                    //todo: assemble RendererBatches based on RenderObj
+                    
+                }
+            }
+        }
+    }
+    
     //rendering collected batches and clearing queue
     for(const auto& batch : m_currentBatchQueue)
     {
         drawBatch(batch);
     }
     m_currentBatchQueue.clear();
+    m_sortedRenderPriority.clear();
 }
 
 void Renderer::clear() const
@@ -73,8 +94,10 @@ void Renderer::checkNodeForRender(SPTR<Node> _node)
     float distance_to_camera = 0.f;
     //todo: add distance to camera check!
     SPTR<RenderObject> renderableObject = CAST_SPTR<RenderObject>(_node);
-    if(!renderableObject)
+    if(!renderableObject || !renderableObject->getMatInst())
         return;
 
-    m_sortedRenderPriority[distance_to_camera][renderableObject->getRenderOrder()] = renderableObject;
+    //placing RenderObject to automatically sorting multi-layered container, based on suggested rendering order
+    //Priorities: distance to camera, set render order of the object + division into separate instances of MaterialInstance (shaders)
+    m_sortedRenderPriority[distance_to_camera][renderableObject->getRenderOrder()][renderableObject->getMatInst()->getUID()].push_back(renderableObject);
 }
