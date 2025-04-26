@@ -23,6 +23,7 @@ public:
 
 private:
     ShaderMachine();
+    ~ShaderMachine() = default;
     
     void precompileShaders();
     

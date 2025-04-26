@@ -25,8 +25,7 @@ public:
     //iterate over node and its children with _nodeVisitor
     void traversal(std::function<void(SPTR<Node>)> _nodeVisitor, bool _bEnabledOnly = false);
     void traverseChildren(std::function<void(SPTR<Node>)> _nodeVisitor, bool _bEnabledOnly = false);
-
-    //todo: add transforms
+    
     Transform& getTransform() {return m_transform;}
     [[nodiscard]] vec3 getWorldPos() const {return m_transform.getTranslation();}
     [[nodiscard]] vec3 getWorldScale() const {return m_transform.getScale();}
