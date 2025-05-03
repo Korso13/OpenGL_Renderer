@@ -7,6 +7,7 @@ SPTR<MaterialInstance> Material::createInstance()
         return nullptr;
 
     auto newMatInst = SPTR<MaterialInstance>(new MaterialInstance(getName() + "_Instance", m_underlyingShaderType));
+//todo: add instancing of default shader parameters in newMatInst
     return newMatInst;
 }
 

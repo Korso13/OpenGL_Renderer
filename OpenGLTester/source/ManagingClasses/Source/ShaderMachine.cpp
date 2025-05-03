@@ -33,7 +33,7 @@ void ShaderMachine::resetShader()
     }
 }
 
-Shader* ShaderMachine::getShader(ShaderType _shaderType)
+SPTR<Shader> ShaderMachine::getShader(ShaderType _shaderType)
 {
     if(m_shaders.find(_shaderType) == m_shaders.end())
         return nullptr;
@@ -45,7 +45,7 @@ void ShaderMachine::precompileShaders()
 {
     for(const auto& [ShaderType, Paths] : ShaderLib::get())
     {
-        Shader* shader = new Shader(Paths.first, Paths.second);
+        SPTR<Shader> shader = M_SPTR<Shader>(Paths.first, Paths.second);
         m_shaders.emplace(ShaderType, shader);
     }
 }

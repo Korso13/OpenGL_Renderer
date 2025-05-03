@@ -7,6 +7,7 @@
 //uncomment one of two. Determines whether Renderer class is singlton or allows multiple instances.
 //#define MULTIRENDER
 #define SINGLERENDER
+#define MAX_RENDER_BATCH_SIZE 32 //need for std::array in MaterialInst. Limits maximum batch size. 
 
 //Shortcuts
 #define DEBUG_UI ImG_debuger::get()
@@ -29,6 +30,45 @@ enum class ShaderType
     SIMPLE = 1,
     TEXTURE_STD = 2,
     BATCH_RENDER = 3,
+    SIZE
+};
+
+//todo: once BOOST PP added to proj, use it and MAX_RENDER_BATCH_SIZE to aseemble this enum
+enum class TextureId
+{
+    TEX_0,
+    TEX_1,
+    TEX_2,
+    TEX_3,
+    TEX_4,
+    TEX_5,
+    TEX_6,
+    TEX_7,
+    TEX_8,
+    TEX_9,
+    TEX_10,
+    TEX_11,
+    TEX_12,
+    TEX_13,
+    TEX_14,
+    TEX_15,
+    TEX_16,
+    TEX_17,
+    TEX_18,
+    TEX_19,
+    TEX_20,
+    TEX_21,
+    TEX_22,
+    TEX_23,
+    TEX_24,
+    TEX_25,
+    TEX_26,
+    TEX_27,
+    TEX_28,
+    TEX_29,
+    TEX_30,
+    TEX_31,
+    TEX_32,
     SIZE
 };
 

@@ -17,7 +17,7 @@ public:
 
     bool setShader(ShaderType _shaderType);
     void resetShader();
-    Shader* getShader(ShaderType _shaderType);
+    SPTR<Shader> getShader(ShaderType _shaderType);
     ShaderType getSelectedShaderType() const {return m_selectedShader;}
 
 
@@ -30,6 +30,6 @@ private:
 private:
     static ShaderMachine* m_instance;
 
-    std::unordered_map<ShaderType, Shader*> m_shaders;
+    std::unordered_map<ShaderType, SPTR<Shader>> m_shaders;
     ShaderType m_selectedShader = ShaderType::NONE;
 };

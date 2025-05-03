@@ -38,6 +38,7 @@ public:
     void clear() const;
 
     SPTR<Node> getRoot();
+    GLint getMaxBatchSize() const {return m_maxBatchSize;}
     
 private:
 

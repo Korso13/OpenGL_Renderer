@@ -13,3 +13,4 @@
 #include <cstdint>
 #include <utility>
 #include <optional>
+#include <variant>

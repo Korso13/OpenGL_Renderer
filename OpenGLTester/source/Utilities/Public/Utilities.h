@@ -60,3 +60,14 @@ private:
     const uint32_t m_id;
     std::string m_name;
 };
+
+//Helper struct for using std::visit with vector of variants
+//Syntax to use: std::visit(Visitor{[](type1 var){/*type1_handler*/},[](type2 var){/*type2_handler*/}...}, std::variant<>);
+template<typename ... Lambdas>
+struct Visitor : Lambdas...
+{
+    Visitor(Lambdas... lambdas) : Lambdas(std::forward<Lambdas>(lambdas))...
+    {
+    }
+    using Lambdas::operator()...;
+};

@@ -2,6 +2,7 @@
 #include <pch.h>
 #include <Defines.h>
 #include "GLM/glm.hpp"
+#include "ManagingClasses/Public/Renderer.h"
 
 //shader program wrapper class
 class Shader
@@ -27,6 +28,9 @@ public:
     void setUniform(const std::string& _uniformName, const glm::mat4& _value);
 
     void debugRecacheUniforms() {cacheUniformLocations();}
+
+    template<typename T>
+    [[nodiscard]] bool hasUniformParam(const std::string& _uniformName) const = delete;
     
 private:
     
@@ -43,3 +47,7 @@ private:
     //holds uniform names and locations
     Uniforms m_uniforms;
 };
+
+
+//template methods impls
+#include "../source/ShaderImpl.tpp"

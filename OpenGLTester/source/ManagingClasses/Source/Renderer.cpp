@@ -14,6 +14,11 @@ Renderer* Renderer::m_instance = nullptr;
 Renderer::Renderer()
 {
     GLCall(glGetIntegerv(GL_MAX_TEXTURE_SIZE, &m_maxBatchSize));
+    if(m_maxBatchSize > MAX_RENDER_BATCH_SIZE)
+    {
+        std::cout << "[Init][Renderer] Batch size limited exceeded! Raise value for MAX_RENDER_BATCH_SIZE define! GPU limit: " << std::to_string(m_maxBatchSize) << std::endl;
+        m_maxBatchSize = MAX_RENDER_BATCH_SIZE;
+    }
     std::cout << "[Init][Renderer] Batch max size: " << std::to_string(m_maxBatchSize) << std::endl;
     ShaderMachine::get();//forces shaders to precompile
     m_rootNode = M_SPTR<Node>("RenderRootNode");

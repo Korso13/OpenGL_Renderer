@@ -568,6 +568,7 @@
     </ClCompile>
     <ClInclude Include="source\BaseClasses\Materials\Public\Material.h" />
     <ClInclude Include="source\BaseClasses\Materials\Public\MaterialInstance.h" />
+    <ClInclude Include="source\BaseClasses\Materials\Source\MaterialInstance.tpp" />
     <ClInclude Include="source\BaseClasses\Nodes\Public\Node.h" />
     <ClInclude Include="source\BaseClasses\Public\IndexBuffer.h" />
     <ClInclude Include="source\BaseClasses\Public\RendererBatch.h" />
@@ -579,6 +580,7 @@
     <ClInclude Include="source\BaseClasses\RenderObjects\Public\Quad.h" />
     <ClInclude Include="source\BaseClasses\RenderObjects\Public\RenderObject.h" />
     <ClInclude Include="source\BaseClasses\RenderObjects\Public\RenderPrimitive.h" />
+    <ClInclude Include="source\BaseClasses\Source\ShaderImpl.tpp" />
     <ClInclude Include="source\ManagingClasses\Public\MaterialLibrary.h" />
     <ClInclude Include="source\ManagingClasses\Public\Renderer.h" />
     <ClInclude Include="source\ManagingClasses\Public\ShaderMachine.h" />

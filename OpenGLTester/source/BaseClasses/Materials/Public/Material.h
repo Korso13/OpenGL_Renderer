@@ -62,7 +62,6 @@ public:
     }
     
     SPTR<Material> getImpl() override {return m_implInstance;}
-    //SPTR<MaterialInstance> createInstance() override;
     
 protected:
     
@@ -87,12 +86,6 @@ bool MaterialImpl<ShaderT>::bindMaterialShader()
 {
     return ShaderMachine::get()->setShader(ShaderT);
 }
-
-// template <ShaderType ShaderT>
-// SPTR<MaterialInstance> MaterialImpl<ShaderT>::createInstance()
-// {
-//     return SPTR(new MaterialInstance(getName() + "_Instance", ShaderT)); //todo: implement
-// }
 
 template <ShaderType ShaderT>
 MaterialImpl<ShaderT>::MaterialImpl(ShaderType)
