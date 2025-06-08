@@ -11,6 +11,9 @@ class Node : public Object, public std::enable_shared_from_this<Node>
     
 public:
     explicit Node(const std::string& _name);
+    Node() = delete;
+    Node(const Node& origin) = delete; //node cloning is disabled for now
+    void operator=(const Node& origin) = delete; //node cloning is disabled for now
     ~Node() override;
     
     virtual void setEnabled(const bool _isEnabled){m_isEnabled = _isEnabled;}

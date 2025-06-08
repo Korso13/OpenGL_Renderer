@@ -6,6 +6,7 @@
 #include "BaseClasses/Public/RendererBatch.h"
 #include "../Public/ShaderMachine.h"
 #include "BaseClasses/Nodes/Public/Node.h"
+#include "BaseClasses/Nodes/Public/Camera.h"
 
 #ifdef SINGLERENDER
 Renderer* Renderer::m_instance = nullptr;
@@ -22,6 +23,7 @@ Renderer::Renderer()
     std::cout << "[Init][Renderer] Batch max size: " << std::to_string(m_maxBatchSize) << std::endl;
     ShaderMachine::get();//forces shaders to precompile
     m_rootNode = M_SPTR<Node>("RenderRootNode");
+    m_camera = std::shared_ptr<Camera>(new Camera); //alternative SPTR creation due to private constructor
 }
 
 void Renderer::draw(const VertexAO* _vertexArray, const ShaderType _shaderType, GLint _renderPrimitiveType) const
@@ -84,6 +86,11 @@ void Renderer::clear() const
 SPTR<Node> Renderer::getRoot()
 {
     return m_rootNode;
+}
+
+SPTR<Camera> Renderer::getCamera()
+{
+    return m_camera;
 }
 
 void Renderer::drawBatch(SPTR<RendererBatch> _batch)

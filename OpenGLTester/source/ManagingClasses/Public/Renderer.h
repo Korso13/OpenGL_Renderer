@@ -2,6 +2,7 @@
 #include "Defines.h"
 #include "Utilities/Public/GLErrorCatcher.h"
 
+class Camera;
 class MaterialInstance;
 class RenderObject;
 class Node;
@@ -38,6 +39,7 @@ public:
     void clear() const;
 
     SPTR<Node> getRoot();
+    SPTR<Camera> getCamera();
     GLint getMaxBatchSize() const {return m_maxBatchSize;}
     
 private:
@@ -50,6 +52,8 @@ private:
 
     GLint m_maxBatchSize = 1;
     SPTR<Node> m_rootNode = nullptr;
+    SPTR<Camera> m_camera = nullptr;
+    
     //Multi-layered sorted render map: distance to camera - RenderOrder - MaterialInstance(by id)
     std::map<float, std::map<uint32_t, std::unordered_map<uint32_t, std::vector<SPTR<RenderObject>>>>> m_sortedRenderPriority;
     std::vector<SPTR<RendererBatch>> m_currentBatchQueue;
