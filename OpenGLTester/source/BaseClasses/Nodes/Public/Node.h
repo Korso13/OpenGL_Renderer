@@ -29,11 +29,22 @@ public:
     void traversal(std::function<void(SPTR<Node>)> _nodeVisitor, bool _bEnabledOnly = false);
     void traverseChildren(std::function<void(SPTR<Node>)> _nodeVisitor, bool _bEnabledOnly = false);
     
-    Transform& getTransform() {return m_transform;}
-    [[nodiscard]] vec3 getWorldPos() const {return m_transform.getTranslation();}
-    [[nodiscard]] vec3 getWorldScale() const {return m_transform.getScale();}
-    [[nodiscard]] vec3 getLocalPos() const;
-    [[nodiscard]] vec3 getLocalScale() const;
+    const Transform& getTransform() {return m_transform;}
+    size_t subscribeToTransformChange(std::function<void(const Transform&)>);
+    
+    virtual [[nodiscard]] vec3 getWorldPos() const {return m_transform.getTranslation();}
+    virtual [[nodiscard]] vec3 getWorldScale() const {return m_transform.getScale();}
+    virtual [[nodiscard]] vec3 getLocalPos() const;
+    virtual [[nodiscard]] vec3 getLocalScale() const;
+
+    virtual void setWorldPos(const vec3 _newPos);
+    virtual void setLocalPos(const vec3 _newPos);
+    virtual void setWorldScale(const vec3 _newScale);
+    virtual void setLocalScale(const vec3 _newScale);
+
+protected:
+    
+    virtual void onTransformChange(); //todo: consider removing virtual
     
 private:
 
@@ -42,7 +53,7 @@ private:
     //used to recursively iterate down the Node hierarchy
     //static void recursiveVisitor(Node& _node, std::function<void(SPTR<Node>)>& _nodeVisitor);
     static void recursiveVisitor(SPTR<Node> _node, std::function<void(SPTR<Node>)>& _nodeVisitor, bool _bEnabledOnly = false);
-    
+
 protected:
     
     SPTR<Node> m_parent = nullptr;
