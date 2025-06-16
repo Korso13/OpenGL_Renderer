@@ -48,11 +48,49 @@ void Camera::onTransformChange()
     Node::onTransformChange();
     
     const vec3 worldPos = getWorldPos();
-    m_viewTranslation = glm::vec3(worldPos.x, worldPos.y, worldPos.z);
+    m_view = glm::translate(glm::mat4(1.f), glm::vec3(worldPos.x, worldPos.y, worldPos.z));
 }
 
 void Camera::setProjectionMode(const ProjectionMode _mode)
 {
     m_projectionMode = _mode;
     updateProjection();
+}
+
+void Camera::setClearColor(vec3 _newClColor)
+{
+    m_clearColor = glm::vec4(_newClColor.x, _newClColor.y, _newClColor.z, 1.f);
+    GLCall(glClearColor(m_clearColor.r, m_clearColor.g, m_clearColor.b, m_clearColor.a));
+}
+
+void Camera::setClearColor(vec4 _newClColor)
+{
+    m_clearColor = glm::vec4(_newClColor.x, _newClColor.y, _newClColor.z, _newClColor.a);
+    GLCall(glClearColor(m_clearColor.r, m_clearColor.g, m_clearColor.b, m_clearColor.a));
+}
+
+void Camera::setClearColor(glm::vec4 _newClColor)
+{
+    m_clearColor = _newClColor;
+    GLCall(glClearColor(m_clearColor.r, m_clearColor.g, m_clearColor.b, m_clearColor.a));
+}
+
+glm::mat4 Camera::getMvpForRender(const Node& _nodeToRender) const
+{
+    const vec3 worldPos = _nodeToRender.getWorldPos();
+    const glm::mat4 model = glm::translate(glm::mat4(1.f), glm::vec3 (worldPos.x, worldPos.y, worldPos.z));
+    const glm::mat4 mvp =  m_projection * m_view * model;
+
+    return mvp;
+}
+
+glm::mat4 Camera::getMvpForRender(const SPTR<Node>& _nodeToRender) const
+{
+    if(_nodeToRender)
+        return getMvpForRender(*_nodeToRender);
+    else
+    {
+        std::cerr << "[Camera::getMvpForRender] Invalid node! Returning default mvp matrix!" << std::endl;
+        return glm::mat4();
+    }
 }
