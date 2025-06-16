@@ -23,13 +23,21 @@ void VertexAO::addBuffer(const VertexBuffer& _vertexBuffer, const VertexAttribut
 
     //setting vertex attribute array
     const auto& attributes = _vertexAttrib.getVertexAttributes();
-    unsigned int offset = 0;
+    //unsigned int offset = 0; //todo: remove if works after refactoring is done
+    uint64_t offset = 0;
     for (unsigned int i = 0; i < attributes.size(); i++)
     {
         GLCall(glEnableVertexAttribArray(i)); //setting new vertex attributes array
-        GLCall(glVertexAttribPointer(i, attributes[i].count, attributes[i].type, attributes[i].isNotNormalized, _vertexAttrib.getStride(), (const void*)offset));
+        GLCall(glVertexAttribPointer(
+            i,
+            attributes[i].count,
+            attributes[i].type,
+            attributes[i].isNotNormalized,
+            _vertexAttrib.getStride(),
+            reinterpret_cast<const void*>(offset)
+        ));
 
-        offset += attributes[i].count * _vertexAttrib.getTypeSize(attributes[i].type);
+        offset += _vertexAttrib.getTypeSize(attributes[i].type) * attributes[i].count;
     }
 }
 

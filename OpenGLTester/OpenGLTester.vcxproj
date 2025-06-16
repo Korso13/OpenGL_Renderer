@@ -1109,7 +1109,7 @@
     <ClInclude Include="source\pch.h" />
     <ClInclude Include="source\Utilities\Public\GLErrorCatcher.h" />
     <ClInclude Include="source\Utilities\Public\ImG_debuger.h" />
-    <ClInclude Include="source\Utilities\Public\ImG_templateImpl.h" />
+    <ClInclude Include="source\Utilities\Public\ImG_templateImpl.inl" />
     <ClInclude Include="source\Utilities\Public\ShaderLib.h" />
     <ClInclude Include="source\Utilities\Public\ShaderUtilities.h" />
   </ItemGroup>

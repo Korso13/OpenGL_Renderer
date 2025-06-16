@@ -23,8 +23,8 @@ public:
     
     std::vector<SPTR<Vertex>> getVertices() override {return m_vertices;}
     size_t getVertexCount() const override {return m_vertices.size();}
-    std::vector<unsigned int> getIndices() override {return m_indices;}
-    void adjustIndices(unsigned int _adjustment) override;
+    std::vector<size_t> getIndices() override {return m_indices;}
+    void adjustIndices(size_t _adjustment) override;
 
 private:
 
@@ -32,7 +32,7 @@ private:
     
 private:
     std::vector<SPTR<Vertex>> m_vertices;
-    std::vector<unsigned int> m_indices;
+    std::vector<size_t> m_indices;
     
     glm::uvec2 m_size;
     vec3 m_position;

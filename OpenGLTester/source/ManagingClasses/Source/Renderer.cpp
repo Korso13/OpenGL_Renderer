@@ -40,8 +40,8 @@ void Renderer::draw(const VertexAO* _vertexArray, const ShaderType _shaderType, 
         return;
     }
     _vertexArray->bind(); //binds vertex buffer, index buffer and vertex attributes
-    const int indexSize = (_vertexArray->getIndexBuffers().empty()) ? (6) : (_vertexArray->getIndexBuffers()[0]->getCount()); //precaution against vertexAO without index buffer
-    GLCall(glDrawElements(_renderPrimitiveType, indexSize, GL_UNSIGNED_INT, 0));
+    const size_t indexSize = (_vertexArray->getIndexBuffers().empty()) ? (6) : (_vertexArray->getIndexBuffers()[0]->getCount()); //precaution against vertexAO without index buffer
+    GLCall(glDrawElements(_renderPrimitiveType, CAST_I(indexSize), GL_UNSIGNED_INT, 0));
 }
 
 void Renderer::render()

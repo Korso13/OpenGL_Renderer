@@ -3,7 +3,7 @@
 #include "Utilities/Public/GLErrorCatcher.h"
 #include "BaseClasses/RenderObjects/Public/RenderObject.h"
 
-IndexBuffer::IndexBuffer(const unsigned int* _data, const unsigned int _count, const GLenum _memUsageType)
+IndexBuffer::IndexBuffer(const unsigned int* _data, const size_t _count, const GLenum _memUsageType)
     : m_count(_count)
 {
     GLCall(glGenBuffers(1, &m_rendererId));
@@ -11,7 +11,7 @@ IndexBuffer::IndexBuffer(const unsigned int* _data, const unsigned int _count, c
     GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_count * sizeof(GLuint), _data, _memUsageType));
 }
 
-IndexBuffer::IndexBuffer(const unsigned _count)
+IndexBuffer::IndexBuffer(const size_t _count)
     : m_count(_count)
 {
     GLCall(glGenBuffers(1, &m_rendererId));
@@ -25,7 +25,7 @@ IndexBuffer::~IndexBuffer()
     GLCall(glDeleteBuffers(1, &m_rendererId));
 }
 
-void IndexBuffer::push_back_drawIndices(std::vector<unsigned int> _indices)
+void IndexBuffer::push_back_drawIndices(std::vector<size_t> _indices)
 {
     m_vertexIndicesPool.insert(m_vertexIndicesPool.end(), _indices.begin(), _indices.end());
     m_count = static_cast<unsigned>(m_vertexIndicesPool.size());

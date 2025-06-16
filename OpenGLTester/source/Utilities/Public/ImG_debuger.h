@@ -1,8 +1,6 @@
 #pragma once
 #include <pch.h>
 
-#include "ImG_templateImpl.h"
-
 enum class DebugDataType
 {
     FLOAT,
@@ -23,13 +21,13 @@ enum class ImGUI_ToolType
 template<typename T>
 struct elementData
 {
-    elementData(T* _inValsPtr, const size_t _valuesCount, ImGUI_ToolType _inType, const T _rangeMin = 0, const T _rangeMax = 0)
+    elementData(T* _inValsPtr, const size_t _valuesCount, ImGUI_ToolType _inType, const T&& _rangeMin = 0, const T&& _rangeMax = 0)
     :
     values(_inValsPtr),
     valuesCount(_valuesCount),
     toolType(_inType),
-    rangeMin(_rangeMin),
-    rangeMax(_rangeMax)
+    rangeMin(std::move(_rangeMin)),
+    rangeMax(std::move(_rangeMax))
     {}
     elementData() = default;
     
@@ -82,12 +80,9 @@ public:
         const size_t _valuesCount = 1,
         ImGUI_ToolType _editToolType = ImGUI_ToolType::SLIDER,
         //consider rewriting to deal with warnings
-        const T _rangeMin = T(),
-        const T _rangeMax = T()
-        )
-    {
-        ADDDEBUGVALUE_IMPL
-    }
+        const T&& _rangeMin = T(),
+        const T&& _rangeMax = T()
+        );
 
     void addDebugButtonToFolder(const std::string& _folder, const std::string& _buttonName, std::function<void()>&& _btnActivationCB);
     
@@ -110,3 +105,6 @@ private:
     bool m_isInitialized = false;
     std::unordered_map<std::string, ImGUI_folder> m_imguiFolders;
 };
+
+//template methods impls
+#include "ImG_templateImpl.inl"

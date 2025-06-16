@@ -59,8 +59,8 @@ BatchRenderTest::BatchRenderTest()
         &m_debugTexIndex,
         1,
         ImGUI_ToolType::SLIDER,
-        -10.f,
-        20.f);
+        -10,
+        20);
 }
 
 void BatchRenderTest::onUpdate(float dt)

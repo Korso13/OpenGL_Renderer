@@ -95,7 +95,7 @@ void Quad::addVertex(Vertex&& _vertex)
     m_vertices.push_back(std::make_shared<Vertex>(_vertex));
 }
 
-void Quad::adjustIndices(unsigned int _adjustment)
+void Quad::adjustIndices(size_t _adjustment)
 {
     for(auto& index : m_indices)
     {

@@ -155,7 +155,7 @@ struct Uniforms
     std::unordered_map<std::string, GLint> v3Uniforms;
     std::unordered_map<std::string, GLint> v4Uniforms;
     std::unordered_map<std::string, GLint> m4Uniforms;
-    std::unordered_map<std::string, std::pair<GLint, int>> ivUniforms;
+    std::unordered_map<std::string, std::pair<GLint, int32_t>> ivUniforms;
 };
 
 struct Vertex

@@ -21,6 +21,5 @@ private:
     
     GLuint m_rendererId;
     std::unordered_map<std::string, SPTR<RenderObject>> m_renderPool;
-    unsigned int m_VerticesToDraw = 0;
-    mutable bool onetimer = false;
+    size_t m_VerticesToDraw = 0;
 };

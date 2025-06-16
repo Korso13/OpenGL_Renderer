@@ -200,7 +200,7 @@ namespace shaderUtils
                         if(line.find('[') != std::string::npos)
                         {
                             //extracting array size
-                            size_t size;
+                            int32_t size;
                             pos = line.find('[') + 1;
                             size = std::atoi(line.substr(pos).c_str());
 
@@ -212,7 +212,7 @@ namespace shaderUtils
                             {
                                 varName.pop_back();
                             }
-                            foundUniforms.ivUniforms.emplace(varName, std::pair<GLint, size_t>{-1, size});
+                            foundUniforms.ivUniforms.emplace(varName, std::pair<GLint, int32_t>{-1, size});
                             continue;
                         }
                         else
