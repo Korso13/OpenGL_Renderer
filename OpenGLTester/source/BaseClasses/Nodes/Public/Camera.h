@@ -38,15 +38,16 @@ private:
 
 public:
     
-    void setEnabled(const bool _isEnabled) override {};
-    [[nodiscard]] bool isEnabled() const override {return true;};
+    void setEnabled(const bool _isEnabled) override {}
+    [[nodiscard]] bool isEnabled() const override {return true;}
     bool isInFrustum() const override {return true;}
-
+    
+    void setWorldScale(const vec3 _newScale) override {} //note: scale is always 1. Probably correct, but might affect HUD elements' scaling
+    void setLocalScale(const vec3 _newScale) override {}
+    
 protected:
     
     void onTransformChange() override;
-
-public:;
 
 private:
 
@@ -67,7 +68,7 @@ private:
     //Camera projection(vertices shift from camera frustum)
     glm::mat4 m_view;
     //Camera position
-    glm::vec3 m_viewTranslation;   
+    glm::vec3 m_viewTranslation;
 
     //clear color
     glm::vec4 m_clearColor{0.f, 0.f, 0.f, 1.f};

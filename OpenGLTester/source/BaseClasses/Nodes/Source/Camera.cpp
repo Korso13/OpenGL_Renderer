@@ -29,6 +29,10 @@ void Camera::onWindowSizeChanged(GLFWwindow* _window, const int _width, const in
 
 void Camera::updateProjection()
 {
+    std::cout << "[Camera::updateProjection] Updating " << ((m_projectionMode == ProjectionMode::ORTHOGRAFIC) ? "Ortho " : "Perspective ") << 
+        "projection with window size " <<
+        m_windowSize.w << "x" << m_windowSize.h << std::endl;
+    
     if(m_projectionMode == ProjectionMode::ORTHOGRAFIC)
     {
         m_projection = glm::ortho(0.f, CAST_F(m_windowSize.w), 0.0f, CAST_F(m_windowSize.h), -1.f, 1.f);
@@ -42,7 +46,9 @@ void Camera::updateProjection()
 void Camera::onTransformChange()
 {
     Node::onTransformChange();
-    //todo: update m_viewTranslation
+    
+    const vec3 worldPos = getWorldPos();
+    m_viewTranslation = glm::vec3(worldPos.x, worldPos.y, worldPos.z);
 }
 
 void Camera::setProjectionMode(const ProjectionMode _mode)

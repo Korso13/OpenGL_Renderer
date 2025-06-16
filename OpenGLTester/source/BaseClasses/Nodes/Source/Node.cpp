@@ -46,7 +46,7 @@ void Node::addChild(const SPTR<Node>& _child, const bool _bResetTransforms )
 
     if(_bResetTransforms)
     {
-        m_transform = Transform();
+        _child->m_transform = Transform();
     }
 
     m_children[_child->getName()] = _child;
@@ -83,6 +83,20 @@ void Node::traverseChildren(std::function<void(SPTR<Node>)> _nodeVisitor, bool _
     }
 }
 
+void Node::subscribeToTransformChange(const uint32_t _subscriberId, std::function<void(const Transform&)>&& _onTransformCb)
+{
+    subscribeToEvent(_subscriberId, "onTransformChanged",
+        [this, _onTransformCb](const SubscriberEventPayload& _payload)
+        {
+            _onTransformCb(m_transform);
+        });
+}
+
+void Node::unsubscribeFromTransformChange(uint32_t _subscriberId)
+{
+    unsubscribeFromEvent("onTransformChanged", _subscriberId);
+}
+
 vec3 Node::getLocalPos() const
 {
     if(m_parent)
@@ -101,13 +115,56 @@ vec3 Node::getLocalScale() const
     return getWorldScale();
 }
 
-void Node::handleChildNameChange(SubscriberEventPayload eventInfo)
+void Node::setWorldPos(const vec3 _newPos)
 {
-    if(!eventInfo.stringPayload.has_value())
+    m_transform.m_translation = _newPos;
+    onTransformChange();
+}
+
+void Node::setLocalPos(const vec3 _newPos)
+{
+    if(m_parent)
+    {
+        //todo: correct implementation using scale later!
+        setWorldPos(m_parent->getWorldPos() + _newPos);
+    }
+    else
+    {
+        setWorldPos(_newPos);
+    }
+}
+
+void Node::setWorldScale(const vec3 _newScale)
+{
+    m_transform.m_scale = _newScale;
+    onTransformChange();
+}
+
+void Node::setLocalScale(const vec3 _newScale)
+{
+    //todo: implement later!
+    onTransformChange();
+}
+
+void Node::onTransformChange()
+{
+    traverseChildren(
+        [this](const SPTR<Node>& _node)
+        {
+            _node->setWorldPos(m_transform.m_translation + _node->getLocalPos());
+            //todo: add scale transform change handling
+        });
+    
+    triggerEvent("onTransformChanged");
+}
+
+void Node::handleChildNameChange(const SubscriberEventPayload& _eventInfo)
+{
+    if(!_eventInfo.stringPayload.has_value())
         return;
 
-    const auto old_name = eventInfo.stringPayload.value();
-    const auto child_it = m_children.find(eventInfo.stringPayload.value());
+    const auto old_name = _eventInfo.stringPayload.value();
+    const auto child_it = m_children.find(_eventInfo.stringPayload.value());
     if(child_it == m_children.end())
         return;
 

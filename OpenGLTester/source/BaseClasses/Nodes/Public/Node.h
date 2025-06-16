@@ -30,7 +30,8 @@ public:
     void traverseChildren(std::function<void(SPTR<Node>)> _nodeVisitor, bool _bEnabledOnly = false);
     
     const Transform& getTransform() {return m_transform;}
-    size_t subscribeToTransformChange(std::function<void(const Transform&)>);
+    void subscribeToTransformChange(const uint32_t _subscriberId, std::function<void(const Transform&)>&& _onTransformCb);
+    void unsubscribeFromTransformChange(uint32_t _subscriberId);
     
     virtual [[nodiscard]] vec3 getWorldPos() const {return m_transform.getTranslation();}
     virtual [[nodiscard]] vec3 getWorldScale() const {return m_transform.getScale();}
@@ -49,7 +50,7 @@ protected:
 private:
 
     //Handles situations, where a child node changes its name
-    void handleChildNameChange(SubscriberEventPayload eventInfo);
+    void handleChildNameChange(const SubscriberEventPayload& _eventInfo);
     //used to recursively iterate down the Node hierarchy
     //static void recursiveVisitor(Node& _node, std::function<void(SPTR<Node>)>& _nodeVisitor);
     static void recursiveVisitor(SPTR<Node> _node, std::function<void(SPTR<Node>)>& _nodeVisitor, bool _bEnabledOnly = false);
