@@ -8,33 +8,34 @@ class RenderPrimitive;
 class Quad : public RenderObject
 {
 public:
-
-    Quad() = default;
-    Quad(glm::uvec2 _size, glm::vec3 _position, int _textureID = -1);
-
+    Quad() = delete;
+    explicit Quad(const std::string& _name = "Quad");
+    Quad(glm::uvec2 _size, glm::vec3 _position, int _textureID = -1, const std::string& _name = "Quad");
+    //todo: does it require destructor?
+    
     void makeQuad(glm::uvec2 _size, glm::vec3 _position, int _textureID = -1);
+
+    //todo: remove/rewrite using Node parent
     vec3 getPosition() const {return m_position;}
     void setPosition(glm::vec3& _newPosition);
-    void setColor(glm::vec4 newColor);
+    
+    void setColor(glm::vec4 newColor); //todo: remove when MaterialInst/Texture can replace functionality?
     
     void addPolygon(SPTR<RenderPrimitive> _polygon);
+    
+    void adjustIndices(size_t _adjustment) override;
+
+protected:
     void addVertex(SPTR<Vertex> _vertex) override;
     void addVertex(Vertex&& _vertex) override;
     
-    std::vector<SPTR<Vertex>> getVertices() override {return m_vertices;}
-    size_t getVertexCount() const override {return m_vertices.size();}
-    std::vector<size_t> getIndices() override {return m_indices;}
-    void adjustIndices(size_t _adjustment) override;
-
 private:
 
     vec3 getOffsetFromCenter(const unsigned int& index);
     
 private:
-    std::vector<SPTR<Vertex>> m_vertices;
-    std::vector<size_t> m_indices;
     
-    glm::uvec2 m_size;
-    vec3 m_position;
-    unsigned int m_textureID;
+    glm::uvec2 m_size{};
+    vec3 m_position; //todo: replace with call to Node
+    unsigned int m_textureID{};
 };

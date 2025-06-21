@@ -153,7 +153,8 @@ void Node::onTransformChange()
         {
             _node->setWorldPos(m_transform.m_translation + _node->getLocalPos());
             //todo: add scale transform change handling
-        });
+        }
+    );
     
     triggerEvent("onTransformChanged");
 }

@@ -11,6 +11,7 @@ public:
     ~VertexBuffer();
 
     //Registers renderable object in the specific vertex buffer for batch-rendering
+    //todo: redelegate to future RendererBatch class
     void addRenderObject(const std::string& _name,  SPTR<RenderObject> _objRef);
     void removeRenderObject(const std::string& _name);
     

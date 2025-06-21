@@ -52,7 +52,7 @@ private:
     //Handles situations, where a child node changes its name
     void handleChildNameChange(const SubscriberEventPayload& _eventInfo);
     //used to recursively iterate down the Node hierarchy
-    //static void recursiveVisitor(Node& _node, std::function<void(SPTR<Node>)>& _nodeVisitor);
+    //static void recursiveVisitor(Node& _node, std::function<void(SPTR<Node>)>& _nodeVisitor); //todo: need to remove?
     static void recursiveVisitor(SPTR<Node> _node, std::function<void(SPTR<Node>)>& _nodeVisitor, bool _bEnabledOnly = false);
 
 protected:

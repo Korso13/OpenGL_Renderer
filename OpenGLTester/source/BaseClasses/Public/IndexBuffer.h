@@ -14,6 +14,7 @@ public:
     ~IndexBuffer();
 
     //Primary method for adding indices to draw for batch-rendering method
+    //todo: redelegate to future RendererBatch class
     void addRenderObject(const SPTR<RenderObject>& _RenderObject);
     //Only use this one if you adjusted your indices elsewhere or it's the first batch of indices! Avoid if possible!
     void push_back_drawIndices(std::vector<size_t> _indices);
