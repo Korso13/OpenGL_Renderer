@@ -38,9 +38,14 @@ protected:
     //Render-related methods (implemented and used by heir classes)
     virtual void addVertex(SPTR<Vertex> _vertex) = 0;
     virtual void addVertex(Vertex&& _vertex) = 0;
-    
-protected:
+    bool isDirty() const { return m_isDirty; }
+    void setIsDirty(const bool _isDirty) { m_isDirty = _isDirty; }
 
+    void onTransformChange() override {setIsDirty(true); Node::onTransformChange(); }
+    
+private:
+    
+    bool m_isDirty = true; // set to "false" after being put in batch, reset to "true" after render parameters change
     uint32_t m_renderOrder = 0;
     SPTR<MaterialInstance> m_materialInstance = nullptr;
 

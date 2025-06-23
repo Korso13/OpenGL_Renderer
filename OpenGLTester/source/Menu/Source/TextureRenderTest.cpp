@@ -5,7 +5,7 @@
 #include "ManagingClasses/Public/ShaderMachine.h"
 #include "BaseClasses/Public/IndexBuffer.h"
 #include "BaseClasses/Public/VertexBuffer.h"
-#include "ManagingClasses/Public/VertexAO.h"
+#include "BaseClasses/Public/VertexAO.h"
 #include "BaseClasses/Public/VertexAttributes.h"
 #include "Utilities/Public/GLErrorCatcher.h"
 

@@ -45,7 +45,7 @@ public:
 
 protected:
     
-    virtual void onTransformChange(); //todo: consider removing virtual
+    virtual void onTransformChange();
     
 private:
 

@@ -1,5 +1,5 @@
 #include "../Public/Renderer.h"
-#include "../Public/VertexAO.h"
+#include "BaseClasses/Public/VertexAO.h"
 #include "../Public/ShaderMachine.h"
 #include "BaseClasses/Public/IndexBuffer.h"
 #include "Utilities/Public/GLErrorCatcher.h"

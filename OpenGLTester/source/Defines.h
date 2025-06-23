@@ -22,6 +22,10 @@
 //using and typedefs
 template<typename Ty>
 using SPTR = std::shared_ptr<Ty>;
+template<typename Ty>
+using UPTR = std::unique_ptr<Ty>;
+template<typename Ty>
+using WPTR = std::weak_ptr<Ty>;
 
 //enums
 enum class ShaderType

@@ -7,7 +7,7 @@
 #include "BaseClasses/RenderObjects/Public/Quad.h"
 #include "ManagingClasses/Public/Renderer.h"
 #include "ManagingClasses/Public/ShaderMachine.h"
-#include "ManagingClasses/Public/VertexAO.h"
+#include "BaseClasses/Public/VertexAO.h"
 #include "Utilities/Public/GLErrorCatcher.h"
 
 BatchRenderTest::BatchRenderTest()
