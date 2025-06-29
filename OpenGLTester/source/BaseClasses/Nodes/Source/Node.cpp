@@ -83,9 +83,9 @@ void Node::traverseChildren(std::function<void(SPTR<Node>)> _nodeVisitor, bool _
     }
 }
 
-void Node::subscribeToTransformChange(const uint32_t _subscriberId, std::function<void(const Transform&)>&& _onTransformCb)
+SPTR<Subscriber::SubscriberHandler>  Node::subscribeToTransformChange(const uint32_t _subscriberId, std::function<void(const Transform&)>&& _onTransformCb)
 {
-    subscribeToEvent(_subscriberId, "onTransformChanged",
+    return subscribeToEventWithHandler(_subscriberId, "onTransformChanged",
         [this, _onTransformCb](const SubscriberEventPayload& _payload)
         {
             _onTransformCb(m_transform);

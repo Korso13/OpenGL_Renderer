@@ -30,7 +30,7 @@ public:
     void traverseChildren(std::function<void(SPTR<Node>)> _nodeVisitor, bool _bEnabledOnly = false);
     
     const Transform& getTransform() {return m_transform;}
-    void subscribeToTransformChange(const uint32_t _subscriberId, std::function<void(const Transform&)>&& _onTransformCb);
+    [[nodiscard]] SPTR<Subscriber::SubscriberHandler> subscribeToTransformChange(const uint32_t _subscriberId, std::function<void(const Transform&)>&& _onTransformCb);
     void unsubscribeFromTransformChange(uint32_t _subscriberId);
     
     virtual [[nodiscard]] vec3 getWorldPos() const {return m_transform.getTranslation();}

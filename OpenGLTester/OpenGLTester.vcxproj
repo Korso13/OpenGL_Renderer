@@ -640,6 +640,7 @@
     <ClCompile Include="source\Menu\Source\TextureRenderTest.cpp" />
     <ClCompile Include="source\Utilities\Source\ImG_debuger.cpp" />
     <ClCompile Include="source\Utilities\Source\ShaderLib.cpp" />
+    <ClCompile Include="source\Utilities\Source\Subscriber.cpp" />
     <ClCompile Include="source\Utilities\Source\Utilities.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
