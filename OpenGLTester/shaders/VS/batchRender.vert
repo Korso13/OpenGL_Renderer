@@ -1,9 +1,10 @@
 #version 450 core
-layout(location = 0) in vec4 position;
-layout(location = 1) in vec4 Color;
-layout(location = 2) in vec2 UV;
-layout(location = 3) in float TextureID;
-layout(location = 4) in uint VertexIndex;
+layout(location = 0) in vec4 vCoord;
+layout(location = 1) in vec4 position;
+layout(location = 2) in vec4 Color;
+layout(location = 3) in vec2 UV;
+layout(location = 4) in float TextureID;
+layout(location = 5) in uint VertexIndex;
 
 out vec2 v_TexCoord;
 flat out float v_TexIndex;

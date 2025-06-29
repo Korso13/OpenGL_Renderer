@@ -1,6 +1,7 @@
 #pragma once
 #include "pch.h"
 #include "Subscriber.h"
+#include "Math.h"
 
 namespace utils
 {
@@ -71,3 +72,20 @@ struct Visitor : Lambdas...
     }
     using Lambdas::operator()...;
 };
+
+static [[nodiscard]] SPTR<Vertex> CreateVertex(
+    const vec3& _vertexLocalCoord,
+    const vec2& _uv,
+    const unsigned int& _vertexIndex,
+    const vec3& _globalPosOffset, 
+    const int32_t& _textureID = 0)
+{
+    SPTR<Vertex> new_vertex = std::make_shared<Vertex>(*(new Vertex));
+    new_vertex->vCoord = _vertexLocalCoord;
+    new_vertex->position = _globalPosOffset + new_vertex->vCoord;
+    new_vertex->uv = _uv;
+    new_vertex->textureId = static_cast<float>(_textureID);
+    new_vertex->vertexIndex = _vertexIndex;
+
+    return new_vertex;
+}

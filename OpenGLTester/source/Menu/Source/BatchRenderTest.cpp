@@ -82,8 +82,8 @@ void BatchRenderTest::onRender()
 
     //calculating MVP
     m_view = glm::translate(glm::mat4(1.f), m_viewTranslation);
-    const auto transform = glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.f, 0.f));
-    m_MVP =  m_projection * m_view * transform;
+    const auto model = glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.f, 0.f));
+    m_MVP =  m_projection * m_view * model;
     auto shader = ShaderMachine::get()->getShader(ShaderType::BATCH_RENDER);
     if(!shader)
     {
@@ -103,8 +103,8 @@ void BatchRenderTest::prepareMVP()
 {
     //making starting MVP matrix
     m_view = glm::translate(glm::mat4(1.f), m_viewTranslation); //Camera projection
-    auto transform = glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.f, 0.f)); //rendered primitives position
-    m_MVP =  m_projection * m_view * transform;
+    auto model = glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.f, 0.f)); //rendered primitives position
+    m_MVP =  m_projection * m_view * model;
 }
 
 void BatchRenderTest::prepareTextures()
@@ -119,18 +119,15 @@ void BatchRenderTest::prepareTextures()
     m_vBuffer = M_SPTR<VertexBuffer>(*(new VertexBuffer));
     m_iBuffer = M_SPTR<IndexBuffer>(*(new IndexBuffer));
 
-    /*m_logoPlane1 = M_SPTR<Quad>(*(new Quad));
-    m_logoPlane1->makeQuad({300,300}, m_logo1Pos, 0);*/
+    m_logoPlane1 = Quad::build(uvec2(300,300), m_logo1Pos, 0);
     m_vBuffer->addRenderObject("Logo1", m_logoPlane1);
     m_iBuffer->addRenderObject(m_logoPlane1);
-
-    /*m_logoPlane2 = M_SPTR<Quad>(*(new Quad));
-    m_logoPlane2->makeQuad({300,300}, m_logo2Pos, 1);*/
+    
+    m_logoPlane2 = Quad::build(uvec2(300,300), m_logo2Pos, 1);
     m_vBuffer->addRenderObject("Logo2", m_logoPlane2);
     m_iBuffer->addRenderObject(m_logoPlane2);
 
     m_vao = M_SPTR<VertexAO>(*(new VertexAO()));
-    //TODO:: transition all buffer wrappers to SPTR
     m_vao->addBufferTyped<Vertex>(m_vBuffer.get(), m_iBuffer.get());
     
     //generating shader

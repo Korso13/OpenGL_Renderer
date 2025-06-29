@@ -9,30 +9,31 @@ class Quad : public RenderObject
 {
 public:
     Quad() = delete;
-    Quad(glm::uvec2 _size, glm::vec3 _position, int _textureID = -1, const std::string& _name = "Quad");
+    Quad(const uvec2& _size, const vec3& _position, const int _textureId = -1, const std::string& _name = "Quad");
+    static SPTR<Quad> build(const uvec2& _size, const vec3& _position, const int _textureId = -1, const std::string& _name = "Quad")
+    {
+        auto new_quad = SPTR<Quad>(new Quad(_size, _position, _textureId, _name));
+        return new_quad;
+    }
     //todo: add copy/move constructors?
     
-    //todo: does it require destructor?
-    
-    void makeQuad(glm::uvec2 _size, glm::vec3 _position, int _textureID = -1);
-
-    //todo: remove/rewrite using Node parent
-    /*vec3 getPosition() const {return m_position;}
-    void setPosition(glm::vec3& _newPosition);*/
-    
-    void setColor(glm::vec4 newColor); //todo: remove when MaterialInst/Texture can replace functionality?
+    void setColor(glm::vec4 _newColor); //todo: remove when MaterialInst/Texture can replace functionality?
 
 protected:
+
     void addVertex(SPTR<Vertex>&& _vertex) override;
     void addVertex(Vertex&& _vertex) override;
+
+    void onTransformChange() override;
     
 private:
 
-    vec3 getOffsetFromCenter(const unsigned int& index);
+    void makeQuad();
+    vec3 getOffsetFromCenter(const unsigned int& _index);
     
 private:
-    
-    glm::uvec2 m_size{};
-    vec3 m_position; //todo: replace with call to Node
-    unsigned int m_textureID{};
+
+    bool m_isInitialized = false;
+    const uvec2 m_size;
+    int32_t m_textureId; //todo: is it needed?
 };

@@ -1,9 +1,18 @@
 #include "../Public/RenderObject.h"
+#include "Utilities/Public/Math.h"
 
 RenderObject::RenderObject(const std::string& _name): Node(std::forward<const std::string&>(_name))
 {}
 
-void RenderObject::onTransformChange() {setIsDirty(true); Node::onTransformChange(); }
+void RenderObject::onTransformChange()
+{
+    setIsDirty(true);
+    for(const auto& vertex : m_vertices)
+    {
+        vertex->position = getWorldPos() + vertex->vCoord * getWorldScale();
+    }
+    Node::onTransformChange();
+}
 
 void RenderObject::adjustIndices(const size_t _adjustment)
 {

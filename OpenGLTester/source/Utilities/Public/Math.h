@@ -2,7 +2,7 @@
 #include <pch.h>
 #include <Defines.h>
 
-inline vec3 operator+(const vec3 _first, const vec3 _second)
+inline vec3 operator+(const vec3& _first, const vec3& _second)
 {
     vec3 result;
     result.x = _first.x + _second.x;
@@ -11,7 +11,7 @@ inline vec3 operator+(const vec3 _first, const vec3 _second)
     return result;
 }
 
-inline vec3 operator-(const vec3 _first, const vec3 _second)
+inline vec3 operator-(const vec3& _first, const vec3& _second)
 {
     vec3 result;
     result.x = _first.x + _second.x;
@@ -20,7 +20,7 @@ inline vec3 operator-(const vec3 _first, const vec3 _second)
     return result;
 }
 
-inline vec3 operator*(const vec3 _first, const vec3 _second)
+inline vec3 operator*(const vec3& _first, const vec3& _second)
 {
     vec3 result;
     result.x = _first.x * _second.x;
@@ -29,7 +29,7 @@ inline vec3 operator*(const vec3 _first, const vec3 _second)
     return result;
 }
 
-inline vec3 operator/(const vec3 _first, vec3 _second)
+inline vec3 operator/(const vec3& _first, vec3& _second)
 {
     vec3 result;
     if(_second.x == 0.f) _second.x = 0.00001f;
@@ -38,6 +38,17 @@ inline vec3 operator/(const vec3 _first, vec3 _second)
     result.x = _first.x / _second.x;
     result.y = _first.y / _second.y;
     result.z = _first.z / _second.z;
+    return result;
+}
+
+//todo: add missing operations for vec4
+inline vec4 operator+(const vec4& _first, const vec4& _second)
+{
+    vec4 result;
+    result.x = _first.x + _second.x;
+    result.y = _first.y + _second.y;
+    result.z = _first.z + _second.z;
+    result.a = _first.a + _second.a;
     return result;
 }
 
@@ -68,7 +79,7 @@ inline Transform Transform::operator*(const Transform& _other) const
     return result;
 }
 
-inline Transform Transform::operator/(const Transform& _other) const
+inline Transform Transform::operator/(Transform& _other) const
 {
     Transform result;
     result.m_translation = m_translation / _other.m_translation;

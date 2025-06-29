@@ -2,50 +2,65 @@
 #include "../Public/RenderPrimitive.h"
 #include "Utilities/Public/Math.h"
 
-Quad::Quad(glm::uvec2 _size, glm::vec3 _position, int _textureID, const std::string& _name)
+Quad::Quad(const uvec2& _size, const vec3& _position, const int _textureId, const std::string& _name)
     :
     RenderObject((_name == "Quad") ?
                  _name + std::to_string(utils::Utilities::getInternalUID()) :
                  std::forward<const std::string&>(_name)
-                )
+                ),
+    m_size(_size), m_textureId(_textureId)
 {
-    makeQuad(_size, _position, _textureID);
+    Node::setWorldPos(_position);
+    makeQuad();
 }
 
-void Quad::makeQuad(glm::uvec2 _size, glm::vec3 _position, int _textureID)
+void Quad::makeQuad()
 {
-    m_size = _size;
-    m_position = vec3(_position);
-    m_textureID = _textureID;
+    if (m_isInitialized)
+        return;
+    
+    m_isInitialized = true;
     clearVertices();
     
-    //generating vertices clock-wise
-    SPTR<Vertex> v1 = std::make_shared<Vertex>(*(new Vertex));
-    v1->Position = m_position + vec3(-(CAST_F(_size.x)/2.f), -(CAST_F(_size.y)/2.f), 0.f);
-    v1->UV = vec2(0.f, 0.f);
-    v1->TextureID = static_cast<float>(_textureID);
-    v1->VertexIndex = 0;
+    //generating vertices clock-wise from bottom-left
+    vec3 v1Coord = getOffsetFromCenter(0);
+    SPTR<Vertex> v1 = CreateVertex(
+        v1Coord,
+        vec2(0.f, 0.f),
+        0,
+        getWorldPos() + v1Coord,
+        m_textureId
+    );
     addVertex(std::move(v1));
     
-    SPTR<Vertex> v2 = std::make_shared<Vertex>(*(new Vertex));
-    v2->Position = m_position + vec3(-(CAST_F(_size.x)/2.f), (CAST_F(_size.y)/2.f), 0.f);
-    v2->UV = vec2(0.f, 1.f);
-    v2->TextureID = static_cast<float>(_textureID);
-    v2->VertexIndex = 1;
+    vec3 v2Coord = getOffsetFromCenter(1);
+    SPTR<Vertex> v2 = CreateVertex(
+        v2Coord,
+        vec2(0.f, 1.f),
+        1,
+        getWorldPos() + v2Coord,
+        m_textureId
+    );
     addVertex(std::move(v2));
         
-    SPTR<Vertex> v3 = std::make_shared<Vertex>(*(new Vertex));
-    v3->Position = m_position + vec3((CAST_F(_size.x)/2.f), (CAST_F(_size.y)/2.f), 0.f);
-    v3->UV = vec2(1.f, 1.f);
-    v3->TextureID = static_cast<float>(_textureID);
-    v3->VertexIndex = 2;
+    vec3 v3Coord = getOffsetFromCenter(2);
+    SPTR<Vertex> v3 = CreateVertex(
+        v3Coord,
+        vec2(1.f, 1.f),
+        2,
+        getWorldPos() + v3Coord,
+        m_textureId
+    );
     addVertex(std::move(v3));
     
-    SPTR<Vertex> v4 = std::make_shared<Vertex>(*(new Vertex));
-    v4->Position = m_position + vec3((CAST_F(_size.x)/2.f), -(CAST_F(_size.y)/2.f), 0.f);
-    v4->UV = vec2(1.f, 0.f);
-    v4->TextureID = static_cast<float>(_textureID);
-    v4->VertexIndex = 3;
+    vec3 v4Coord = getOffsetFromCenter(3);
+    SPTR<Vertex> v4 = CreateVertex(
+        v4Coord,
+        vec2(1.f, 0.f),
+        3,
+        getWorldPos() + v4Coord,
+        m_textureId
+    );
     addVertex(std::move(v4));
     
     addVerticesIndices({
@@ -54,26 +69,12 @@ void Quad::makeQuad(glm::uvec2 _size, glm::vec3 _position, int _textureID)
     });
 }
 
-/*void Quad::setPosition(glm::vec3& _newPosition)
-{
-    //return;
-    int i = 0;
-    for (auto& vertex : m_vertices)
-    {
-        vertex->Position =
-            vec3(CAST_F(m_size.x) * vertex->UV.x, CAST_F(m_size.y) * vertex->UV.y, 0.f) +
-            getOffsetFromCenter(i) +
-            vec3(_newPosition);
-        i++;
-    }
-}*/
-
-void Quad::setColor(glm::vec4 newColor)
+void Quad::setColor(glm::vec4 _newColor)
 {
     for(auto& vertex : getVertices())
     {
         if (vertex)
-            vertex->Color = vec4(newColor);
+            vertex->color = vec4(_newColor);
     }
 }
 
@@ -93,18 +94,30 @@ void Quad::addVertex(Vertex&& _vertex)
     addVertex(std::move(_vertex));
 }
 
-vec3 Quad::getOffsetFromCenter(const unsigned& index)
+void Quad::onTransformChange()
 {
-    switch (index)
+    setIsDirty(true);
+    int i = 0;
+    for (const auto& vertex : getVertices())
+    {
+        vertex->position = vec3(getWorldPos() - getOffsetFromCenter(i)*getWorldScale()); //different calculations for vertex due to anchor in the center
+        i++;
+    }
+    Node::onTransformChange(); //skipping RenderObject::onTransformChange, because we need different logic for quad to keep anchor in the center  // NOLINT(bugprone-parent-virtual-call)
+}
+
+vec3 Quad::getOffsetFromCenter(const unsigned& _index)
+{
+    switch (_index)
     {
     case (0):
-        return vec3(-(m_size.x/2.f), -(m_size.y/2.f), 0.f);
+        return vec3(-(CAST_F(m_size.x)/2.f), -(CAST_F(m_size.y)/2.f), 0.f);
     case(1):
-        return vec3(-(m_size.x/2.f),  (m_size.y/2.f), 0.f);
+        return vec3(-(CAST_F(m_size.x)/2.f),  (CAST_F(m_size.y)/2.f), 0.f);
     case(2):
-        return vec3( (m_size.x/2.f),  (m_size.y/2.f), 0.f);
+        return vec3( (CAST_F(m_size.x)/2.f),  (CAST_F(m_size.y)/2.f), 0.f);
     case(3):
-        return vec3( (m_size.x/2.f), -(m_size.y/2.f), 0.f);
+        return vec3( (CAST_F(m_size.x)/2.f), -(CAST_F(m_size.y)/2.f), 0.f);
     default:
         return vec3();
     }

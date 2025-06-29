@@ -91,8 +91,10 @@ struct ivec2
     };
 };
 
-struct uivec2
+struct uvec2
 {
+    uvec2(const unsigned int& _element1, const unsigned int& _element2) : x(_element2), y(_element1){}
+    
     union 
     {
         unsigned int x;
@@ -121,8 +123,12 @@ struct vec3
     vec3(const float _x, const float _y, const float _z) : x(_x), y(_y), z(_z){}
     vec3(const float _oneSize) : x(_oneSize), y(_oneSize), z(_oneSize){}
     explicit vec3(const glm::vec3& _vec3) : x(_vec3.x), y(_vec3.y), z(_vec3.z) {}
-    void operator= (const vec3& _vec3) { x = _vec3.x; y = _vec3.y; z = _vec3.z;}
+    vec3& operator=(const vec3& _vec3) { return *this;}
     vec3() = default;
+
+    [[nodiscard]] glm::vec3 glmFormat() const {return {x, y, z};}
+    
+public:
     float x = 0.f;
     float y = 0.f;
     float z = 0.f;
@@ -141,16 +147,6 @@ struct vec4
     float a = 0.f;
 };
 
-inline vec4 operator+(vec4 _first, vec4 _second)
-{
-    vec4 result;
-    result.x = _first.x + _second.x;
-    result.y = _first.y + _second.y;
-    result.z = _first.z + _second.z;
-    result.a = _first.a + _second.a;
-    return result;
-}
-
 struct Uniforms
 {
     std::unordered_map<std::string, GLint> iUniforms;
@@ -164,14 +160,16 @@ struct Uniforms
 
 struct Vertex
 {
-    vec3 Position;
-    vec4 Color = {1.f, 1.f, 1.f, 1.f};
-    vec2 UV;
-    float TextureID = -1.f;
-    unsigned int VertexIndex = 0;
+    vec3 vCoord = vec3(0.f); //vertex local coord
+    vec3 position = vec3(0.f); //Vertex finite coord
+    vec4 color = {1.f, 1.f, 1.f, 1.f};
+    vec2 uv = vec2(0.f);
+    float textureId = -1.f;
+    unsigned int vertexIndex = 0;
 };
 
-class Node;
+class Node; //forward decl
+
 class Transform
 {
     friend Node;
@@ -184,7 +182,7 @@ public:
     Transform operator+(const Transform& _other) const;
     Transform operator-(const Transform& _other) const;
     Transform operator*(const Transform& _other) const;
-    Transform operator/(const Transform& _other) const;
+    Transform operator/(Transform& _other) const;
 
 private:
 

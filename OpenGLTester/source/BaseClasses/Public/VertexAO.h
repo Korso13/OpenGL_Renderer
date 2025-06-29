@@ -20,6 +20,7 @@ public:
     void addBuffer(VertexBuffer* _vertexBuffer, IndexBuffer* _indexBuffer, VertexAttributes* _vertexAttrib);
 
     //Specialized for certain Vertex format
+    //TODO:: transition all buffer wrappers to SPTR
     template<typename T>
     void addBufferTyped(VertexBuffer* _vertexBuffer, IndexBuffer* _indexBuffer);
     template<typename T>
@@ -38,6 +39,7 @@ public:
 private:
 
     GLuint m_rendererId;
+    //TODO:: transition all buffer wrappers to SPTR
     std::vector<VertexBuffer*> m_vBuffer;
     std::vector<IndexBuffer*> m_iBuffer;
     std::vector<VertexAttributes*> m_aBuffer;
