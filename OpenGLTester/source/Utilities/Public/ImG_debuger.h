@@ -1,6 +1,7 @@
 #pragma once
 #include <pch.h>
 
+//todo: add support for vector types
 enum class DebugDataType
 {
     FLOAT,

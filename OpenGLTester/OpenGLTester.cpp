@@ -8,19 +8,16 @@
 #include "ImGUI/imgui_impl_opengl3.h"
 #include "Menu/Public/BatchRenderTest.h"
 #include "Menu/Public/ClearColorTest.h"
-#include "Menu/Public/TextureRenderTest.h"
 #include "source/Utilities/Public/GLErrorCatcher.h"
 
 enum class MMSelector
 {
     NONE,
-    TEXTURE_RENDER,
     CLEAR_COLOR,
     BATCH_RENDER
 };
 
 static MMSelector RenderSelector = MMSelector::NONE;
-static TextureRenderTest* TextureRender = nullptr;
 static ClearColorTest* ClearColor = nullptr;
 static BatchRenderTest* BatchRender = nullptr;
 
@@ -29,9 +26,6 @@ static void switchTesters(MMSelector tester)
     switch (RenderSelector)
     {
     case MMSelector::NONE:
-        break;
-    case MMSelector::TEXTURE_RENDER:
-        delete TextureRender;
         break;
     case MMSelector::CLEAR_COLOR:
         delete ClearColor;
@@ -48,9 +42,6 @@ static void switchTesters(MMSelector tester)
     switch (tester)
     {
     case MMSelector::NONE:
-        break;
-    case MMSelector::TEXTURE_RENDER:
-        TextureRender = new TextureRenderTest();
         break;
     case MMSelector::CLEAR_COLOR:
         ClearColor = new ClearColorTest();
@@ -112,11 +103,6 @@ int main(void)
     DEBUG_UI->initImGUI(window);
 
     //setting up main menu buttons-selectors
-    DEBUG_UI->addMainMenuItem("Texture render tester",
-        []()
-    {
-        switchTesters(MMSelector::TEXTURE_RENDER);
-    });
     DEBUG_UI->addMainMenuItem("Clear color tester",
     []()
     {
@@ -136,9 +122,6 @@ int main(void)
         
         switch (RenderSelector)
         {
-        case MMSelector::TEXTURE_RENDER:
-            if(TextureRender)TextureRender->onRender();
-            break;
         case MMSelector::CLEAR_COLOR:
             if(ClearColor)ClearColor->onRender();
             break;

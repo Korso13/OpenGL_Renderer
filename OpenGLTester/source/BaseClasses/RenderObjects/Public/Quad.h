@@ -9,24 +9,21 @@ class Quad : public RenderObject
 {
 public:
     Quad() = delete;
-    explicit Quad(const std::string& _name = "Quad");
     Quad(glm::uvec2 _size, glm::vec3 _position, int _textureID = -1, const std::string& _name = "Quad");
+    //todo: add copy/move constructors?
+    
     //todo: does it require destructor?
     
     void makeQuad(glm::uvec2 _size, glm::vec3 _position, int _textureID = -1);
 
     //todo: remove/rewrite using Node parent
-    vec3 getPosition() const {return m_position;}
-    void setPosition(glm::vec3& _newPosition);
+    /*vec3 getPosition() const {return m_position;}
+    void setPosition(glm::vec3& _newPosition);*/
     
     void setColor(glm::vec4 newColor); //todo: remove when MaterialInst/Texture can replace functionality?
-    
-    void addPolygon(SPTR<RenderPrimitive> _polygon);
-    
-    void adjustIndices(size_t _adjustment) override;
 
 protected:
-    void addVertex(SPTR<Vertex> _vertex) override;
+    void addVertex(SPTR<Vertex>&& _vertex) override;
     void addVertex(Vertex&& _vertex) override;
     
 private:

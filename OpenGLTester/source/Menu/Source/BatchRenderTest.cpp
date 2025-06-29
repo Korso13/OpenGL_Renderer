@@ -119,16 +119,13 @@ void BatchRenderTest::prepareTextures()
     m_vBuffer = M_SPTR<VertexBuffer>(*(new VertexBuffer));
     m_iBuffer = M_SPTR<IndexBuffer>(*(new IndexBuffer));
 
-    m_logoPlane1 = M_SPTR<Quad>(*(new Quad));
-    //TODO:: replace data type for size and get it from texture
-    m_logoPlane1->makeQuad({300,300}, m_logo1Pos, 0);
-    //m_logoPlane1->setColor(glm::vec4(1, 0, 0, 1));
+    /*m_logoPlane1 = M_SPTR<Quad>(*(new Quad));
+    m_logoPlane1->makeQuad({300,300}, m_logo1Pos, 0);*/
     m_vBuffer->addRenderObject("Logo1", m_logoPlane1);
     m_iBuffer->addRenderObject(m_logoPlane1);
 
-    m_logoPlane2 = M_SPTR<Quad>(*(new Quad));
-    m_logoPlane2->makeQuad({300,300}, m_logo2Pos, 1);
-    //m_logoPlane2->setColor(glm::vec4(0, 0, 1, 1));
+    /*m_logoPlane2 = M_SPTR<Quad>(*(new Quad));
+    m_logoPlane2->makeQuad({300,300}, m_logo2Pos, 1);*/
     m_vBuffer->addRenderObject("Logo2", m_logoPlane2);
     m_iBuffer->addRenderObject(m_logoPlane2);
 
@@ -163,6 +160,6 @@ void BatchRenderTest::prepareTextures()
 
 void BatchRenderTest::updateQuadsTranslations()
 {
-    if(m_logoPlane1)m_logoPlane1->setPosition(m_logo1Pos);
-    if(m_logoPlane2)m_logoPlane2->setPosition(m_logo2Pos);
+    if(m_logoPlane1)m_logoPlane1->setWorldPos(m_logo1Pos);
+    if(m_logoPlane2)m_logoPlane2->setWorldPos(m_logo2Pos);
 }

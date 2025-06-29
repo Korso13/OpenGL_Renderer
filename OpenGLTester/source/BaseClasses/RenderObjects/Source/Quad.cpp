@@ -2,15 +2,6 @@
 #include "../Public/RenderPrimitive.h"
 #include "Utilities/Public/Math.h"
 
-Quad::Quad(const std::string& _name)
-    :
-    RenderObject((_name == "Quad") ?
-                 _name + std::to_string(utils::Utilities::getInternalUID()) :
-                 std::forward<const std::string&>(_name)
-                )
-{
-}
-
 Quad::Quad(glm::uvec2 _size, glm::vec3 _position, int _textureID, const std::string& _name)
     :
     RenderObject((_name == "Quad") ?
@@ -26,7 +17,7 @@ void Quad::makeQuad(glm::uvec2 _size, glm::vec3 _position, int _textureID)
     m_size = _size;
     m_position = vec3(_position);
     m_textureID = _textureID;
-    m_vertices.clear();
+    clearVertices();
     
     //generating vertices clock-wise
     SPTR<Vertex> v1 = std::make_shared<Vertex>(*(new Vertex));
@@ -34,36 +25,36 @@ void Quad::makeQuad(glm::uvec2 _size, glm::vec3 _position, int _textureID)
     v1->UV = vec2(0.f, 0.f);
     v1->TextureID = static_cast<float>(_textureID);
     v1->VertexIndex = 0;
-    m_vertices.push_back(v1);
+    addVertex(std::move(v1));
     
     SPTR<Vertex> v2 = std::make_shared<Vertex>(*(new Vertex));
     v2->Position = m_position + vec3(-(CAST_F(_size.x)/2.f), (CAST_F(_size.y)/2.f), 0.f);
     v2->UV = vec2(0.f, 1.f);
     v2->TextureID = static_cast<float>(_textureID);
     v2->VertexIndex = 1;
-    m_vertices.push_back(v2);
+    addVertex(std::move(v2));
         
     SPTR<Vertex> v3 = std::make_shared<Vertex>(*(new Vertex));
     v3->Position = m_position + vec3((CAST_F(_size.x)/2.f), (CAST_F(_size.y)/2.f), 0.f);
     v3->UV = vec2(1.f, 1.f);
     v3->TextureID = static_cast<float>(_textureID);
     v3->VertexIndex = 2;
-    m_vertices.push_back(v3);
+    addVertex(std::move(v3));
     
     SPTR<Vertex> v4 = std::make_shared<Vertex>(*(new Vertex));
     v4->Position = m_position + vec3((CAST_F(_size.x)/2.f), -(CAST_F(_size.y)/2.f), 0.f);
     v4->UV = vec2(1.f, 0.f);
     v4->TextureID = static_cast<float>(_textureID);
     v4->VertexIndex = 3;
-    m_vertices.push_back(v4);
+    addVertex(std::move(v4));
     
-    m_indices = {
-        0, 1, 2,
-        0, 2, 3
-    };
+    addVerticesIndices({
+        0, 1, 2, //first triangle
+        0, 2, 3  //second triangle
+    });
 }
 
-void Quad::setPosition(glm::vec3& _newPosition)
+/*void Quad::setPosition(glm::vec3& _newPosition)
 {
     //return;
     int i = 0;
@@ -75,46 +66,31 @@ void Quad::setPosition(glm::vec3& _newPosition)
             vec3(_newPosition);
         i++;
     }
-}
+}*/
 
 void Quad::setColor(glm::vec4 newColor)
 {
-    for(auto& vertex : m_vertices)
+    for(auto& vertex : getVertices())
     {
-        vertex->Color = vec4(newColor);
+        if (vertex)
+            vertex->Color = vec4(newColor);
     }
 }
 
-void Quad::addPolygon(SPTR<RenderPrimitive> _polygon)
+void Quad::addVertex(SPTR<Vertex>&& _vertex)
 {
-    for(auto& vertex : _polygon->getVertices())
-    {
-        addVertex(std::move(vertex));
-    }
-}
-
-void Quad::addVertex(SPTR<Vertex> _vertex)
-{
-    if(m_vertices.size() >= 4)
+    if(getVertices().size() >= 4)
         return;
     
-    m_vertices.push_back(_vertex);
+   addVertex(std::move(_vertex));
 }
 
 void Quad::addVertex(Vertex&& _vertex)
 {
-    if(m_vertices.size() >= 4)
+    if(getVertices().size() >= 4)
         return;
     
-    m_vertices.push_back(std::make_shared<Vertex>(_vertex));
-}
-
-void Quad::adjustIndices(size_t _adjustment)
-{
-    for(auto& index : m_indices)
-    {
-        index += _adjustment;
-    }
+    addVertex(std::move(_vertex));
 }
 
 vec3 Quad::getOffsetFromCenter(const unsigned& index)

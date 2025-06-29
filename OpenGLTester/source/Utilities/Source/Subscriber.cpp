@@ -1,4 +1,5 @@
 #include "../Public/Subscriber.h"
+#include <utility>
 
 Subscriber::SubscriberHandler::SubscriberHandler(Subscriber* _subscriberRef): m_subscriberRef(_subscriberRef)
 {}
@@ -12,18 +13,15 @@ void Subscriber::SubscriberHandler::unsubscribe()
 
 Subscriber::SubscriberInfo::SubscriberInfo(SubscriberCallback&& _cb, const bool _bOneTimeEvent,
     SPTR<SubscriberHandler> _handler):
-    cb(_cb),
+    cb(std::move(_cb)),
     bOneTimeEvent(_bOneTimeEvent),
     handler(_handler)
 {}
 
 Subscriber::SubscriberInfo::SubscriberInfo(SubscriberCallback&& _cb, const bool _bOneTimeEvent):
-    cb(_cb),
+    cb(std::move(_cb)),
     bOneTimeEvent(_bOneTimeEvent)
 {}
-
-Subscriber::Subscriber() = default;
-Subscriber::~Subscriber() = default;
 
 SPTR<Subscriber::SubscriberHandler> Subscriber::subscribeToEventWithHandler(const uint32_t _subscriberId,
     const std::string& _eventName, SubscriberCallback _onTriggerCallback, const bool bUseOnce)

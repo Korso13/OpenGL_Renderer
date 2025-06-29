@@ -44,8 +44,8 @@ private:
     SPTR<VertexAttributes> m_vAttributes;
     SPTR<VertexAO> m_vao;
     
-    glm::vec3 m_logo1Pos = glm::vec3(60.f, 60.f, 0.f);
-    glm::vec3 m_logo2Pos = glm::vec3(600.f, 60.f, 0.f);
+    vec3 m_logo1Pos = vec3(60.f, 60.f, 0.f);
+    vec3 m_logo2Pos = vec3(600.f, 60.f, 0.f);
 
     int m_debugTexIndex = -1;
 };

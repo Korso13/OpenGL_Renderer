@@ -4,15 +4,19 @@
 #include "BaseClasses/Materials/Public/MaterialInstance.h"
 #include "BaseClasses/Nodes/Public/Node.h"
 
+class VertexBuffer;
+class IndexBuffer;
 class RendererBatch;
 
 class RenderObject : public Node
 {
     friend RendererBatch;
+    friend IndexBuffer;
+    friend VertexBuffer;
     
 public:
     RenderObject() = delete;
-    explicit RenderObject(const std::string& _name) : Node(std::forward<const std::string&>(_name)) {}
+    explicit RenderObject(const std::string& _name);
     ~RenderObject() override = default;
 
     //Returns object's render order priority
@@ -31,18 +35,25 @@ public:
     virtual std::vector<size_t> getIndices() const {return m_indices;}
 
     //todo: hide to protected after IndexBuffer::addRenderObject replaced with RendererBatch class functionality
-    virtual void adjustIndices(size_t _adjustment) = 0; 
+    virtual void adjustIndices(size_t _adjustment); 
     
 protected:
 
     //Render-related methods (implemented and used by heir classes)
-    virtual void addVertex(SPTR<Vertex> _vertex) = 0;
-    virtual void addVertex(Vertex&& _vertex) = 0;
+    virtual void addVertex(SPTR<Vertex>&& _vertex);
+    virtual void addVertex(Vertex&& _vertex);
+    std::vector<SPTR<Vertex>>& getVertices() {return m_vertices;}
+    void clearVertices(){m_vertices.clear();}
+
+    virtual void addVertexIndex(size_t _index);
+    virtual void addVerticesIndices(std::vector<size_t>&& _indices);
+    std::vector<size_t>& getIndices() {return m_indices;}
+    
     bool isDirty() const { return m_isDirty; }
     void setIsDirty(const bool _isDirty) { m_isDirty = _isDirty; }
 
-    void onTransformChange() override {setIsDirty(true); Node::onTransformChange(); }
-    
+    void onTransformChange() override;
+
 private:
     
     bool m_isDirty = true; // set to "false" after being put in batch, reset to "true" after render parameters change

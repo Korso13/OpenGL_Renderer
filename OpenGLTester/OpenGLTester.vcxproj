@@ -475,6 +475,7 @@
     </ClCompile>
     <ClCompile Include="source\BaseClasses\RenderObjects\Source\Multipolygon.cpp" />
     <ClCompile Include="source\BaseClasses\RenderObjects\Source\Quad.cpp" />
+    <ClCompile Include="source\BaseClasses\RenderObjects\Source\RenderObject.cpp" />
     <ClCompile Include="source\BaseClasses\RenderObjects\Source\RenderPrimitive.cpp" />
     <ClCompile Include="source\BaseClasses\Source\IndexBuffer.cpp" />
     <ClCompile Include="source\BaseClasses\Source\RendererBatch.cpp" />
@@ -637,7 +638,6 @@
     <ClCompile Include="source\Menu\Source\BatchRenderTest.cpp" />
     <ClCompile Include="source\Menu\Source\ClearColorTest.cpp" />
     <ClCompile Include="source\Menu\Source\MainMenuItem.cpp" />
-    <ClCompile Include="source\Menu\Source\TextureRenderTest.cpp" />
     <ClCompile Include="source\Utilities\Source\ImG_debuger.cpp" />
     <ClCompile Include="source\Utilities\Source\ShaderLib.cpp" />
     <ClCompile Include="source\Utilities\Source\Subscriber.cpp" />
@@ -740,7 +740,6 @@
     <ClInclude Include="source\Menu\Public\BatchRenderTest.h" />
     <ClInclude Include="source\Menu\Public\ClearColorTest.h" />
     <ClInclude Include="source\Menu\Public\MainMenuItem.h" />
-    <ClInclude Include="source\Menu\Public\TextureRenderTest.h" />
     <ClInclude Include="source\Utilities\Public\Math.h" />
     <ClInclude Include="source\Utilities\Public\Subscriber.h" />
     <ClInclude Include="source\Utilities\Public\Utilities.h" />
