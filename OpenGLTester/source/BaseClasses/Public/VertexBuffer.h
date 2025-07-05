@@ -7,20 +7,22 @@ class VertexBuffer
 public:
 
     VertexBuffer(const void* _data, const unsigned int _size, GLenum _memUsageType = GL_STATIC_DRAW);
-    VertexBuffer(const unsigned int _size = sizeof(Vertex)*1024);
+    VertexBuffer(const unsigned int _size = sizeof(Vertex)*1024); //todo: probably should be templated vertex type + make Vertex interface class + requires std::is_base_v check 
     ~VertexBuffer();
 
     //Registers renderable object in the specific vertex buffer for batch-rendering
-    //todo: redelegate to future RendererBatch class
-    void addRenderObject(const std::string& _name,  SPTR<RenderObject> _objRef);
+    void addRenderObject(const std::string& _name, const SPTR<RenderObject>& _objRef);
     void removeRenderObject(const std::string& _name);
     
+    void updateVerticesPool(); //call this before binding to avoid vertices' caching issues (or add flags to determine whether you need it)
     void bind() const;
     void unbind() const;
+    void clear();
     
 private:
     
     GLuint m_rendererId;
-    std::unordered_map<std::string, SPTR<RenderObject>> m_renderPool;
-    size_t m_VerticesToDraw = 0;
+    std::unordered_map<std::string, WPTR<RenderObject>> m_renderPool;
+    std::vector<Vertex> m_verticesPool;
+    size_t m_verticesToDraw = 0;
 };

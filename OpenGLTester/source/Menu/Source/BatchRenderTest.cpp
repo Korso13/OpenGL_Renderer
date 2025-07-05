@@ -87,11 +87,10 @@ void BatchRenderTest::onRender()
     auto shader = ShaderMachine::get()->getShader(ShaderType::BATCH_RENDER);
     if(!shader)
     {
-        std::cout << "Shader BATCH_RENDER not found!" << std::endl;
+        std::cout << "Shader BATCH_RENDER not found!\n";
         return;
     }
     shader->setUniform("u_MVP", m_MVP);
-    shader->setUniform("u_debugTexIndex", m_debugTexIndex);
 
     //making a single draw call
     if(m_texture1) m_texture1->bind(0); 

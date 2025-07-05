@@ -1,4 +1,7 @@
 #include "../Public/IndexBuffer.h"
+
+#include <algorithm>
+
 #include "Defines.h"
 #include "Utilities/Public/GLErrorCatcher.h"
 #include "BaseClasses/RenderObjects/Public/RenderObject.h"
@@ -25,18 +28,18 @@ IndexBuffer::~IndexBuffer()
     GLCall(glDeleteBuffers(1, &m_rendererId));
 }
 
-void IndexBuffer::push_back_drawIndices(std::vector<size_t> _indices)
+void IndexBuffer::addRenderObject(const SPTR<RenderObject>& _renderObject)
 {
-    m_vertexIndicesPool.insert(m_vertexIndicesPool.end(), _indices.begin(), _indices.end());
-    m_count = static_cast<unsigned>(m_vertexIndicesPool.size());
-}
-
-void IndexBuffer::addRenderObject(const SPTR<RenderObject>& _RenderObject)
-{
-    _RenderObject->adjustIndices(m_adjustment);
-    m_adjustment += _RenderObject->getVertexCount();
-    auto indices = _RenderObject->getIndices();
-    m_vertexIndicesPool.insert(m_vertexIndicesPool.end(), indices.begin(), indices.end());
+    std::vector<size_t> new_indices = _renderObject->getIndices(); //copying intended!
+    //adjusting indices values
+    std::transform(new_indices.begin(), new_indices.end(), new_indices.begin(),
+        [this](const size_t _index)
+            {
+                return _index + m_adjustment;
+            });
+    //updating adjustment
+    m_adjustment += _renderObject->getVertexCount();
+    m_vertexIndicesPool.insert(m_vertexIndicesPool.end(), new_indices.begin(), new_indices.end());
     m_count = static_cast<unsigned>(m_vertexIndicesPool.size());
 }
 

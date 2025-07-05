@@ -24,10 +24,11 @@ public:
     template<typename T>
     void addBufferTyped(VertexBuffer* _vertexBuffer, IndexBuffer* _indexBuffer);
     template<typename T>
-    void setVertexAtributesTyped(){}
+    void setVertexAttributesTyped();
     
     void bind() const;
     void unbind() const;
+    void clear();
 
     const std::vector<VertexBuffer*>& getVertexBuffers() const {return m_vBuffer;}
     const std::vector<IndexBuffer*>& getIndexBuffers() const {return m_iBuffer;}

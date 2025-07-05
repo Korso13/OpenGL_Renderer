@@ -100,7 +100,7 @@ void Quad::onTransformChange()
     int i = 0;
     for (const auto& vertex : getVertices())
     {
-        vertex->position = vec3(getWorldPos() - getOffsetFromCenter(i)*getWorldScale()); //different calculations for vertex due to anchor in the center
+        vertex->position = vec3(getWorldPos() - getOffsetFromCenter(i) * getWorldScale()); //different calculations for vertex due to anchor in the center
         i++;
     }
     Node::onTransformChange(); //skipping RenderObject::onTransformChange, because we need different logic for quad to keep anchor in the center  // NOLINT(bugprone-parent-virtual-call)

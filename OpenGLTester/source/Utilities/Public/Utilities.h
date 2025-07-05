@@ -31,6 +31,7 @@ class Object : public Subscriber
 public:
     
     Object();
+    Object(const Object& other) = delete;
     explicit Object(std::string _name);
     ~Object() override = default;
     
@@ -38,6 +39,8 @@ public:
     //Changes set Object name. Fires onNameChange event containing old name
     void setName(std::string _newName); 
     [[nodiscard]] uint32_t getUID() const {return m_id;}
+
+    //todo: add virtual protected method onGui for debug rendering + add ImGui renderer as friend
     
 private:
 
@@ -45,6 +48,7 @@ private:
     const uint32_t m_id;
 };
 
+//Base class for engine entities that are not rendered on screen / not present in the level
 class EngineInternal
 {
 public:

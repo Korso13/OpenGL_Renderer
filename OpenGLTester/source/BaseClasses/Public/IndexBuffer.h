@@ -10,18 +10,15 @@ class IndexBuffer
 public:
 
     IndexBuffer(const unsigned int* _data, const size_t _count, GLenum _memUsageType = GL_STATIC_DRAW);
-    IndexBuffer(const size_t _count = 1024);
+    IndexBuffer(const size_t _count = 1024); //todo: make 1024 a global constexpr or a macro + add it to VertexBuffer
     ~IndexBuffer();
 
     //Primary method for adding indices to draw for batch-rendering method
-    //todo: redelegate to future RendererBatch class
-    void addRenderObject(const SPTR<RenderObject>& _RenderObject);
-    //Only use this one if you adjusted your indices elsewhere or it's the first batch of indices! Avoid if possible!
-    void push_back_drawIndices(std::vector<size_t> _indices);
+    void addRenderObject(const SPTR<RenderObject>& _renderObject);
 
     void bind() const;
     void unbind() const;
-    
+    void clear() {m_vertexIndicesPool.clear();}
     size_t getCount() const { return m_count; }
 
     //TODO: add methods for changing data, for "locking" buffer for data streaming

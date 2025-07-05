@@ -9,6 +9,8 @@ class Node;
 class RendererBatch;
 class VertexAO;
 
+//todo: add RenderPipeline interface class with render() and checkNodeForRender() methods. Use interface impls as switchable render pipelines (Strategy pattern)
+
 class Renderer
 {
 //defines constructor depending on what type of instantiation we want
@@ -30,8 +32,8 @@ public:
 //end of constructor definitions
     
 public:
-    //todo: depricate once batch-rendering refactoring complete
-    void draw(const VertexAO* _vertexArray, const ShaderType _shaderType, GLint _renderPrimitiveType = GL_TRIANGLES) const;
+    //todo: depricated. Remove after Batch rendering is done
+    void draw(const VertexAO* _vertexArray, const ShaderType _shaderType, GLint _renderPrimitiveType = GL_TRIANGLES) const{};
     
     //Main rendering function - assembles all batches and renders them.
     //Do not call yourself! Should only be called from main program loop (todo: consider making private, adding friendly iGame and impl to call it)
@@ -45,8 +47,10 @@ public:
 private:
 
     ~Renderer() = default; //prevents calling delete() on Renderer pointer
-    void drawBatch(SPTR<RendererBatch> _batch);
-    void checkNodeForRender(SPTR<Node> _node);
+    void drawBatch(const UPTR<RendererBatch>& _batch);
+    void checkNodeForRender(const SPTR<Node>& _node);
+    //updates existing batches' content and removes expired batches
+    void updateRenderBatches();
     
 private:
 
@@ -55,6 +59,5 @@ private:
     SPTR<Camera> m_camera = nullptr;
     
     //Multi-layered sorted render map: distance to camera - RenderOrder - MaterialInstance(by id)
-    std::map<float, std::map<uint32_t, std::unordered_map<uint32_t, std::vector<SPTR<RenderObject>>>>> m_sortedRenderPriority;
-    std::vector<SPTR<RendererBatch>> m_currentBatchQueue;
+    std::map<float, std::map<uint32_t, std::unordered_map<uint32_t, std::vector<UPTR<RendererBatch>>>>> m_sortedRenderPriority;
 };

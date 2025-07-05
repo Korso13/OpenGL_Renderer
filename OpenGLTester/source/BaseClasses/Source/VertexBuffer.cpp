@@ -20,52 +20,71 @@ VertexBuffer::~VertexBuffer()
     GLCall(glDeleteBuffers(1, &m_rendererId));
 }
 
-void VertexBuffer::addRenderObject(const std::string& _name,  SPTR<RenderObject> _objRef)
+void VertexBuffer::addRenderObject(const std::string& _name, const SPTR<RenderObject>& _objRef)
 {
     m_renderPool.emplace(std::string(_name), _objRef);
-    //TODO:: debug output for m_renderPool in case object transition fails
-    m_VerticesToDraw += _objRef->getVertexCount();
+    m_verticesToDraw += _objRef->getVertexCount();
+    for(auto& vertex : _objRef->getVertices())
+    {
+        m_verticesPool.push_back(*vertex);
+        m_verticesPool.back().textureId += CAST_F(m_verticesPool.size() - 1); //offsets renderObject textureId
+    }
 }
 
 void VertexBuffer::removeRenderObject(const std::string& _name)
 {
-    if(m_renderPool.find(_name) == m_renderPool.end())
+    if(!m_renderPool.contains(_name))
         return;
 
-    m_VerticesToDraw -= m_renderPool[_name]->getVertexCount();
+    m_verticesToDraw -= m_renderPool[_name].lock()->getVertexCount();
     m_renderPool.erase(_name);
+    m_verticesPool.clear();
+    updateVerticesPool();
 }
 
 void VertexBuffer::bind() const
 {
     GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_rendererId));
     
-    if(!m_renderPool.empty())
+    if(!m_verticesPool.empty())
     {
-        Vertex* vertices = new Vertex[m_VerticesToDraw];
-        size_t VertexCounter = 0;
-        for(auto& object : m_renderPool)
+        if (m_verticesPool.size() != m_verticesToDraw)
         {
-            for(auto& vertex : object.second->getVertices())
-            {
-                if(VertexCounter > (m_VerticesToDraw - 1))
-                {
-                    std::cout << "Vertex buffer binding error! Tried to bind more vertices than registered!" << std::endl;
-                    continue;
-                }
-                
-                //filling vertices array with data from Vertex structs provided by renderable objects
-                vertices[VertexCounter] = *vertex.get();
-                VertexCounter++;
-            }
+            std::cerr << "[VertexBuffer::bind()] vertices pool and verticesToDraw size mismatch!";
+            return;
         }
-        
-        GLCall(glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(Vertex) * m_VerticesToDraw, &vertices[0]));
+        GLCall(glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(Vertex) * m_verticesToDraw, m_verticesPool.data()));
     }
-    
 }
 
 void VertexBuffer::unbind() const
 {
     GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
+}
+
+void VertexBuffer::clear()
+{
+    m_renderPool.clear();
+    m_verticesToDraw = 0;
+}
+
+void VertexBuffer::updateVerticesPool()
+{
+    m_verticesPool.clear();
+    std::erase_if(m_renderPool, [](const  WPTR<RenderObject>& objWptr)
+    {
+        return objWptr.expired();
+    });
+    
+    for (auto& [name, objWptr] : m_renderPool)
+    {
+        if (objWptr.expired())
+            continue;
+        
+        auto objRef = objWptr.lock();
+        for(auto& vertex : objRef->getVertices())
+        {
+            m_verticesPool.push_back(*vertex); 
+        }
+    }
 }

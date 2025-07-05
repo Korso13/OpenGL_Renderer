@@ -12,6 +12,7 @@
 //Shortcuts
 #define DEBUG_UI ImG_debuger::get()
 #define M_SPTR std::make_shared
+#define M_UPTR std::make_unique
 #define CAST_SPTR std::dynamic_pointer_cast
 #define MAT_LIB MaterialLibrary::get()
 
@@ -26,6 +27,21 @@ template<typename Ty>
 using UPTR = std::unique_ptr<Ty>;
 template<typename Ty>
 using WPTR = std::weak_ptr<Ty>;
+
+namespace build
+{
+    template<typename Ty, typename... Args>
+    SPTR<Ty> ShrPTR(Args... args)
+    {
+        return std::make_shared<Ty>(std::forward<Args...>(args));
+    }
+    template<typename Ty, typename... Args>
+    UPTR<Ty> UnqPTR(Args... args)
+    {
+        return std::make_unique<Ty>(std::forward<Args...>(args));
+    }
+}
+
 
 //enums
 enum class ShaderType

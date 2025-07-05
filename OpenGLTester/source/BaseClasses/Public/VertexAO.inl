@@ -1,7 +1,7 @@
 private:
 
 template <>
-void setVertexAtributesTyped<Vertex>()
+void setVertexAttributesTyped<Vertex>()
     {
         //vec3 position;
         GLCall(glEnableVertexAttribArray(0)); //setting new vertex attributes array

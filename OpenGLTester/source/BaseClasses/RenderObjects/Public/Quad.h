@@ -9,15 +9,16 @@ class Quad : public RenderObject
 {
 public:
     Quad() = delete;
-    Quad(const uvec2& _size, const vec3& _position, const int _textureId = -1, const std::string& _name = "Quad");
-    static SPTR<Quad> build(const uvec2& _size, const vec3& _position, const int _textureId = -1, const std::string& _name = "Quad")
+    //todo: consider adding materialInst to constructor to support multiple textures bound to various vertices (possibly not required for Quad, but other RenderObjects)
+    Quad(const uvec2& _size, const vec3& _position, const int _textureId = 0, const std::string& _name = "Quad");
+    static SPTR<Quad> build(const uvec2& _size, const vec3& _position, const int _textureId = 0, const std::string& _name = "Quad")
     {
-        auto new_quad = SPTR<Quad>(new Quad(_size, _position, _textureId, _name));
+        auto new_quad = build::ShrPTR<Quad>(_size, _position, _textureId, _name);
         return new_quad;
     }
     //todo: add copy/move constructors?
     
-    void setColor(glm::vec4 _newColor); //todo: remove when MaterialInst/Texture can replace functionality?
+    void setColor(glm::vec4 _newColor); //todo: add shader support for functionality? Better than uniform coloring!
 
 protected:
 

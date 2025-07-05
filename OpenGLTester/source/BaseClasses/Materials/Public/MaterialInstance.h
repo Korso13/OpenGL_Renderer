@@ -45,6 +45,8 @@ public:
     TextureId setTexture(SPTR<Texture> _texture);
     SPTR<Texture> getTexture(TextureId _slotId) const;
     bool removeTexture(TextureId _slotId);
+
+    ShaderType getShaderType() const{return m_shaderType;}
     
 private:
     

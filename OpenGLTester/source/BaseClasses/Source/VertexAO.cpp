@@ -53,7 +53,7 @@ void VertexAO::addBuffer(VertexBuffer* _vertexBuffer, IndexBuffer* _indexBuffer,
     _indexBuffer->bind();
 
     //setting vertex attribute array
-    setVertexAtributesTyped<Vertex>();
+    setVertexAttributesTyped<Vertex>();
 }
 
 void VertexAO::bind() const

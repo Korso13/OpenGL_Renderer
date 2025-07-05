@@ -20,34 +20,17 @@ Renderer::Renderer()
         std::cout << "[Init][Renderer] Batch size limited exceeded! Raise value for MAX_RENDER_BATCH_SIZE define! GPU limit: " << std::to_string(m_maxBatchSize) << std::endl;
         m_maxBatchSize = MAX_RENDER_BATCH_SIZE;
     }
-    std::cout << "[Init][Renderer] Batch max size: " << std::to_string(m_maxBatchSize) << std::endl;
+    std::cout << "[Init][Renderer] Batch max size: " << std::to_string(m_maxBatchSize) << "\n";
     ShaderMachine::get();//forces shaders to precompile
     m_rootNode = M_SPTR<Node>("RenderRootNode");
     m_camera = std::shared_ptr<Camera>(new Camera); //alternative SPTR creation due to private constructor
 }
 
-void Renderer::draw(const VertexAO* _vertexArray, const ShaderType _shaderType, GLint _renderPrimitiveType) const
-{
-    if(!_vertexArray)
-        return;
-    
-    if(!ShaderMachine::get()->setShader(_shaderType))
-    {
-        std::cout << "Renderer::draw error - shader "
-                    << std::to_string(static_cast<int>(_shaderType))
-                    << " not found!"
-                    << std::endl;
-        return;
-    }
-    _vertexArray->bind(); //binds vertex buffer, index buffer and vertex attributes
-    const size_t indexSize = (_vertexArray->getIndexBuffers().empty()) ? (6) : (_vertexArray->getIndexBuffers()[0]->getCount()); //precaution against vertexAO without index buffer
-    GLCall(glDrawElements(_renderPrimitiveType, CAST_I(indexSize), GL_UNSIGNED_INT, 0));
-}
 
 void Renderer::render()
 {
     clear(); //clearing buffer
-    m_sortedRenderPriority.clear();
+    updateRenderBatches();
     m_rootNode->traversal(std::bind(&Renderer::checkNodeForRender, this, std::placeholders::_1), true);
 
     //todo: add alternative, togglable batch assembly pipelines that ignore RenderOrders or z pos (2 std::function for checkNodeForRender and code below, that are switched on pipeline changes)
@@ -60,22 +43,13 @@ void Renderer::render()
             auto MIContainer =  (*MidLevelIt).second;
             for (auto& [MatInstUid, RenderObjContainer] : MIContainer)
             {
-                for (auto render_obj : RenderObjContainer)
+                for (auto& render_batch : RenderObjContainer)
                 {
-                    //todo: assemble RendererBatches based on RenderObj
-                    
+                    drawBatch(render_batch);
                 }
             }
         }
     }
-    
-    //rendering collected batches and clearing queue
-    for(const auto& batch : m_currentBatchQueue)
-    {
-        drawBatch(batch);
-    }
-    m_currentBatchQueue.clear();
-    m_sortedRenderPriority.clear();
 }
 
 void Renderer::clear() const
@@ -93,12 +67,23 @@ SPTR<Camera> Renderer::getCamera()
     return m_camera;
 }
 
-void Renderer::drawBatch(SPTR<RendererBatch> _batch)
+void Renderer::drawBatch(const UPTR<RendererBatch>& _batch)
 {
-    //todo: batch render logic
+    UPTR<VertexAO>& vao = _batch->getBatchVAO();
+    if(!ShaderMachine::get()->setShader(_batch->getBatchShader()))
+    {
+        std::cout << "Renderer::draw error - shader "
+                    << std::to_string(static_cast<int>(_batch->getBatchShader()))
+                    << " not found!\n";
+        return;
+    }
+    _batch->prepareForDraw(); 
+    vao->bind(); //binds vertex buffer, index buffer and vertex attributes
+    const size_t indexSize = (vao->getIndexBuffers().empty()) ? (6) : (vao->getIndexBuffers()[0]->getCount()); //precaution against vertexAO without index buffer
+    GLCall(glDrawElements(GL_TRIANGLES, CAST_I(indexSize), GL_UNSIGNED_INT, 0));
 }
 
-void Renderer::checkNodeForRender(SPTR<Node> _node)
+void Renderer::checkNodeForRender(const SPTR<Node>& _node)
 {
     if(!_node || !_node->isEnabled() || !_node->isInFrustum())
         return;
@@ -106,10 +91,36 @@ void Renderer::checkNodeForRender(SPTR<Node> _node)
     float distance_to_camera = 0.f;
     //todo: add distance to camera check!
     SPTR<RenderObject> renderableObject = CAST_SPTR<RenderObject>(_node);
-    if(!renderableObject || !renderableObject->getMatInst())
+    if(!renderableObject || !renderableObject->getMatInst() || renderableObject->isInBatch())
         return;
 
-    //placing RenderObject to automatically sorting multi-layered container, based on suggested rendering order
+    //placing RenderObject to an existing Renderer batch or creating a new batch in automatically sorting multi-layered container, based on suggested rendering order
     //Priorities: distance to camera, set render order of the object + division into separate instances of MaterialInstance (shaders)
-    m_sortedRenderPriority[distance_to_camera][renderableObject->getRenderOrder()][renderableObject->getMatInst()->getUID()].push_back(renderableObject);
+    auto& renderBatches =  m_sortedRenderPriority[distance_to_camera][renderableObject->getRenderOrder()][renderableObject->getMatInst()->getUID()];
+    if (renderBatches.empty() || renderBatches.back()->isFull()) //no batches for this render layer or the last one is full (avoiding checking all batches)
+    {
+        renderBatches.emplace_back(build::UnqPTR<RendererBatch>(m_maxBatchSize));
+    }
+    renderBatches.back()->addRenderObject(renderableObject);
+    //m_sortedRenderPriority[distance_to_camera][renderableObject->getRenderOrder()][renderableObject->getMatInst()->getUID()].push_back(renderableObject);
+}
+
+void Renderer::updateRenderBatches()
+{
+    for (auto TopLevelIt = m_sortedRenderPriority.rbegin(); TopLevelIt != m_sortedRenderPriority.rend(); TopLevelIt++)
+    {
+        auto roContainer =  (*TopLevelIt).second;
+        for (auto MidLevelIt = roContainer.begin(); MidLevelIt != roContainer.end(); MidLevelIt++)
+        {
+            auto MIContainer =  (*MidLevelIt).second;
+            for (auto& [MatInstUid, RenderObjContainer] : MIContainer)
+            {
+                std::erase_if(RenderObjContainer, [](const SPTR<RendererBatch>& batch) 
+                {
+                    batch->clearExpiredObjects(); //removes dirty and expired objects
+                    return batch->isExpired(); //removes empty batches
+                });
+            }
+        }
+    }
 }

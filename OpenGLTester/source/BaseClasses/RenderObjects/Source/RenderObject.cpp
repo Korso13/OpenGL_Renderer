@@ -4,6 +4,18 @@
 RenderObject::RenderObject(const std::string& _name): Node(std::forward<const std::string&>(_name))
 {}
 
+void RenderObject::setRenderOrder(const uint32_t _newRO)
+{
+    m_renderOrder = _newRO;
+    setIsDirty(true);
+}
+
+void RenderObject::setMatInst(const SPTR<MaterialInstance> _newMI)
+{
+    m_materialInstance = _newMI;
+    setIsDirty(true);
+}
+
 void RenderObject::onTransformChange()
 {
     setIsDirty(true);
@@ -12,14 +24,6 @@ void RenderObject::onTransformChange()
         vertex->position = getWorldPos() + vertex->vCoord * getWorldScale();
     }
     Node::onTransformChange();
-}
-
-void RenderObject::adjustIndices(const size_t _adjustment)
-{
-    for(auto& index : getIndices())
-    {
-        index += _adjustment;
-    }
 }
 
 void RenderObject::addVertex(SPTR<Vertex>&& _vertex)

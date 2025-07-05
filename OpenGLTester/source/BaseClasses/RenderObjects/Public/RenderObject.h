@@ -22,20 +22,14 @@ public:
     //Returns object's render order priority
     virtual uint32_t getRenderOrder() {return m_renderOrder;}
     //Sets object's render order priority
-    virtual void setRenderOrder(const uint32_t _newRO) {m_renderOrder = _newRO;}
+    virtual void setRenderOrder(const uint32_t _newRO);
 
     //returns material instance (ideally not overriden)
     virtual SPTR<MaterialInstance> getMatInst() {return m_materialInstance;}
     //sets new material instance (ideally not overriden)
-    virtual void setMatInst(const SPTR<MaterialInstance> _newMI) {m_materialInstance = _newMI;}
+    virtual void setMatInst(const SPTR<MaterialInstance> _newMI);
     
-    //Render-related methods
-    virtual std::vector<SPTR<Vertex>> getVertices() const {return m_vertices;}
-    virtual size_t getVertexCount() const {return m_vertices.size();}
-    virtual std::vector<size_t> getIndices() const {return m_indices;}
-
-    //todo: hide to protected after IndexBuffer::addRenderObject replaced with RendererBatch class functionality
-    virtual void adjustIndices(size_t _adjustment); 
+    bool isInBatch() const {return m_isInBatch;}
     
 protected:
 
@@ -43,11 +37,12 @@ protected:
     virtual void addVertex(SPTR<Vertex>&& _vertex);
     virtual void addVertex(Vertex&& _vertex);
     std::vector<SPTR<Vertex>>& getVertices() {return m_vertices;}
+    virtual size_t getVertexCount() const {return m_vertices.size();}
     void clearVertices(){m_vertices.clear();}
 
     virtual void addVertexIndex(size_t _index);
     virtual void addVerticesIndices(std::vector<size_t>&& _indices);
-    std::vector<size_t>& getIndices() {return m_indices;}
+    const std::vector<size_t>& getIndices() {return m_indices;}
     
     bool isDirty() const { return m_isDirty; }
     void setIsDirty(const bool _isDirty) { m_isDirty = _isDirty; }
@@ -57,6 +52,7 @@ protected:
 private:
     
     bool m_isDirty = true; // set to "false" after being put in batch, reset to "true" after render parameters change
+    bool m_isInBatch = false; //if false - needs to be placed in a batch
     uint32_t m_renderOrder = 0;
     SPTR<MaterialInstance> m_materialInstance = nullptr;
 
