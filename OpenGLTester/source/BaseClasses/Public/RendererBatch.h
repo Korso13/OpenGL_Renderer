@@ -19,10 +19,10 @@ public:
     void addRenderObject(const SPTR<RenderObject>& _object);
     void removeRenderObject(uint32_t _objectUid);
 
-    bool isFull() const {return CAST_I(m_batch.size()) == m_batchMaxSize;} 
+    bool isFull(GLint _texturesForInsertion) const;
     bool isExpired() const {return m_batch.empty();}
 
-    //set u_MVP, bind textures
+    // bind textures, prepare vao if batch changed since last time
     void prepareForDraw();
     
     UPTR<VertexAO>& getBatchVAO() { return m_vertexAOtoRender; }
@@ -36,6 +36,7 @@ private:
 private:
 
     const GLint m_batchMaxSize = 1; //set in constructor
+    GLint m_heldTextures = 0; //batch max size is how many textures are we holding
     std::unordered_map<uint32_t, WPTR<RenderObject>> m_batch; //map of render objects. Key == object's UID
     UPTR<VertexBuffer> m_vertexBuffer = nullptr;
     UPTR<IndexBuffer> m_indexBuffer = nullptr;

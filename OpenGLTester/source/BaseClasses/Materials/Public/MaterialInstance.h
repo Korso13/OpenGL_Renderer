@@ -47,6 +47,7 @@ public:
     bool removeTexture(TextureId _slotId);
 
     ShaderType getShaderType() const{return m_shaderType;}
+    size_t getTexturesCount() const {return m_textures.size();}
     
 private:
     

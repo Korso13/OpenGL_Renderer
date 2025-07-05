@@ -43,8 +43,8 @@ void VertexAO::addBuffer(const VertexBuffer& _vertexBuffer, const VertexAttribut
 
 void VertexAO::addBuffer(VertexBuffer* _vertexBuffer, IndexBuffer* _indexBuffer, VertexAttributes* _vertexAttrib)
 {
-    m_vBuffer.push_back(_vertexBuffer);
-    m_iBuffer.push_back(_indexBuffer);
+    m_vBufferRaw.push_back(_vertexBuffer);
+    m_iBufferRaw.push_back(_indexBuffer);
     m_aBuffer.push_back(_vertexAttrib);
     
     //binding vertexArrayObject and buffers
@@ -64,5 +64,15 @@ void VertexAO::bind() const
 void VertexAO::unbind() const
 {
     GLCall(glBindVertexArray(0));
+}
+
+void VertexAO::clear()
+{
+    m_vBufferRaw.clear();
+    m_iBufferRaw.clear();
+    m_aBuffer.clear();
+    unbind();
+    GLCall(glDeleteVertexArrays(1, &m_rendererId));
+    GLCall(glGenVertexArrays(1, &m_rendererId));
 }
     

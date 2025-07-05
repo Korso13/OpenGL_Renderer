@@ -77,6 +77,7 @@ void Renderer::drawBatch(const UPTR<RendererBatch>& _batch)
                     << " not found!\n";
         return;
     }
+    //shader->setUniform("u_MVP", m_MVP); //can technically set mvp here instead of prepareForDraw();
     _batch->prepareForDraw(); 
     vao->bind(); //binds vertex buffer, index buffer and vertex attributes
     const size_t indexSize = (vao->getIndexBuffers().empty()) ? (6) : (vao->getIndexBuffers()[0]->getCount()); //precaution against vertexAO without index buffer
@@ -97,7 +98,7 @@ void Renderer::checkNodeForRender(const SPTR<Node>& _node)
     //placing RenderObject to an existing Renderer batch or creating a new batch in automatically sorting multi-layered container, based on suggested rendering order
     //Priorities: distance to camera, set render order of the object + division into separate instances of MaterialInstance (shaders)
     auto& renderBatches =  m_sortedRenderPriority[distance_to_camera][renderableObject->getRenderOrder()][renderableObject->getMatInst()->getUID()];
-    if (renderBatches.empty() || renderBatches.back()->isFull()) //no batches for this render layer or the last one is full (avoiding checking all batches)
+    if (renderBatches.empty() || renderBatches.back()->isFull(static_cast<GLint>(renderableObject->getMatInst()->getTexturesCount()))) //no batches for this render layer or the last one is full (avoiding checking all batches)
     {
         renderBatches.emplace_back(build::UnqPTR<RendererBatch>(m_maxBatchSize));
     }

@@ -115,8 +115,8 @@ void BatchRenderTest::prepareTextures()
     m_texture1->bind(1);
     int textures[2] = {0, 1};
     
-    m_vBuffer = M_SPTR<VertexBuffer>(*(new VertexBuffer));
-    m_iBuffer = M_SPTR<IndexBuffer>(*(new IndexBuffer));
+    m_vBuffer = build::UnqPTR<VertexBuffer>();
+    m_iBuffer = build::UnqPTR<IndexBuffer>();
 
     m_logoPlane1 = Quad::build(uvec2(300,300), m_logo1Pos, 0);
     m_vBuffer->addRenderObject("Logo1", m_logoPlane1);
@@ -127,7 +127,7 @@ void BatchRenderTest::prepareTextures()
     m_iBuffer->addRenderObject(m_logoPlane2);
 
     m_vao = M_SPTR<VertexAO>(*(new VertexAO()));
-    m_vao->addBufferTyped<Vertex>(m_vBuffer.get(), m_iBuffer.get());
+    m_vao->addBufferTyped<Vertex>(m_vBuffer, m_iBuffer);
     
     //generating shader
     if(!ShaderMachine::get()->setShader(ShaderType::BATCH_RENDER))

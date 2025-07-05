@@ -5,7 +5,6 @@
 
 class Quad;
 class VertexAO;
-class VertexAttributes;
 class IndexBuffer;
 class Texture;
 class Renderer;
@@ -39,9 +38,8 @@ private:
 
     SPTR<Quad> m_logoPlane1;
     SPTR<Quad> m_logoPlane2;
-    SPTR<VertexBuffer> m_vBuffer;
-    SPTR<IndexBuffer> m_iBuffer;
-    SPTR<VertexAttributes> m_vAttributes;
+    UPTR<VertexBuffer> m_vBuffer;
+    UPTR<IndexBuffer> m_iBuffer;
     SPTR<VertexAO> m_vao;
     
     vec3 m_logo1Pos = vec3(60.f, 60.f, 0.f);

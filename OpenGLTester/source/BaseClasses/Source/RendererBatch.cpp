@@ -16,7 +16,7 @@ RendererBatch::RendererBatch(const GLint _maxBatchSize)
 
 void RendererBatch::addRenderObject(const SPTR<RenderObject>& _object)
 {
-    if (!_object || isFull())
+    if (!_object || isFull(static_cast<GLint>(_object->getMatInst()->getTexturesCount())))
         return;
     
     _object->m_isInBatch = true;
@@ -24,11 +24,11 @@ void RendererBatch::addRenderObject(const SPTR<RenderObject>& _object)
     m_batch[_object->getUID()] = _object;
     if (m_batchMaterial.expired())
         m_batchMaterial = _object->getMatInst();
-
+    
+    m_heldTextures += static_cast<GLint>(_object->getMatInst()->getTexturesCount());
     m_vertexBuffer->addRenderObject(_object->getName(), _object);
     m_indexBuffer->addRenderObject(_object);
-    
-    //todo: add to buffers and etc
+    m_vertexAOtoRender->addBufferTyped<Vertex>(m_vertexBuffer, m_indexBuffer);
 }
 
 void RendererBatch::removeRenderObject(uint32_t _objectUid)
@@ -38,6 +38,11 @@ void RendererBatch::removeRenderObject(uint32_t _objectUid)
         m_batch[_objectUid].lock()->m_isInBatch = false;
     }
     recalculateBuffers();
+}
+
+bool RendererBatch::isFull(const GLint _texturesForInsertion) const
+{
+    return m_heldTextures + _texturesForInsertion > m_batchMaxSize;
 }
 
 ShaderType RendererBatch::getBatchShader() const
@@ -50,16 +55,25 @@ ShaderType RendererBatch::getBatchShader() const
 
 void RendererBatch::clearExpiredObjects()
 {
-    std::erase_if(m_batch, [](const WPTR<RenderObject>& _object)
+    bool need_to_recalculate_buffers = false;
+    std::erase_if(m_batch, [&need_to_recalculate_buffers](const WPTR<RenderObject>& _object)
     {
         if (_object.expired())
+        {
+            need_to_recalculate_buffers = true;
             return true;
+        }
         if (_object.lock()->isDirty())
         {
             _object.lock()->m_isInBatch = false;
+            need_to_recalculate_buffers = true;
             return true;
         }
+        
+        return false;
     });
+
+    if (need_to_recalculate_buffers) recalculateBuffers();
 }
 
 void RendererBatch::recalculateBuffers()
@@ -68,5 +82,18 @@ void RendererBatch::recalculateBuffers()
     m_vertexBuffer->clear();
     m_indexBuffer->clear();
     m_vertexAOtoRender->clear();
-    //todo: recalculate all buffers
+    m_heldTextures = 0;
+    
+    for (const auto& [name, objectWptr] : m_batch)
+    {
+        if (objectWptr.expired())
+            continue;
+
+        auto object = objectWptr.lock();
+        object->m_isInBatch = true;
+        m_heldTextures += static_cast<GLint>(object->getMatInst()->getTexturesCount());
+        m_vertexBuffer->addRenderObject(object->getName(), object);
+        m_indexBuffer->addRenderObject(object);
+        m_vertexAOtoRender->addBufferTyped<Vertex>(m_vertexBuffer, m_indexBuffer);
+    }
 }
