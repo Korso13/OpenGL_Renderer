@@ -6,7 +6,8 @@ class Renderer;
 
 class Camera : public Node
 {
-    friend Renderer;
+    friend class Renderer;
+    friend class RendererBatch;
 
 public:
 
@@ -45,11 +46,12 @@ protected:
 
 private:
 
-    Camera(); //should only be called by Renderer
+    Camera(); //should only be called by Renderer or RendererBatch
 
     //Used by Renderer:
-    [[nodiscard]] glm::mat4 getMvpForRender(const Node& _nodeToRender) const;
-    [[nodiscard]] glm::mat4 getMvpForRender(const SPTR<Node>& _nodeToRender) const;
+    [[nodiscard]] glm::mat4 getMvp() const; //uses zero-position model (moving vertices, instead of model)
+    [[nodiscard]] glm::mat4 getMvpForRender(const Node& _nodeToRender) const; //uses model position from node 
+    [[nodiscard]] glm::mat4 getMvpForRender(const SPTR<Node>& _nodeToRender) const; //uses model position from node
     
     void updateProjection();
 

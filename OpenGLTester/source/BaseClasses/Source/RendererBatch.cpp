@@ -4,14 +4,16 @@
 #include "BaseClasses/Public/VertexAO.h"
 #include "BaseClasses/Public/VertexBuffer.h"
 #include "BaseClasses/RenderObjects/Public/RenderObject.h"
+#include "Defines.h"
+#include "BaseClasses/Nodes/Public/Camera.h"
 
 RendererBatch::RendererBatch(const GLint _maxBatchSize)
     : m_batchMaxSize(_maxBatchSize) 
 {
     m_batch.reserve(_maxBatchSize);
-    m_vertexBuffer = build::UnqPTR<VertexBuffer>();
-    m_indexBuffer = build::UnqPTR<IndexBuffer>();
-    m_vertexAOtoRender = build::UnqPTR<VertexAO>();
+    m_vertexBuffer = build::Unique<VertexBuffer>();
+    m_indexBuffer = build::Unique<IndexBuffer>();
+    m_vertexAOtoRender = build::Unique<VertexAO>();
 }
 
 void RendererBatch::addRenderObject(const SPTR<RenderObject>& _object)
@@ -45,6 +47,14 @@ bool RendererBatch::isFull(const GLint _texturesForInsertion) const
     return m_heldTextures + _texturesForInsertion > m_batchMaxSize;
 }
 
+void RendererBatch::prepareForDraw() const
+{
+    ASSERT(!m_batchMaterial.expired()) //need the batch to have material
+
+    m_batchMaterial.lock()->inputUniformParamsToShader();
+    m_batchMaterial.lock()->setMVP(RENDERER->getCamera()->getMvp()); 
+}
+
 ShaderType RendererBatch::getBatchShader() const
 {
     if (!m_batchMaterial.expired())
@@ -56,16 +66,16 @@ ShaderType RendererBatch::getBatchShader() const
 void RendererBatch::clearExpiredObjects()
 {
     bool need_to_recalculate_buffers = false;
-    std::erase_if(m_batch, [&need_to_recalculate_buffers](const WPTR<RenderObject>& _object)
+    std::erase_if(m_batch, [&need_to_recalculate_buffers](const std::pair<uint32_t, WPTR<RenderObject>>& _batchPair)
     {
-        if (_object.expired())
+        if (_batchPair.second.expired())
         {
             need_to_recalculate_buffers = true;
             return true;
         }
-        if (_object.lock()->isDirty())
+        if (_batchPair.second.lock()->isDirty())
         {
-            _object.lock()->m_isInBatch = false;
+            _batchPair.second.lock()->m_isInBatch = false;
             need_to_recalculate_buffers = true;
             return true;
         }

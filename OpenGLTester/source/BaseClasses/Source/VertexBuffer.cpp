@@ -71,9 +71,9 @@ void VertexBuffer::clear()
 void VertexBuffer::updateVerticesPool()
 {
     m_verticesPool.clear();
-    std::erase_if(m_renderPool, [](const  WPTR<RenderObject>& objWptr)
+    std::erase_if(m_renderPool, [](const  std::pair<std::string, WPTR<RenderObject>>& _renderPoolPair)
     {
-        return objWptr.expired();
+        return _renderPoolPair.second.expired();
     });
     
     for (auto& [name, objWptr] : m_renderPool)

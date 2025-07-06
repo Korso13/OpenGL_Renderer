@@ -82,7 +82,7 @@ void MaterialInstance::inputUniformParamsToShader()
         ASSERT(ShaderMachine::get()->setShader(m_shaderType))
 
     //binding MaterialInst textures to specified slots 
-    for (auto [textureId, texture] : m_textures)
+    for (const auto& [textureId, texture] : m_textures)
     {
         texture->bind(CAST_I(textureId));
     }

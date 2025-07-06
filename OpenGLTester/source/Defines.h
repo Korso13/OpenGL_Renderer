@@ -4,12 +4,16 @@
 
 //macros
 
-//uncomment one of two. Determines whether Renderer class is singlton or allows multiple instances.
+//uncomment one of two. Determines whether Renderer class is singleton or allows multiple instances.
 //#define MULTIRENDER
 #define SINGLERENDER
 #define MAX_RENDER_BATCH_SIZE 32 //need for std::array in MaterialInst. Limits maximum batch size. 
+#define RESERVE_SAME_LEVEL_BATCHES 20 //when a new std::vector of batches is added in Renderer, reserve memory for this many batches
 
 //Shortcuts
+#ifdef SINGLERENDER
+    #define RENDERER Renderer::get()
+#endif
 #define DEBUG_UI ImG_debuger::get()
 #define M_SPTR std::make_shared
 #define M_UPTR std::make_unique
@@ -31,14 +35,14 @@ using WPTR = std::weak_ptr<Ty>;
 namespace build
 {
     template<typename Ty, typename... Args>
-    SPTR<Ty> ShrPTR(Args... args)
+    SPTR<Ty> Shared(Args&&... _args)
     {
-        return std::make_shared<Ty>(std::forward<Args...>(args));
+        return std::make_shared<Ty>(std::forward<Args>(_args)...);
     }
     template<typename Ty, typename... Args>
-    UPTR<Ty> UnqPTR(Args... args)
+    UPTR<Ty> Unique(Args&&... _args)
     {
-        return std::make_unique<Ty>(std::forward<Args...>(args));
+        return std::make_unique<Ty>(std::forward<Args>(_args)...);
     }
 }
 

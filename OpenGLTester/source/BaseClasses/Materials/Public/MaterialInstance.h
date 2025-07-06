@@ -23,7 +23,8 @@ class Material;
 class MaterialInstance final : public EngineInternal 
 {
     friend Material;
-    friend Renderer;
+    friend class Renderer;
+    friend class RendererBatch;
     
 public:
     MaterialInstance() = delete;
@@ -53,8 +54,12 @@ private:
     
     MaterialInstance(std::string _name, ShaderType _shaderType);
 
+    //call these 2 functions during render pipeline:
+    //Binds textures and passes uniform parameters to shader
     void inputUniformParamsToShader();
+    //Sets the MVP parameter
     void setMVP(const glm::mat4& _mvp);
+    
     void checkUnusedTextureSlots();
     //todo: implement fast checking of repeated textures and use it in setTexture method in the beginning
     void checkIfAlreadyUsesTexture(const SPTR<Texture> _texture);

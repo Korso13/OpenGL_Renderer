@@ -4,6 +4,11 @@
 template <UniformParam T>
 void MaterialInstance::setUniformParam(const std::string& _paramName, T _param)
 {
+    if (_paramName == "u_MVP")
+    {
+        std::cerr << "Do not change MVP yourself!\n";
+        return;
+    }
     ASSERT(ShaderMachine::get()->getShader(m_shaderType)->hasUniformParam<T>(_paramName));
     
     m_materialParams[_paramName] = _param;

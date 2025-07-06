@@ -23,7 +23,7 @@ Renderer::Renderer()
     std::cout << "[Init][Renderer] Batch max size: " << std::to_string(m_maxBatchSize) << "\n";
     ShaderMachine::get();//forces shaders to precompile
     m_rootNode = M_SPTR<Node>("RenderRootNode");
-    m_camera = std::shared_ptr<Camera>(new Camera); //alternative SPTR creation due to private constructor
+    m_camera = SPTR<Camera>(new Camera); //not using build::ShrPTR due to private constructor limitation
 }
 
 
@@ -35,12 +35,10 @@ void Renderer::render()
 
     //todo: add alternative, togglable batch assembly pipelines that ignore RenderOrders or z pos (2 std::function for checkNodeForRender and code below, that are switched on pipeline changes)
     //assembling m_sortedRenderPriority into ordered Renderer Batches
-    for (auto TopLevelIt = m_sortedRenderPriority.rbegin(); TopLevelIt != m_sortedRenderPriority.rend(); TopLevelIt++)
+    for (auto&  [zDist, ro_container] : m_sortedRenderPriority)
     {
-        auto roContainer =  (*TopLevelIt).second;
-        for (auto MidLevelIt = roContainer.begin(); MidLevelIt != roContainer.end(); MidLevelIt++)
+        for (auto& [RenderOrder, MIContainer] : ro_container)
         {
-            auto MIContainer =  (*MidLevelIt).second;
             for (auto& [MatInstUid, RenderObjContainer] : MIContainer)
             {
                 for (auto& render_batch : RenderObjContainer)
@@ -67,21 +65,20 @@ SPTR<Camera> Renderer::getCamera()
     return m_camera;
 }
 
-void Renderer::drawBatch(const UPTR<RendererBatch>& _batch)
+void Renderer::drawBatch(UPTR<RendererBatch>& _batch)
 {
-    UPTR<VertexAO>& vao = _batch->getBatchVAO();
+    const UPTR<VertexAO>& vao = _batch->getBatchVAO();
     if(!ShaderMachine::get()->setShader(_batch->getBatchShader()))
     {
-        std::cout << "Renderer::draw error - shader "
+        std::cout << "Renderer::drawBatch error - shader "
                     << std::to_string(static_cast<int>(_batch->getBatchShader()))
                     << " not found!\n";
         return;
     }
-    //shader->setUniform("u_MVP", m_MVP); //can technically set mvp here instead of prepareForDraw();
     _batch->prepareForDraw(); 
     vao->bind(); //binds vertex buffer, index buffer and vertex attributes
-    const size_t indexSize = (vao->getIndexBuffers().empty()) ? (6) : (vao->getIndexBuffers()[0]->getCount()); //precaution against vertexAO without index buffer
-    GLCall(glDrawElements(GL_TRIANGLES, CAST_I(indexSize), GL_UNSIGNED_INT, 0));
+    const size_t index_size = (vao->getIndexCount() == 0) ? (6) : (vao->getIndexCount()); //precaution against vertexAO without index buffer
+    GLCall(glDrawElements(GL_TRIANGLES, CAST_I(index_size), GL_UNSIGNED_INT, 0));
 }
 
 void Renderer::checkNodeForRender(const SPTR<Node>& _node)
@@ -98,9 +95,10 @@ void Renderer::checkNodeForRender(const SPTR<Node>& _node)
     //placing RenderObject to an existing Renderer batch or creating a new batch in automatically sorting multi-layered container, based on suggested rendering order
     //Priorities: distance to camera, set render order of the object + division into separate instances of MaterialInstance (shaders)
     auto& renderBatches =  m_sortedRenderPriority[distance_to_camera][renderableObject->getRenderOrder()][renderableObject->getMatInst()->getUID()];
+    if (renderBatches.empty()) renderBatches.reserve(RESERVE_SAME_LEVEL_BATCHES);
     if (renderBatches.empty() || renderBatches.back()->isFull(static_cast<GLint>(renderableObject->getMatInst()->getTexturesCount()))) //no batches for this render layer or the last one is full (avoiding checking all batches)
     {
-        renderBatches.emplace_back(build::UnqPTR<RendererBatch>(m_maxBatchSize));
+        renderBatches.emplace_back(build::Unique<RendererBatch>(m_maxBatchSize));
     }
     renderBatches.back()->addRenderObject(renderableObject);
     //m_sortedRenderPriority[distance_to_camera][renderableObject->getRenderOrder()][renderableObject->getMatInst()->getUID()].push_back(renderableObject);
@@ -108,18 +106,16 @@ void Renderer::checkNodeForRender(const SPTR<Node>& _node)
 
 void Renderer::updateRenderBatches()
 {
-    for (auto TopLevelIt = m_sortedRenderPriority.rbegin(); TopLevelIt != m_sortedRenderPriority.rend(); TopLevelIt++)
+    for (auto&  [zDist, ro_container] : m_sortedRenderPriority)
     {
-        auto roContainer =  (*TopLevelIt).second;
-        for (auto MidLevelIt = roContainer.begin(); MidLevelIt != roContainer.end(); MidLevelIt++)
+        for (auto& [RenderOrder, MIContainer] : ro_container)
         {
-            auto MIContainer =  (*MidLevelIt).second;
             for (auto& [MatInstUid, RenderObjContainer] : MIContainer)
             {
-                std::erase_if(RenderObjContainer, [](const SPTR<RendererBatch>& batch) 
+                std::erase_if(RenderObjContainer, [](const UPTR<RendererBatch>& _batch) 
                 {
-                    batch->clearExpiredObjects(); //removes dirty and expired objects
-                    return batch->isExpired(); //removes empty batches
+                    _batch->clearExpiredObjects(); //removes dirty and expired objects
+                    return _batch->isExpired(); //removes empty batches
                 });
             }
         }

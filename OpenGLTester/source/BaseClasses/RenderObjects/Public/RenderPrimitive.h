@@ -10,7 +10,7 @@ public:
         std::vector<SPTR<Vertex>> _vertices,
         std::vector<size_t>&& _indices);
     
-    size_t getVertexCount() const override {return getVertices().size();}
+    size_t getVertexCount() const override {return getVertexCount();}
 
     
 private:

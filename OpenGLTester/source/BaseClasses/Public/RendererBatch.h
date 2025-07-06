@@ -11,7 +11,7 @@ class RendererBatch
 {
     friend class Renderer;
 public:
-    RendererBatch(GLint _maxBatchSize);
+    explicit RendererBatch(GLint _maxBatchSize);
     RendererBatch() = delete;
     RendererBatch(const RendererBatch&) = delete;
     ~RendererBatch() = default;
@@ -22,8 +22,8 @@ public:
     bool isFull(GLint _texturesForInsertion) const;
     bool isExpired() const {return m_batch.empty();}
 
-    // bind textures, prepare vao if batch changed since last time
-    void prepareForDraw();
+    // binds textures, sets MVP
+    void prepareForDraw() const;
     
     UPTR<VertexAO>& getBatchVAO() { return m_vertexAOtoRender; }
     ShaderType getBatchShader() const;

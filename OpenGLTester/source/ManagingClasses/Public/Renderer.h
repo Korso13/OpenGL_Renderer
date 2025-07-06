@@ -47,7 +47,7 @@ public:
 private:
 
     ~Renderer() = default; //prevents calling delete() on Renderer pointer
-    void drawBatch(const UPTR<RendererBatch>& _batch);
+    void drawBatch(UPTR<RendererBatch>& _batch);
     void checkNodeForRender(const SPTR<Node>& _node);
     //updates existing batches' content and removes expired batches
     void updateRenderBatches();
