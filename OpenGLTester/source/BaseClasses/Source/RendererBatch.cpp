@@ -11,9 +11,9 @@ RendererBatch::RendererBatch(const GLint _maxBatchSize)
     : m_batchMaxSize(_maxBatchSize) 
 {
     m_batch.reserve(_maxBatchSize);
-    m_vertexBuffer = build::Unique<VertexBuffer>();
-    m_indexBuffer = build::Unique<IndexBuffer>();
-    m_vertexAOtoRender = build::Unique<VertexAO>();
+    m_vertexBuffer = M_UPTR<VertexBuffer>();
+    m_indexBuffer = M_UPTR<IndexBuffer>();
+    m_vertexAOtoRender = M_UPTR<VertexAO>();
 }
 
 void RendererBatch::addRenderObject(const SPTR<RenderObject>& _object)

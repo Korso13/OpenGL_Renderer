@@ -115,8 +115,8 @@ void BatchRenderTest::prepareTextures()
     m_texture1->bind(1);
     int textures[2] = {0, 1};
     
-    m_vBuffer = build::Unique<VertexBuffer>();
-    m_iBuffer = build::Unique<IndexBuffer>();
+    m_vBuffer = M_UPTR<VertexBuffer>();
+    m_iBuffer = M_UPTR<IndexBuffer>();
 
     m_logoPlane1 = Quad::build(uvec2(300,300), m_logo1Pos, 0);
     m_vBuffer->addRenderObject("Logo1", m_logoPlane1);

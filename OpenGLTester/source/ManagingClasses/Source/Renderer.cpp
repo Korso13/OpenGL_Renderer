@@ -23,7 +23,7 @@ Renderer::Renderer()
     std::cout << "[Init][Renderer] Batch max size: " << std::to_string(m_maxBatchSize) << "\n";
     ShaderMachine::get();//forces shaders to precompile
     m_rootNode = M_SPTR<Node>("RenderRootNode");
-    m_camera = SPTR<Camera>(new Camera); //not using build::ShrPTR due to private constructor limitation
+    m_camera = SPTR<Camera>(new Camera); //not using M_SPTR due to private constructor limitation
 }
 
 
@@ -71,7 +71,7 @@ void Renderer::drawBatch(UPTR<RendererBatch>& _batch)
     if(!ShaderMachine::get()->setShader(_batch->getBatchShader()))
     {
         std::cout << "Renderer::drawBatch error - shader "
-                    << std::to_string(static_cast<int>(_batch->getBatchShader()))
+                    << std::to_string(CAST_I(_batch->getBatchShader()))
                     << " not found!\n";
         return;
     }
@@ -98,7 +98,7 @@ void Renderer::checkNodeForRender(const SPTR<Node>& _node)
     if (renderBatches.empty()) renderBatches.reserve(RESERVE_SAME_LEVEL_BATCHES);
     if (renderBatches.empty() || renderBatches.back()->isFull(static_cast<GLint>(renderableObject->getMatInst()->getTexturesCount()))) //no batches for this render layer or the last one is full (avoiding checking all batches)
     {
-        renderBatches.emplace_back(build::Unique<RendererBatch>(m_maxBatchSize));
+        renderBatches.emplace_back(M_UPTR<RendererBatch>(m_maxBatchSize));
     }
     renderBatches.back()->addRenderObject(renderableObject);
     //m_sortedRenderPriority[distance_to_camera][renderableObject->getRenderOrder()][renderableObject->getMatInst()->getUID()].push_back(renderableObject);

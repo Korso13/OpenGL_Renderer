@@ -32,21 +32,6 @@ using UPTR = std::unique_ptr<Ty>;
 template<typename Ty>
 using WPTR = std::weak_ptr<Ty>;
 
-namespace build
-{
-    template<typename Ty, typename... Args>
-    SPTR<Ty> Shared(Args&&... _args)
-    {
-        return std::make_shared<Ty>(std::forward<Args>(_args)...);
-    }
-    template<typename Ty, typename... Args>
-    UPTR<Ty> Unique(Args&&... _args)
-    {
-        return std::make_unique<Ty>(std::forward<Args>(_args)...);
-    }
-}
-
-
 //enums
 enum class ShaderType
 {

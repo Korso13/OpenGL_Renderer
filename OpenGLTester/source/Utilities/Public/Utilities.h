@@ -88,7 +88,7 @@ static [[nodiscard]] SPTR<Vertex> CreateVertex(
     new_vertex->vCoord = _vertexLocalCoord;
     new_vertex->position = _globalPosOffset + new_vertex->vCoord;
     new_vertex->uv = _uv;
-    new_vertex->textureId = static_cast<float>(_textureID);
+    new_vertex->textureId = CAST_F(_textureID);
     new_vertex->vertexIndex = _vertexIndex;
 
     return new_vertex;

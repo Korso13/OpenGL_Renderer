@@ -69,7 +69,7 @@ void Shader::setUniform(const std::string& _uniformName, bool _value)
     {
         if(m_uniforms.iUniforms.at(_uniformName) != -1)
         {
-            GLCall(glUniform1i(m_uniforms.iUniforms.at(_uniformName), static_cast<int>(_value)));
+            GLCall(glUniform1i(m_uniforms.iUniforms.at(_uniformName), CAST_I(_value)));
         }
         else
         {

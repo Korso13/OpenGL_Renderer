@@ -90,6 +90,6 @@ bool MaterialImpl<ShaderT>::bindMaterialShader()
 template <ShaderType ShaderT>
 MaterialImpl<ShaderT>::MaterialImpl(ShaderType)
 :
-    Material("Material_" + std::to_string(static_cast<int>(ShaderT)), //todo: change it after implementing enum to string conversions
+    Material("Material_" + std::to_string(CAST_I(ShaderT)), //todo: change it after implementing enum to string conversions
             ShaderT)
 {}

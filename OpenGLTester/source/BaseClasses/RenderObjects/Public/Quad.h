@@ -13,7 +13,7 @@ public:
     Quad(const uvec2& _size, const vec3& _position, const int _textureId = 0, const std::string& _name = "Quad");
     static SPTR<Quad> build(const uvec2& _size, const vec3& _position, const int _textureId = 0, const std::string& _name = "Quad")
     {
-        auto new_quad = build::Shared<Quad>(_size, _position, _textureId, _name);
+        auto new_quad = M_SPTR<Quad>(_size, _position, _textureId, _name);
         return new_quad;
     }
     Quad(const Quad&) = delete;
