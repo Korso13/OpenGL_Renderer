@@ -1,7 +1,7 @@
 #include "../Public/Texture.h"
 #include "Utilities/Public/GLErrorCatcher.h"
 
-Texture::Texture(const std::string _filePath)
+Texture::Texture(const std::string& _filePath)
     :
     m_rendererId(0),
     m_buffer(nullptr),
@@ -28,6 +28,32 @@ Texture::Texture(const std::string _filePath)
 
     if(m_buffer)
         stbi_image_free(m_buffer);
+}
+
+Texture::Texture(const Texture& _texture)
+    :
+    //at the moment, trying to avoid multiple instances of the same texture
+    m_rendererId(_texture.m_rendererId),
+    m_buffer(_texture.m_buffer),
+    m_path(_texture.m_path),
+    m_size(_texture.m_size),
+    m_bytesPP(4)
+{
+}
+
+Texture& Texture::operator=(const Texture& _texture)
+{
+    if (this == &_texture)
+        return *this;
+
+    //at the moment, trying to avoid multiple instances of the same texture
+    m_rendererId = _texture.m_rendererId;
+    m_buffer =_texture.m_buffer;
+    m_path = _texture.m_path;
+    m_size = _texture.m_size;
+    m_bytesPP = 4;
+
+    return *this;
 }
 
 Texture::~Texture()

@@ -6,6 +6,8 @@
 #include <ImGUI/imgui.h>
 #include <ImGUI/imgui_impl_glfw.h>
 #include "ImGUI/imgui_impl_opengl3.h"
+#include "ManagingClasses/Public/Renderer.h"
+#include "ManagingClasses/Public/ResourceLibrary.h"
 #include "Menu/Public/BatchRenderTest.h"
 #include "Menu/Public/ClearColorTest.h"
 #include "source/Utilities/Public/GLErrorCatcher.h"
@@ -98,6 +100,10 @@ int main(void)
     GLCall(glEnable(GL_BLEND));
     
 //============================================================================================================
+
+    //Initializing resources
+    ResourceLibrary::get().init();
+    RENDERER;
     
     //Creating ImGUI debugger
     DEBUG_UI->initImGUI(window);

@@ -6,7 +6,11 @@
 class Texture
 {
 public:
-    Texture(const std::string _filePath);
+    Texture(const std::string& _filePath);
+    Texture(const Texture& _texture);
+    Texture& operator=(const Texture& _texture);
+    Texture(Texture&& _texture) = delete;
+    void operator=(const Texture&& _texture) = delete;
     ~Texture();
 
     void bind(GLuint slot = 0) const;

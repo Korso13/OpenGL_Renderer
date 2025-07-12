@@ -14,11 +14,14 @@
 #ifdef SINGLERENDER
     #define RENDERER Renderer::get()
 #endif
+#define RES_LIB ResourceLibrary::get()
+#define RL_TEXTURE ResourceLibrary::get().getTexture
+#define MAT_LIB MaterialLibrary::get()
+#define MESH_FACTORY MeshesFactory::get()
 #define DEBUG_UI ImG_debuger::get()
 #define M_SPTR std::make_shared
 #define M_UPTR std::make_unique
 #define CAST_SPTR std::dynamic_pointer_cast
-#define MAT_LIB MaterialLibrary::get()
 
 #define CAST_I static_cast<int>
 #define CAST_SZ static_cast<size_t>
