@@ -12,8 +12,9 @@ public:
     Texture(Texture&& _texture) = delete;
     void operator=(const Texture&& _texture) = delete;
     ~Texture();
+    //TODO: add constructor with color + color enum
 
-    void bind(GLuint slot = 0) const;
+    void bind(GLuint _slot = 0) const;
     void unbind() const;
 
     ivec2 getSize() const {return m_size;}

@@ -2,16 +2,25 @@
 #include "../Public/RenderPrimitive.h"
 #include "Utilities/Public/Math.h"
 
-Quad::Quad(const uvec2& _size, const vec3& _position, const int _textureId, const std::string& _name)
+Quad::Quad(const uvec2& _size, const vec3& _position, const std::string& _name)
     :
     RenderObject((_name == "Quad") ?
                  _name + std::to_string(utils::Utilities::getInternalUID()) :
                  std::forward<const std::string&>(_name)
                 ),
-    m_size(_size), m_textureId(_textureId)
+    m_size(_size)
 {
     Node::setWorldPos(_position);
     makeQuad();
+}
+
+Quad::Quad(const Quad& _copiedObj)
+    :
+    RenderObject(*this), //copying the RenderObject part of the Quad
+    m_isInitialized(_copiedObj.m_isInitialized),
+    m_size(_copiedObj.m_size)
+{
+    
 }
 
 void Quad::makeQuad()
@@ -29,7 +38,7 @@ void Quad::makeQuad()
         vec2(0.f, 0.f),
         0,
         getWorldPos() + v1Coord,
-        m_textureId
+        0
     );
     addVertex(std::move(v1));
     
@@ -39,7 +48,7 @@ void Quad::makeQuad()
         vec2(0.f, 1.f),
         1,
         getWorldPos() + v2Coord,
-        m_textureId
+        0
     );
     addVertex(std::move(v2));
         
@@ -49,7 +58,7 @@ void Quad::makeQuad()
         vec2(1.f, 1.f),
         2,
         getWorldPos() + v3Coord,
-        m_textureId
+        0
     );
     addVertex(std::move(v3));
     
@@ -59,7 +68,7 @@ void Quad::makeQuad()
         vec2(1.f, 0.f),
         3,
         getWorldPos() + v4Coord,
-        m_textureId
+        0
     );
     addVertex(std::move(v4));
     

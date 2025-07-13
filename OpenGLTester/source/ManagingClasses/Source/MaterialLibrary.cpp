@@ -14,13 +14,13 @@ MaterialLibrary& MaterialLibrary::get()
     return *m_instance;
 }
 
-SPTR<Material> MaterialLibrary::getMaterial(ShaderType type)
+SPTR<Material> MaterialLibrary::getMaterial(ShaderType _type)
 {
-    if(!m_materialLib.contains(type))
+    if(!m_materialLib.contains(_type))
     {
-        std::cerr << "[MaterialLibrary] Shader type " << std::to_string(CAST_I(type)) << " not found!" << std::endl;
+        std::cerr << "[MaterialLibrary] Shader type " << std::to_string(CAST_I(_type)) << " not found!" << std::endl;
         return nullptr;
     }
     
-    return m_materialLib[type];
+    return m_materialLib[_type];
 }

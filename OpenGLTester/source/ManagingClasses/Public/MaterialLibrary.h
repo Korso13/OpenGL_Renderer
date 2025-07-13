@@ -8,10 +8,14 @@ class Material;
 class MaterialLibrary
 {
 public:
+    MaterialLibrary(const MaterialLibrary& _other) = delete;
+    MaterialLibrary(MaterialLibrary&& _other) = delete;
+    MaterialLibrary& operator=(const MaterialLibrary& _other) = delete;
+    MaterialLibrary& operator=(MaterialLibrary&& _other) = delete;
 
     static MaterialLibrary& get();
 
-    SPTR<Material> getMaterial(ShaderType type);
+    SPTR<Material> getMaterial(ShaderType _type);
 
     //auxiliary method for registering new Materials, if they are not added to the Utilities/Source/MaterialList.impl
     template<ShaderType ShaderT>

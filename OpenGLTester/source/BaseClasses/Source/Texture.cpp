@@ -15,7 +15,7 @@ Texture::Texture(const std::string& _filePath)
 
     //load image
     stbi_set_flip_vertically_on_load(1);
-    m_buffer = stbi_load(m_path.c_str(), &m_size.w, &m_size.h, &m_bytesPP, 4);
+    m_buffer = stbi_load(m_path.c_str(), &m_size.w, &m_size.h, &m_bytesPP, 4); //fixed m_bytesPP might be an issue with jpg
 
     //TODO:: outsource texture instantiation and allow setting these parameters first
     GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
@@ -61,9 +61,9 @@ Texture::~Texture()
     GLCall(glDeleteTextures(1, &m_rendererId));
 }
 
-void Texture::bind(GLuint slot) const
+void Texture::bind(GLuint _slot) const
 {
-    GLCall(glActiveTexture(GL_TEXTURE0 + slot));
+    GLCall(glActiveTexture(GL_TEXTURE0 + _slot));
     GLCall(glBindTexture(GL_TEXTURE_2D, m_rendererId));
 }
 

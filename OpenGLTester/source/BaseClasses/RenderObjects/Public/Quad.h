@@ -10,15 +10,17 @@ class Quad : public RenderObject
 public:
     Quad() = delete;
     //todo: consider adding materialInst to constructor to support multiple textures bound to various vertices (possibly not required for Quad, but other RenderObjects)
-    Quad(const uvec2& _size, const vec3& _position, const int _textureId = 0, const std::string& _name = "Quad");
-    static SPTR<Quad> build(const uvec2& _size, const vec3& _position, const int _textureId = 0, const std::string& _name = "Quad")
+    explicit Quad(const uvec2& _size, const vec3& _position,  const std::string& _name = "Quad");
+    static SPTR<Quad> build(const uvec2& _size, const vec3& _position, const std::string& _name = "Quad")
     {
-        auto new_quad = M_SPTR<Quad>(_size, _position, _textureId, _name);
+        auto new_quad = M_SPTR<Quad>(_size, _position, _name);
         return new_quad;
     }
-    Quad(const Quad&) = delete;
+    
+    Quad(const Quad& _copiedObj);
+    Quad& operator=(const Quad&) = delete;
     Quad(const Quad&&) = delete;
-    //todo: add copy/move constructors?
+    Quad& operator=(const Quad&&) = delete;
     
     void setColor(glm::vec4 _newColor); //todo: add shader support for functionality? Better than uniform coloring!
 
@@ -38,5 +40,11 @@ private:
 
     bool m_isInitialized = false;
     const uvec2 m_size;
-    int32_t m_textureId; //todo: is it needed?
 };
+
+//Template methods impls:
+template <>
+inline SPTR<Quad> RenderObject::clone()
+{
+    return M_SPTR<Quad>(*static_cast<Quad*>(this));
+}

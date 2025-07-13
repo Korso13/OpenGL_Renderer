@@ -2,7 +2,6 @@
 
 #include "BaseClasses/Public/IndexBuffer.h"
 #include "BaseClasses/Public/Texture.h"
-#include "BaseClasses/Public/VertexAttributes.h"
 #include "BaseClasses/Public/VertexBuffer.h"
 #include "BaseClasses/RenderObjects/Public/Quad.h"
 #include "ManagingClasses/Public/Renderer.h"
@@ -118,11 +117,11 @@ void BatchRenderTest::prepareTextures()
     m_vBuffer = M_UPTR<VertexBuffer>();
     m_iBuffer = M_UPTR<IndexBuffer>();
 
-    m_logoPlane1 = Quad::build(uvec2(300,300), m_logo1Pos, 0);
+    m_logoPlane1 = Quad::build(uvec2(300,300), m_logo1Pos);
     m_vBuffer->addRenderObject("Logo1", m_logoPlane1);
     m_iBuffer->addRenderObject(m_logoPlane1);
     
-    m_logoPlane2 = Quad::build(uvec2(300,300), m_logo2Pos, 1);
+    m_logoPlane2 = Quad::build(uvec2(300,300), m_logo2Pos);
     m_vBuffer->addRenderObject("Logo2", m_logoPlane2);
     m_iBuffer->addRenderObject(m_logoPlane2);
 
@@ -132,14 +131,14 @@ void BatchRenderTest::prepareTextures()
     //generating shader
     if(!ShaderMachine::get()->setShader(ShaderType::BATCH_RENDER))
     {
-        std::cout << "Setting shader BATCH_RENDER failed, shader not found!" << std::endl;
+        std::cout << "Setting shader BATCH_RENDER failed, shader not found!\n";
         return;
     }
 
     auto shader =  ShaderMachine::get()->getShader(ShaderType::BATCH_RENDER);
     if(!shader)
     {
-        std::cout << "Shader BATCH_RENDER not found!" << std::endl;
+        std::cout << "Shader BATCH_RENDER not found!\n";
         return;
     }
     shader->bind();

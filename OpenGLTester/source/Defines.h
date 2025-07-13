@@ -101,7 +101,8 @@ struct ivec2
 
 struct uvec2
 {
-    uvec2(const unsigned int& _element1, const unsigned int& _element2) : x(_element2), y(_element1){}
+    explicit uvec2(const unsigned int& _element1, const unsigned int& _element2) : x(_element2), y(_element1){}
+    explicit uvec2(const unsigned int& _oneSize) : x(_oneSize), y(_oneSize){}
     
     union 
     {

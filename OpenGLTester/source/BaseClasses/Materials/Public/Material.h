@@ -20,7 +20,7 @@ public:
 
     virtual ~Material() {}
     //returns SPTR to underlying MaterialImpl (without the need to cast to specific MaterialImpl first)
-    virtual SPTR<Material> getImpl() = 0; //might need default impl((
+    virtual SPTR<Material> getImpl() = 0; //NOTE: might need default impl((
 
     virtual SPTR<MaterialInstance> createInstance();
     

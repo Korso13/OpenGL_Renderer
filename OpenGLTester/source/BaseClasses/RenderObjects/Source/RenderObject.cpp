@@ -4,6 +4,22 @@
 RenderObject::RenderObject(const std::string& _name): Node(std::forward<const std::string&>(_name))
 {}
 
+RenderObject::RenderObject(const RenderObject& _copiedObj)
+    :
+    Node(std::forward<const std::string&>(_copiedObj.getName())), //instancing new node, Node-cloning is disabled for now
+    m_isDirty(true),
+    m_isInBatch(false),
+    m_renderOrder(_copiedObj.m_renderOrder),
+    m_materialInstance(_copiedObj.m_materialInstance), //common MaterialInstance is ok in some cases
+    m_indices(_copiedObj.m_indices)
+{
+    //since vertices are kept as SPTR, need to clone them this way
+    for (auto& vertex : _copiedObj.m_vertices)
+    {
+        m_vertices.emplace_back(M_SPTR<Vertex>(*vertex));
+    }
+}
+
 void RenderObject::setRenderOrder(const uint32_t _newRO)
 {
     m_renderOrder = _newRO;

@@ -17,6 +17,10 @@ class RenderObject : public Node
 public:
     RenderObject() = delete;
     explicit RenderObject(const std::string& _name);
+    RenderObject(const RenderObject& _copiedObj); //copy ctor
+    RenderObject& operator=(const RenderObject& _copiedObj) = delete; //copy assignment ctor deleted for now 
+    RenderObject(const RenderObject&& _copiedObj) = delete;
+    RenderObject& operator=(const RenderObject&& _copiedObj) = delete;
     ~RenderObject() override = default;
 
     //Returns object's render order priority
@@ -30,7 +34,11 @@ public:
     virtual void setMatInst(const SPTR<MaterialInstance> _newMI);
     
     bool isInBatch() const {return m_isInBatch;}
-    
+
+    //SPTR-based cloning. Uses copy ctor!
+    template<typename ClonedType>
+    [[nodiscard]] SPTR<ClonedType> clone();
+
 protected:
 
     //Render-related methods (implemented and used by heir classes)
@@ -49,6 +57,7 @@ protected:
 
     void onTransformChange() override;
 
+    
 private:
     
     bool m_isDirty = true; // set to "false" after being put in batch, reset to "true" after render parameters change
@@ -59,3 +68,10 @@ private:
     std::vector<SPTR<Vertex>> m_vertices;
     std::vector<size_t> m_indices;
 };
+
+//Template methods impls:
+template <>
+inline SPTR<RenderObject> RenderObject::clone<RenderObject>()
+{
+    return M_SPTR<RenderObject>(*this);
+}
