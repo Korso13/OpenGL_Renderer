@@ -30,6 +30,8 @@ public:
     ResourceLibrary& operator=(ResourceLibrary&&) = delete;
     
     [[nodiscard]] SPTR<Texture> getTexture(const std::string& _textureName);
+    bool hasTexture(const std::string& _textureName) const;
+    
     //todo: will add sound and vfx getters at the very least, probably wil move material getters here as well (in the future)
     
 private:

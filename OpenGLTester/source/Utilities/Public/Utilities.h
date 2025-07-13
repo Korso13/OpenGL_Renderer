@@ -31,7 +31,7 @@ class Object : public Subscriber
 public:
     
     Object();
-    Object(const Object& other) = delete;
+    Object(const Object& _other) = delete;
     explicit Object(std::string _name);
     ~Object() override = default;
     

@@ -87,6 +87,10 @@ enum class TextureId
 //structs
 struct ivec2
 {
+    explicit ivec2() : x(0), y(0) {}
+    explicit ivec2(const int32_t& _element1, const int32_t& _element2) : x(_element2), y(_element1){}
+    explicit ivec2(const int32_t& _oneSize) : x(_oneSize), y(_oneSize){}
+    
     union 
     {
         int x;
@@ -101,8 +105,10 @@ struct ivec2
 
 struct uvec2
 {
+    explicit uvec2() : x(0), y(0) {}
     explicit uvec2(const unsigned int& _element1, const unsigned int& _element2) : x(_element2), y(_element1){}
     explicit uvec2(const unsigned int& _oneSize) : x(_oneSize), y(_oneSize){}
+    explicit uvec2(const ivec2& _ivecInit) : x(_ivecInit.x), y(_ivecInit.y){}
     
     union 
     {

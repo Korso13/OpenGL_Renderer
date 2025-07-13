@@ -13,7 +13,8 @@ void ResourceLibrary::init()
     
     m_isInitialized = true;
 
-    //todo: fill m_resourcePaths, either by scanning the resource dir, ot by reading some json/config file
+    //todo: textures and other resources require unique identifiers!
+    //Atm two images with the same name, but different paths/extensions can't be imported correctly!
     Directory_Iterator directory_visitor_it = Directory_Iterator("resources/");
     for (const fs::directory_entry& dir_entry : directory_visitor_it)
     {
@@ -69,4 +70,10 @@ SPTR<Texture> ResourceLibrary::getTexture(const std::string& _textureName)
     //at the moment, trying to avoid multiple instances of the same texture, so we're keeping them as SPTR.
     //Batch renderer should avoid binding one texture to different slots, and other renderers are unlikely to use one texture twice in one draw call
     return m_cachedTextures[_textureName];
+}
+
+bool ResourceLibrary::hasTexture(const std::string& _textureName) const
+{
+    return m_cachedTextures.contains(_textureName) ||
+            (m_resourcePaths.contains(ResourceType::TEXTURE) && m_resourcePaths.at(ResourceType::TEXTURE).contains(_textureName));
 }

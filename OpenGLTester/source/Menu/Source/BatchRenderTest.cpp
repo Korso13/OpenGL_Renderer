@@ -7,6 +7,7 @@
 #include "ManagingClasses/Public/Renderer.h"
 #include "ManagingClasses/Public/ShaderMachine.h"
 #include "BaseClasses/Public/VertexAO.h"
+#include "ManagingClasses/Public/MeshesFactory.h"
 #include "Utilities/Public/GLErrorCatcher.h"
 
 BatchRenderTest::BatchRenderTest()
@@ -109,17 +110,18 @@ void BatchRenderTest::prepareTextures()
 {
     m_texture1 = new Texture("resources/textures/logo.png");
     m_texture2 = new Texture("resources/textures/logo2.png");
-    if(m_texture2)
-        m_texture2->bind(0);
-    m_texture1->bind(1);
+    if(m_texture1)
+        m_texture1->bind(0);
+    m_texture2->bind(1);
     int textures[2] = {0, 1};
     
     m_vBuffer = M_UPTR<VertexBuffer>();
     m_iBuffer = M_UPTR<IndexBuffer>();
 
-    m_logoPlane1 = Quad::build(uvec2(300,300), m_logo1Pos);
+    /*m_logoPlane1 = Quad::build(uvec2(300,300), m_logo1Pos);
     m_vBuffer->addRenderObject("Logo1", m_logoPlane1);
-    m_iBuffer->addRenderObject(m_logoPlane1);
+    m_iBuffer->addRenderObject(m_logoPlane1);*/
+    m_logoPlane1 = MESH_FACTORY.buildQuad("logo", ShaderType::BATCH_RENDER, RENDERER->getRoot());
     
     m_logoPlane2 = Quad::build(uvec2(300,300), m_logo2Pos);
     m_vBuffer->addRenderObject("Logo2", m_logoPlane2);

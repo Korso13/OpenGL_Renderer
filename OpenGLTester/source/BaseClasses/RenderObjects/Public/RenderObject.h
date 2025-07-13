@@ -36,8 +36,14 @@ public:
     bool isInBatch() const {return m_isInBatch;}
 
     //SPTR-based cloning. Uses copy ctor!
+    //todo: consider moving up to Object class
     template<typename ClonedType>
-    [[nodiscard]] SPTR<ClonedType> clone();
+    requires std::is_copy_constructible_v<ClonedType>
+    [[nodiscard]] SPTR<ClonedType> clone()
+    {
+        //static_assert(false, "You must add specialization of clone() for your class and implement copy ctor for it!");
+        return M_SPTR<ClonedType>(*static_cast<ClonedType*>(this));
+    }
 
 protected:
 

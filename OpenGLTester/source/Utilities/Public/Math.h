@@ -2,6 +2,26 @@
 #include <pch.h>
 #include <Defines.h>
 
+inline bool operator==(const uvec2& _first,const uvec2& _second)
+{
+    return _first.x == _second.x && _first.y == _second.y;
+}
+
+inline bool operator>(const uvec2& _first,const uvec2& _second)
+{
+    return _first.x + _first.y > _second.x + _second.y;
+}
+
+inline bool operator==(const ivec2& _first,const ivec2& _second)
+{
+    return _first.x == _second.x && _first.y == _second.y;
+}
+
+inline bool operator>(const ivec2& _first,const ivec2& _second)
+{
+    return _first.x + _first.y > _second.x + _second.y;
+}
+
 inline vec3 operator+(const vec3& _first, const vec3& _second)
 {
     vec3 result;
