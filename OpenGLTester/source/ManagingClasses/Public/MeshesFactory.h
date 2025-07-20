@@ -1,6 +1,7 @@
 #pragma once
 #include "Defines.h"
 
+class MaterialInstance;
 class Quad;
 
 class MeshesFactory
@@ -38,4 +39,7 @@ private:
 private:
 
     std::unordered_map<std::string, SPTR<Quad>> m_cachedQuads; //std::string - texture name. Stores only Quads created with bool _useUniqueMatInst = false and _customSize = uvec2(0)
+#ifdef USE_BATCH_RENDERER_PIPELINE
+    std::unordered_map<ShaderType, SPTR<MaterialInstance>> m_cachedBatchMaterials;
+#endif
 };

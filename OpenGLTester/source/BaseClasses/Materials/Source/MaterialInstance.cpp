@@ -45,15 +45,20 @@ void MaterialInstance::setTextureToSlot(const SPTR<Texture> _texture, TextureId 
 
 TextureId MaterialInstance::setTexture(const SPTR<Texture> _texture)
 {
-    TextureId candidateSlot = getAvailableTextureId();
-    if(candidateSlot == TextureId::SIZE)
+    //checking if material instance already has such texture
+    const TextureId existing_texture = checkIfAlreadyUsesTexture(_texture);
+    if (existing_texture != TextureId::SIZE)
+        return existing_texture;
+
+    const TextureId candidate_slot = getAvailableTextureId();
+    if(candidate_slot == TextureId::SIZE)
     {
-        std::cerr << "[MaterialInstance::setTexture] Not enough slots!" << std::endl;
-        return candidateSlot;
+        std::cerr << "[MaterialInstance::setTexture] Not enough slots!\n";
+        return candidate_slot;
     }
 
-    setTextureToSlot(_texture, candidateSlot);
-    return candidateSlot;
+    setTextureToSlot(_texture, candidate_slot);
+    return candidate_slot;
 }
 
 SPTR<Texture> MaterialInstance::getTexture(const TextureId _slotId) const
@@ -132,7 +137,7 @@ void MaterialInstance::inputUniformParamsToShader()
 
 void MaterialInstance::setMVP(const glm::mat4& _mvp)
 {
-    ASSERT(m_shader);
+    ASSERT(m_shader)
     if(ShaderMachine::get()->getSelectedShaderType() != m_shaderType)
         ASSERT(ShaderMachine::get()->setShader(m_shaderType))
     m_shader->setUniform("u_MVP", _mvp);
@@ -144,4 +149,13 @@ void MaterialInstance::checkUnusedTextureSlots()
     {
         return !_texturRecord.second;
     });
+}
+
+TextureId MaterialInstance::checkIfAlreadyUsesTexture(const SPTR<Texture>& _checkedTexture) const
+{
+    for (const auto& [slotId, texture] : m_textures)
+        if (texture->getUID() == _checkedTexture->getUID())
+            return slotId;
+    
+    return TextureId::SIZE;
 }

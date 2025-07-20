@@ -31,7 +31,7 @@ void Camera::updateProjection()
 {
     std::cout << "[Camera::updateProjection] Updating " << ((m_projectionMode == ProjectionMode::ORTHOGRAFIC) ? "Ortho " : "Perspective ") << 
         "projection with window size " <<
-        m_windowSize.w << "x" << m_windowSize.h << std::endl;
+        m_windowSize.w << "x" << m_windowSize.h << "\n";
     
     if(m_projectionMode == ProjectionMode::ORTHOGRAFIC)
     {
@@ -57,19 +57,19 @@ void Camera::setProjectionMode(const ProjectionMode _mode)
     updateProjection();
 }
 
-void Camera::setClearColor(vec3 _newClColor)
+void Camera::setClearColor(const vec3& _newClColor)
 {
     m_clearColor = glm::vec4(_newClColor.x, _newClColor.y, _newClColor.z, 1.f);
     GLCall(glClearColor(m_clearColor.r, m_clearColor.g, m_clearColor.b, m_clearColor.a));
 }
 
-void Camera::setClearColor(vec4 _newClColor)
+void Camera::setClearColor(const vec4& _newClColor)
 {
     m_clearColor = glm::vec4(_newClColor.x, _newClColor.y, _newClColor.z, _newClColor.a);
     GLCall(glClearColor(m_clearColor.r, m_clearColor.g, m_clearColor.b, m_clearColor.a));
 }
 
-void Camera::setClearColor(glm::vec4 _newClColor)
+void Camera::setClearColor(const glm::vec4 _newClColor)
 {
     m_clearColor = _newClColor;
     GLCall(glClearColor(m_clearColor.r, m_clearColor.g, m_clearColor.b, m_clearColor.a));

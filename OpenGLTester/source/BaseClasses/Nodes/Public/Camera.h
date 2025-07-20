@@ -29,8 +29,8 @@ public:
     void setPerspectiveNear(const float _perspectiveNear) { m_perspectiveNear = _perspectiveNear; }
     [[nodiscard]] float getPerspectiveFar() const { return m_perspectiveFar; }
     void setPerspectiveFar(const float _perspectiveFar) { m_perspectiveFar = _perspectiveFar; }
-    void setClearColor(vec3 _newClColor);
-    void setClearColor(vec4 _newClColor);
+    void setClearColor(const vec3& _newClColor);
+    void setClearColor(const vec4& _newClColor);
     void setClearColor(glm::vec4 _newClColor);
     
     void setEnabled(const bool _isEnabled) override {}

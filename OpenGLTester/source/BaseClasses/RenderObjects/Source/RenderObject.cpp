@@ -20,15 +20,25 @@ RenderObject::RenderObject(const RenderObject& _copiedObj)
     }
 }
 
+RenderObject::~RenderObject()
+{
+
+}
+
 void RenderObject::setRenderOrder(const uint32_t _newRO)
 {
     m_renderOrder = _newRO;
     setIsDirty(true);
 }
 
-void RenderObject::setMatInst(const SPTR<MaterialInstance> _newMI)
+void RenderObject::setMatInst(const SPTR<MaterialInstance> _newMI, TextureId _objectTextureId)
 {
     m_materialInstance = _newMI;
+    if (_objectTextureId != TextureId::SIZE)
+    {
+        m_objectTextureId = _objectTextureId;
+        setAllVerticesTextureId(_objectTextureId);
+    }
     setIsDirty(true);
 }
 
@@ -50,6 +60,12 @@ void RenderObject::addVertex(SPTR<Vertex>&& _vertex)
 void RenderObject::addVertex(Vertex&& _vertex)
 {
     getVertices().emplace_back(std::make_shared<Vertex>(std::move(_vertex)));
+}
+
+void RenderObject::setAllVerticesTextureId(TextureId _objectsTextureId)
+{
+    for (const auto& vertex : m_vertices)
+        vertex->textureId = CAST_F(_objectsTextureId);
 }
 
 void RenderObject::addVertexIndex(size_t _index)

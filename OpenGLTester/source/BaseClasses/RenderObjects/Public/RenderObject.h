@@ -21,7 +21,7 @@ public:
     RenderObject& operator=(const RenderObject& _copiedObj) = delete; //copy assignment ctor deleted for now 
     RenderObject(const RenderObject&& _copiedObj) = delete;
     RenderObject& operator=(const RenderObject&& _copiedObj) = delete;
-    ~RenderObject() override = default;
+    ~RenderObject() override;
 
     //Returns object's render order priority
     virtual uint32_t getRenderOrder() {return m_renderOrder;}
@@ -30,8 +30,8 @@ public:
 
     //returns material instance (ideally not overriden)
     virtual SPTR<MaterialInstance> getMatInst() {return m_materialInstance;}
-    //sets new material instance (ideally not overriden)
-    virtual void setMatInst(const SPTR<MaterialInstance> _newMI);
+    //sets new material instance (ideally not overriden) and adjusts vertices texture index if _objectsTextureId != TextureId::SIZE
+    virtual void setMatInst(const SPTR<MaterialInstance> _newMI, TextureId _objectTextureId = TextureId::SIZE);
     
     bool isInBatch() const {return m_isInBatch;}
 
@@ -53,7 +53,8 @@ protected:
     std::vector<SPTR<Vertex>>& getVertices() {return m_vertices;}
     virtual size_t getVertexCount() const {return m_vertices.size();}
     void clearVertices(){m_vertices.clear();}
-
+    void setAllVerticesTextureId(TextureId _objectsTextureId);
+    
     virtual void addVertexIndex(size_t _index);
     virtual void addVerticesIndices(std::vector<size_t>&& _indices);
     const std::vector<size_t>& getIndices() {return m_indices;}
@@ -70,7 +71,8 @@ private:
     bool m_isInBatch = false; //if false - needs to be placed in a batch
     uint32_t m_renderOrder = 0;
     SPTR<MaterialInstance> m_materialInstance = nullptr;
-
+    TextureId m_objectTextureId = TextureId::SIZE;
+    
     std::vector<SPTR<Vertex>> m_vertices;
     std::vector<size_t> m_indices;
 };

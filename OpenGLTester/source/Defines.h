@@ -9,6 +9,7 @@
 #define SINGLERENDER
 #define MAX_RENDER_BATCH_SIZE 32 //need for std::array in MaterialInst. Limits maximum batch size. 
 #define RESERVE_SAME_LEVEL_BATCHES 20 //when a new std::vector of batches is added in Renderer, reserve memory for this many batches
+#define USE_BATCH_RENDERER_PIPELINE
 
 //Shortcuts
 #ifdef SINGLERENDER
@@ -45,7 +46,7 @@ enum class ShaderType
     SIZE
 };
 
-//todo: once BOOST PP added to proj, use it and MAX_RENDER_BATCH_SIZE to aseemble this enum
+//todo: once BOOST PP added to proj, use it and MAX_RENDER_BATCH_SIZE to assemble this enum
 enum class TextureId
 {
     TEX_0,

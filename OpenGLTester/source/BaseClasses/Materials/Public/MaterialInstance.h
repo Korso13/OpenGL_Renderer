@@ -62,7 +62,7 @@ private:
     
     void checkUnusedTextureSlots();
     //todo: implement fast checking of repeated textures and use it in setTexture method in the beginning
-    void checkIfAlreadyUsesTexture(const SPTR<Texture> _texture);
+    TextureId checkIfAlreadyUsesTexture(const SPTR<Texture>& _texture) const;
     
 private:
 

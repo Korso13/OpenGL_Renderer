@@ -2,8 +2,9 @@
 #include <pch.h>
 #include <Defines.h>
 #include "ManagingClasses/Public/Renderer.h"
+#include "Utilities/Public/Utilities.h"
 
-class Texture
+class Texture : public EngineInternal
 {
 public:
     Texture(const std::string& _filePath);

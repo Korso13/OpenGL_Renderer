@@ -37,6 +37,7 @@ SPTR<Quad> MeshesFactory::buildQuad(
     }
 
     const SPTR<Texture> tex = RL_TEXTURE(_textureName);
+    //Creating Quad mesh
     auto new_quad_mesh = Quad::build(
         (_customSize != uvec2(0) ? _customSize : uvec2(tex->getSize())), //using texture's size for Quad size, if _customSize is not valid
         vec3(0.f),
@@ -47,10 +48,34 @@ SPTR<Quad> MeshesFactory::buildQuad(
         std::cerr << "[MeshesFactory::buildQuad]" << "Quad build error!\n";
         return nullptr;
     }
-    //Setting up material for new mesh (no check for _useUniqueMatInst needed - if there was a cached MatInst, we would have already returned cloned mesh)
+    
+    //Setting up material for new mesh. Trying to use cached one if it's batchrender and user asked no unique material
+#ifdef USE_BATCH_RENDERER_PIPELINE
+    SPTR<MaterialInstance> mat_inst = nullptr;
+    if (m_cachedBatchMaterials.contains(_shaderType) && !_useUniqueMatInst)
+        mat_inst = m_cachedBatchMaterials[_shaderType];
+    else
+    {
+        mat_inst = MAT_LIB.getMaterial(_shaderType)->createInstance();
+        if (!_useUniqueMatInst) //caching material if it was not mandatory unique
+            m_cachedBatchMaterials[_shaderType] = mat_inst;
+    }
+#else
     const SPTR<MaterialInstance> mat_inst = MAT_LIB.getMaterial(_shaderType)->createInstance();
-    mat_inst->setTexture(tex);
-    new_quad_mesh->setMatInst(mat_inst);
+#endif
+    
+    TextureId tex_id = mat_inst->setTexture(tex);
+    
+#ifdef USE_BATCH_RENDERER_PIPELINE
+    if (tex_id == TextureId::SIZE) //setTexture returns TextureId::SIZE if out of texture slots
+    {
+        std::cout << "[MeshesFactory::buildQuad] too many textures for one material instance! Forced to make a new material inst!\n";
+        mat_inst = MAT_LIB.getMaterial(_shaderType)->createInstance();
+        tex_id = mat_inst->setTexture(tex);
+    }
+#endif
+    
+    new_quad_mesh->setMatInst(mat_inst, tex_id);
 
     //caching new non-unique mesh
     if (!_useUniqueMatInst && !m_cachedQuads.contains(_textureName))

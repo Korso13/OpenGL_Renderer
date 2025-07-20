@@ -3,6 +3,7 @@
 
 Texture::Texture(const std::string& _filePath)
     :
+    EngineInternal(_filePath),
     m_rendererId(0),
     m_buffer(nullptr),
     m_path(_filePath),
@@ -32,6 +33,7 @@ Texture::Texture(const std::string& _filePath)
 
 Texture::Texture(const Texture& _texture)
     :
+    EngineInternal(_texture.getName()),
     //at the moment, trying to avoid multiple instances of the same texture
     m_rendererId(_texture.m_rendererId),
     m_buffer(_texture.m_buffer),

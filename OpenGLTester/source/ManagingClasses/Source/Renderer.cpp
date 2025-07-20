@@ -70,9 +70,7 @@ void Renderer::drawBatch(UPTR<RendererBatch>& _batch)
     const UPTR<VertexAO>& vao = _batch->getBatchVAO();
     if(!ShaderMachine::get()->setShader(_batch->getBatchShader()))
     {
-        std::cout << "Renderer::drawBatch error - shader "
-                    << std::to_string(CAST_I(_batch->getBatchShader()))
-                    << " not found!\n";
+        std::cout << "[Renderer::drawBatch] error - shader "<< std::to_string(CAST_I(_batch->getBatchShader()))<< " not found!\n";
         return;
     }
     _batch->prepareForDraw(); 
