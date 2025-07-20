@@ -1,5 +1,5 @@
 #pragma once
-#include <GLEW/glew.h>
+#include <GLEW/glew.h> //always before glfw3 !!
 #include <GLFW/glfw3.h>
 #include "GLM/glm.hpp"
 #include "GLM/gtc/matrix_transform.hpp"

@@ -12,7 +12,7 @@ public:
     Texture& operator=(const Texture& _texture);
     Texture(Texture&& _texture) = delete;
     void operator=(const Texture&& _texture) = delete;
-    ~Texture();
+    ~Texture() override;
     //TODO: add constructor with color + color enum
 
     void bind(GLuint _slot = 0) const;

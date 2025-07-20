@@ -117,10 +117,13 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies); openGL32.lib; glew32s.lib; glfw3.lib;</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)external/lib/GLEW/x64; $(SolutionDir)external\lib\GLFW\out\install\x64-Debug\lib\; $(SolutionDir)external\lib\GLFW\out\build\x64-Debug\src\CMakeFiles\glfw.dir\</AdditionalLibraryDirectories>
-      <AdditionalOptions>/NODEFAULTLIB:library</AdditionalOptions>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies); openGL32.lib; glew32sd.lib; glfw3.lib;</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)external/lib/GLEW/Debug/x64; $(SolutionDir)external\lib\GLFW\out\install\x64-Debug\lib\</AdditionalLibraryDirectories>
+      <AdditionalOptions>/NODEFAULTLIB:LIBCMT</AdditionalOptions>
     </Link>
+    <CustomBuildStep>
+      <Command></Command>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
