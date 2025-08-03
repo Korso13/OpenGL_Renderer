@@ -25,9 +25,12 @@ void ResourceLibrary::init()
         ResourceType found_resource_type = checkResourceType(extension);
         if (found_resource_type != ResourceType::NONE)
         {
-            m_resourcePaths[found_resource_type][dir_entry.path().filename().string()] = dir_entry.path().relative_path().string();
-            std::cout << "[ResourceLibrary::init]" << "Added resource " << dir_entry.path().relative_path().string()
-                    << "with path" << dir_entry.path().string() << '\n';
+            std::string resource_name = dir_entry.path().filename().string();
+            resource_name.erase((resource_name.size() - extension.size()), extension.size()); //removing file extention
+            
+            m_resourcePaths[found_resource_type][resource_name] = dir_entry.path().relative_path().string();
+            std::cout << "[ResourceLibrary::init]" << "Added resource " << resource_name
+                    << " with path " << dir_entry.path().string() << '\n';
         }
     }
 }
@@ -42,7 +45,7 @@ ResourceLibrary::ResourceType ResourceLibrary::checkResourceType(const std::stri
     {
         return ResourceType::SOUND;
     }
-    //other checks might be added in teh future
+    //other checks might be added in the future
 
     return ResourceType::NONE;
 }

@@ -16,7 +16,7 @@ Quad::Quad(const uvec2& _size, const vec3& _position, const std::string& _name)
 
 Quad::Quad(const Quad& _copiedObj)
     :
-    RenderObject(*this), //copying the RenderObject part of the Quad
+    RenderObject(_copiedObj), //copying the RenderObject part of the Quad
     m_isInitialized(_copiedObj.m_isInitialized),
     m_size(_copiedObj.m_size)
 {
@@ -92,7 +92,7 @@ void Quad::addVertex(SPTR<Vertex>&& _vertex)
     if(getVertices().size() >= 4)
         return;
     
-   addVertex(std::move(_vertex));
+   RenderObject::addVertex(std::move(_vertex));
 }
 
 void Quad::addVertex(Vertex&& _vertex)

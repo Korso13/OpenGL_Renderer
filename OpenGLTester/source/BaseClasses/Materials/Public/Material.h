@@ -56,7 +56,7 @@ public:
         if(!m_implInstance)
         {
             m_implInstance = SPTR<MaterialImpl<ShaderT>>(new MaterialImpl(ShaderT));
-            std::cout << m_implInstance->getName() << " instanced" << std::endl;
+            std::cout << m_implInstance->getName() << " instanced\n";
         }
         return m_implInstance;
     }

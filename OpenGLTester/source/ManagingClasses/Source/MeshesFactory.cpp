@@ -37,6 +37,12 @@ SPTR<Quad> MeshesFactory::buildQuad(
     }
 
     const SPTR<Texture> tex = RL_TEXTURE(_textureName);
+    if (!tex)
+    {
+        std::cerr << "[MeshesFactory::buildQuad] Failed to load texture with resource name " << _textureName << "\n";
+        return nullptr;
+    }
+
     //Creating Quad mesh
     auto new_quad_mesh = Quad::build(
         (_customSize != uvec2(0) ? _customSize : uvec2(tex->getSize())), //using texture's size for Quad size, if _customSize is not valid

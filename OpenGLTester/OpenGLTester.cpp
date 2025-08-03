@@ -10,18 +10,21 @@
 #include "ManagingClasses/Public/ResourceLibrary.h"
 #include "Menu/Public/BatchRenderTest.h"
 #include "Menu/Public/ClearColorTest.h"
+#include "Menu/Public/NewBatchPipelineTest.h"
 #include "source/Utilities/Public/GLErrorCatcher.h"
 
 enum class MMSelector
 {
     NONE,
     CLEAR_COLOR,
-    BATCH_RENDER
+    BATCH_RENDER,
+    NEW_PIPELINE
 };
 
 static MMSelector RenderSelector = MMSelector::NONE;
 static ClearColorTest* ClearColor = nullptr;
 static BatchRenderTest* BatchRender = nullptr;
+static NewBatchPipelineTest* NewRender = nullptr;
 
 static void switchTesters(MMSelector tester)
 {
@@ -34,6 +37,9 @@ static void switchTesters(MMSelector tester)
         break;
     case MMSelector::BATCH_RENDER:
         delete BatchRender;
+        break;
+    case MMSelector::NEW_PIPELINE:
+        delete NewRender;
         break;
     default:
         break;
@@ -50,6 +56,9 @@ static void switchTesters(MMSelector tester)
         break;
     case MMSelector::BATCH_RENDER:
         BatchRender = new BatchRenderTest();
+        break;
+    case MMSelector::NEW_PIPELINE:
+        NewRender = new NewBatchPipelineTest();
         break;
     default: 
         break;
@@ -119,6 +128,11 @@ int main(void)
     {
         switchTesters(MMSelector::BATCH_RENDER);
     });
+    DEBUG_UI->addMainMenuItem("New Batch Render Pipeline tester",
+    []()
+    {
+        switchTesters(MMSelector::NEW_PIPELINE);
+    });
 //============================================================================================================
  
     /* Loop until the user closes the window */
@@ -133,6 +147,9 @@ int main(void)
             break;
         case MMSelector::BATCH_RENDER:
             if(BatchRender)BatchRender->onRender();
+            break;
+        case MMSelector::NEW_PIPELINE:
+            if(NewRender)NewRender->onRender();
             break;
         case MMSelector::NONE:
             break;

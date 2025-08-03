@@ -37,7 +37,7 @@ public:
     [[nodiscard]] bool isEnabled() const override {return true;}
     bool isInFrustum() const override {return true;}
     
-    void setWorldScale(const vec3 _newScale) override {} //note: scale is always 1. Probably correct, but might affect HUD elements' scaling
+    void setWorldScale(const vec3 _newScale) override {} //NOTE: scale is always 1. Probably correct, but might affect HUD elements' scaling
     void setLocalScale(const vec3 _newScale) override {}
 
 protected:

@@ -40,11 +40,17 @@ TextureId MaterialInstance::getAvailableTextureId()
 void MaterialInstance::setTextureToSlot(const SPTR<Texture> _texture, TextureId _slotId)
 {
     m_textures[_slotId] = _texture;
+    if (!m_materialParams.contains("u_Textures"))
+    {
+        m_materialParams["u_Textures"] = intVectorParam();
+    }
     get<intVectorParam>(m_materialParams["u_Textures"])[CAST_I(_slotId)] = CAST_I(_slotId);
 }
 
 TextureId MaterialInstance::setTexture(const SPTR<Texture> _texture)
 {
+    assert(_texture && "[MaterialInstance::setTexture]Texture is null");
+    
     //checking if material instance already has such texture
     const TextureId existing_texture = checkIfAlreadyUsesTexture(_texture);
     if (existing_texture != TextureId::SIZE)

@@ -6,7 +6,7 @@ RenderObject::RenderObject(const std::string& _name): Node(std::forward<const st
 
 RenderObject::RenderObject(const RenderObject& _copiedObj)
     :
-    Node(std::forward<const std::string&>(_copiedObj.getName())), //instancing new node, Node-cloning is disabled for now
+    Node(std::forward<const std::string>(_copiedObj.getName())), //instancing new node, Node-cloning is disabled for now
     m_isDirty(true),
     m_isInBatch(false),
     m_renderOrder(_copiedObj.m_renderOrder),
