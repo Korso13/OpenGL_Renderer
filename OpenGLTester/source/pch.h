@@ -8,6 +8,7 @@
 #include <unordered_map>
 #include <map>
 #include <array>
+#include <set>
 #include "STB/stb_image.h"
 #include <functional>
 #include <cstdint>

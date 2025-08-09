@@ -1,6 +1,10 @@
 #pragma once
 #include <pch.h>
 
+#include "ImGUI/imgui.h"
+
+class ImGuiUtils;
+
 //todo: add support for vector types
 enum class DebugDataType
 {
@@ -54,6 +58,7 @@ struct ImGuiIO;
 
 class ImG_debuger
 {
+    friend ImGuiUtils;
 public:
 
     static ImG_debuger* get()
@@ -65,10 +70,11 @@ public:
         return m_instance;
     }
 
+    //todo: Make these two private and add EngineController as friend to call them, once it's implemented
     void initImGUI(GLFWwindow* _window);
     void imGUI_Render();
 
-    bool folderExists(const std::string& _folderName);
+    bool folderExists(const std::string& _folderName) const;
     void addFolder(std::string&& _folderName);
     void addMainMenuItem(const std::string& _menuName, std::function<void()>&& _menuActivationCB);
     
@@ -80,7 +86,6 @@ public:
         T* _valueRef,
         const size_t _valuesCount = 1,
         ImGUI_ToolType _editToolType = ImGUI_ToolType::SLIDER,
-        //consider rewriting to deal with warnings
         const T&& _rangeMin = T(),
         const T&& _rangeMax = T()
         );
@@ -90,8 +95,10 @@ public:
 private:
     
     ImG_debuger();
-    
+    void loadFonts();
+
     void generateImGUIContent();
+    void renderHierarchy();
     void handleFloatElement(const std::string& _folder, const std::string& _name);
     void handleIntElement(const std::string& _folder, const std::string& _name);
     void handleColorElement(const std::string& _folder, const std::string& _name);
@@ -104,6 +111,14 @@ private:
     
     ImGuiIO& io;
     bool m_isInitialized = false;
+
+    //Fonts...
+    bool m_fontLoaded = false;
+    ImVector<ImWchar> m_fontRanges; 
+    ImFontConfig m_fontConfig;
+    //
+    std::string m_lastSelectedHierarchyItem = "";
+    std::function<void()> m_scheduleBetweenFrames = nullptr;
     std::unordered_map<std::string, ImGUI_folder> m_imguiFolders;
 };
 

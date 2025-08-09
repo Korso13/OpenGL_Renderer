@@ -1,7 +1,12 @@
 #include "../Public/ImG_debuger.h"
 #include <ImGUI/imgui.h>
 #include <ImGUI/imgui_impl_glfw.h>
+
+#include "Defines.h"
+#include "BaseClasses/Nodes/Public/Node.h"
 #include "ImGUI/imgui_impl_opengl3.h"
+#include "ManagingClasses/Public/Renderer.h"
+#include "Utilities/Public/ImGuiUtils.h"
 
 ImG_debuger* ImG_debuger::m_instance = nullptr;
 
@@ -16,14 +21,30 @@ ImG_debuger::ImG_debuger()
 {
     (void)io;
     addFolder("Main menu");
+    m_scheduleBetweenFrames = [this](){loadFonts();};
 }
+
+void ImG_debuger::loadFonts()
+{
+    if (m_fontLoaded) return;
+    m_fontLoaded = true;
+    
+    ImFontGlyphRangesBuilder builder;
+    builder.AddText("│├└┬─");   //used in hierarchy drawer
+    builder.AddRanges(io.Fonts->GetGlyphRangesDefault());
+    builder.BuildRanges(&m_fontRanges);
+    m_fontConfig.MergeMode = true;
+    io.Fonts->AddFontFromFileTTF("resources\\fonts\\arial.ttf", 16.0f, &m_fontConfig, m_fontRanges.Data);
+    io.Fonts->Build();
+}
+
 
 void ImG_debuger::addDebugButtonToFolder(const std::string& _folder, const std::string& _buttonName, std::function<void()>&& _btnActivationCB)
 {
     if(!folderExists(_folder))
         addFolder(std::string(_folder));
 
-    m_imguiFolders[_folder].buttons.emplace(_buttonName, _btnActivationCB);
+    m_imguiFolders[_folder].buttons.emplace(_buttonName, std::move(_btnActivationCB));
 
     //registering in render index
     size_t renderIndex = m_imguiFolders[_folder].renderOrder.size();
@@ -76,6 +97,73 @@ void ImG_debuger::generateImGUIContent()
             }
         }
     }
+}
+
+void ImG_debuger::renderHierarchy()
+{
+    auto main_root = RENDERER->getRoot();
+    if (main_root == nullptr) return;
+    
+    SPTR<Node> selected_object = nullptr;
+    
+    //rendering hierarchy with selectables
+    size_t indent = 0;
+    std::map<size_t, std::pair<size_t, size_t>> indent_item_counter; //indent level - current element in indent level - total elements in indent level
+    indent_item_counter[0] = {0,0}; //root node is the only one on zero indent
+    
+    if (ImGui::BeginChild("Hierarchy", ImGuiUtils::getSizeForChild(0.4f)))
+    {
+        static std::function<void(const SPTR<Node>&, const std::string&)> hierarchy_handler =
+            [&selected_object, &indent, &indent_item_counter, this](const SPTR<Node>& _hierarchyObject, const std::string& _nameOverride = "")
+            {
+                std::string name = (_nameOverride.empty()) ?
+                                    (_hierarchyObject->getName() + "_" + std::to_string(_hierarchyObject->getUID())) :
+                                    _nameOverride;
+                std::cout << "========================\n";
+                std::cout << "Indent for " << name << "\n";
+                std::cout << "========================\n";
+                const std::string indentation_prefix = ImGuiUtils::formHierarchyIndentPrefix(indent_item_counter);
+                ImGui::Text("%s", indentation_prefix.c_str());
+                ImGui::SameLine();
+                //indent_item_counter[indent].first++;
+                
+                //Selection mechanic
+                if (name == m_lastSelectedHierarchyItem && !selected_object)
+                    selected_object = _hierarchyObject;
+                if (ImGui::Selectable(name.c_str(), name == m_lastSelectedHierarchyItem))
+                {
+                    m_lastSelectedHierarchyItem = name;
+                    selected_object = _hierarchyObject;
+                }
+
+                //recursive call to children
+                const auto& children = _hierarchyObject->getAllChildren();
+                //adding indent
+                indent++;
+                indent_item_counter[indent-1].first++;
+                indent_item_counter[indent].first = 0;
+                indent_item_counter[indent].second = children.size();
+                //iterating over children
+                for (const auto& [child_name, child] : children)
+                {
+                    hierarchy_handler(child, "");
+                }
+                //finished working with direct children, removing indent
+                indent_item_counter.erase(indent); 
+                indent--;
+            };
+
+        hierarchy_handler(main_root, "Root");
+    }
+    ImGui::EndChild();
+    
+    //Rendering selected item's exposed data
+    if (ImGui::BeginChild("Selected Item",ImGuiUtils::getSizeForChild(0.58f)))
+    {
+        if (selected_object)
+            selected_object->onGui();
+    }
+    ImGui::EndChild();
 }
 
 void ImG_debuger::handleFloatElement(const std::string& _folder, const std::string& _name)
@@ -216,18 +304,38 @@ void ImG_debuger::imGUI_Render()
     ImGui::NewFrame();
 
     ImGui::Begin("ImGUI Debugger");
-    generateImGUIContent();
-    if(ImGui::CollapsingHeader("General info"))
+    if (ImGui::BeginTabBar("Main Tab Bar"))
     {
-        ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
+        if (ImGui::BeginTabItem("Main Tab"))
+        {
+            generateImGUIContent();
+            ImGui::EndTabItem();
+        }
+        if (ImGui::BeginTabItem("Node Hierarchy"))
+        {
+            renderHierarchy();
+            ImGui::EndTabItem();
+        }
+        if (ImGui::BeginTabItem("General info"))
+        {
+            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
+            ImGui::EndTabItem();
+        }
+        
+        ImGui::EndTabBar(); //ends "Main Tab Bar"
     }
     ImGui::End();
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+    if (m_scheduleBetweenFrames)
+    {
+        m_scheduleBetweenFrames();
+        m_scheduleBetweenFrames = nullptr;
+    }
 }
 
-bool ImG_debuger::folderExists(const std::string& _folderName)
+bool ImG_debuger::folderExists(const std::string& _folderName) const
 {
     return m_imguiFolders.find(_folderName) != m_imguiFolders.end();
 }
@@ -242,7 +350,7 @@ void ImG_debuger::addMainMenuItem(const std::string& _menuName, std::function<vo
     addDebugButtonToFolder(
         "Main menu",
         _menuName,
-        std::forward<std::function<void()>>(_menuActivationCB)
+        std::move(_menuActivationCB)
     );
 }
 

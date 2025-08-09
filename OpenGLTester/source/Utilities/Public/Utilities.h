@@ -12,7 +12,7 @@ namespace utils
 
         //provides unique IDs for the use by engine internal classes
         static uint32_t getInternalUID();
-
+        
     private:
         inline static uint32_t m_nextUID = 0;
     };
@@ -28,6 +28,7 @@ namespace utils
 //Events: onNameChange (string payload - old name);
 class Object : public Subscriber
 {
+    friend ImG_debuger; //renders object's data into imGui 
 public:
     
     Object();
@@ -40,7 +41,12 @@ public:
     void setName(std::string _newName); 
     [[nodiscard]] uint32_t getUID() const {return m_id;}
 
-    //todo: add virtual protected method onGui for debug rendering + add ImGui renderer as friend
+protected:
+
+    //Override this method to make the object renderable in ImGui debugger. DO NOT CALL IT YOURSELF!
+    //Use ImGui-related functions to render fields and options in its Ui child form
+    //Should return false only if anything was changed (unused ATM, but might be useful in future)
+    virtual bool onGui() {return false;}
     
 private:
 
