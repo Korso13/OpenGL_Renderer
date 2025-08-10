@@ -115,6 +115,14 @@ void Quad::onTransformChange()
     Node::onTransformChange(); //skipping RenderObject::onTransformChange, because we need different logic for quad to keep anchor in the center  // NOLINT(bugprone-parent-virtual-call)
 }
 
+bool Quad::onGui(const std::string& _name)
+{
+    bool result = false;
+    result = result || RenderObject::onGui(_name);
+    
+    return result;
+}
+
 vec3 Quad::getOffsetFromCenter(const unsigned& _index)
 {
     switch (_index)

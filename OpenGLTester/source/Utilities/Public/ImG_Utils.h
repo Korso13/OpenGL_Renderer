@@ -3,9 +3,6 @@
 #include "pch.h"
 #include "ImGUI/imgui.h"
 
-//NOTE: might need to move to a separate file with all ImGui defines with settings
-#define IMG_LISTBOX_ENTRIES_IN_FRAME 5
-
 class ImGuiUtils
 {
 public:

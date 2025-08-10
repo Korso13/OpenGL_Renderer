@@ -19,7 +19,7 @@ public:
     MeshesFactory& operator=(MeshesFactory&&) = delete;
 
     //Builds a flat Quad mesh with designated texture
-    //If _useUniqueMatInst is set to false, returns a clone of first Mesh instanced with this texture with teh same MaterialInst, disregarding passed _shaderType
+    //If _useUniqueMatInst is set to false, returns a clone of first Mesh instanced with this texture with the same MaterialInst, disregarding passed _shaderType
     //todo: add blending settings, bool flag for stretching/tiling texture to quad size
     SPTR<Quad> buildQuad(const std::string& _textureName,
         ShaderType _shaderType,

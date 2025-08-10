@@ -1,5 +1,6 @@
-#include "../Public/ImGuiUtils.h"
+#include "../Public/ImG_Utils.h"
 #include "ImGUI/imgui_internal.h"
+#include "Utilities/Public/ImG_Defines.h"
 #include "Utilities/Public/Utilities.h"
 
 #define SAFE_NAME(name) (((name).empty()) ? ("default_name"+std::to_string(utils::Utilities::getInternalUID())).c_str() : (name).c_str())
@@ -191,6 +192,7 @@ std::pair<bool, std::string> ImGuiUtils::imGuiListBox(const std::string& _listNa
 	return result;
 }
 
+//todo: fix me pls (indent is not selecting correct glyphs, probably needs rewrite into 2 methods: 1 mapping hierarchy (with caching?) and 1 providing indent for specific element)
 std::string ImGuiUtils::formHierarchyIndentPrefix(const std::map<size_t, std::pair<size_t, size_t>>& _indentationData)
 {
 	if (_indentationData.size() < 2)
@@ -198,8 +200,8 @@ std::string ImGuiUtils::formHierarchyIndentPrefix(const std::map<size_t, std::pa
 
 	std::string prefix_line;
 	const size_t current_indent = _indentationData.size()-1; //-1 because indent is 0-based
-	std::cout << "========================\n";
-#define LOG_INDENT(line) std::cout << "[" << line << "]" <<"Node indent(current_indent): " << current_indent << ", indent_level: " << indent_level << ", indent_item_idx: " << indent_item_idx << ", indent_level_size: " << indent_level_size << "\nPrefix: " << prefix_line << "\n"
+	//std::cout << "========================\n";
+#define LOG_INDENT(line) //std::cout << "[" << line << "]" <<"Node indent(current_indent): " << current_indent << ", indent_level: " << indent_level << ", indent_item_idx: " << indent_item_idx << ", indent_level_size: " << indent_level_size << "\nPrefix: " << prefix_line << "\n"
 	
 	for (const auto& [indent_level, indent_level_data] : _indentationData)
 	{
@@ -282,6 +284,6 @@ std::string ImGuiUtils::formHierarchyIndentPrefix(const std::map<size_t, std::pa
 		LOG_INDENT(282);
 	}
 
-	std::cout << "\nPrefix: " << prefix_line << "\n========================\n";
+	//std::cout << "\nPrefix: " << prefix_line << "\n========================\n";
 	return prefix_line;
 }

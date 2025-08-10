@@ -49,7 +49,7 @@ void Node::addChild(const SPTR<Node>& _child, const bool _bResetTransforms )
         _child->m_transform = Transform();
     }
 
-    m_children[_child->getName()] = _child;
+    m_children[_child->getUniqueName()] = _child;
     _child->subscribeToEvent(getUID(), "onNameChange", std::bind(&Node::handleChildNameChange, this, std::placeholders::_1));
 }
 
@@ -170,11 +170,11 @@ void Node::handleChildNameChange(const SubscriberEventPayload& _eventInfo)
         return;
 
     const SPTR<Node> child = child_it->second;
-    const auto& new_name = child->getName();
+    const auto& new_name = child->getUniqueName();
     if(new_name == old_name)
         return;
 
-    if(m_children.contains(new_name))
+    if(m_children.contains(new_name)) //most-likely not needed with getUniqueName() being used
     {
         child->setName(new_name + "_" + std::to_string(child->getUID())); //we need unique name for the node
         return;

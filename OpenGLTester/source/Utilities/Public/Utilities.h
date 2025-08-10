@@ -37,6 +37,7 @@ public:
     ~Object() override = default;
     
     [[nodiscard]] const std::string& getName() const {return m_name;}
+    [[nodiscard]] std::string getUniqueName() const {return m_name + "_" + std::to_string(getUID());}
     //Changes set Object name. Fires onNameChange event containing old name
     void setName(std::string _newName); 
     [[nodiscard]] uint32_t getUID() const {return m_id;}
@@ -46,7 +47,7 @@ protected:
     //Override this method to make the object renderable in ImGui debugger. DO NOT CALL IT YOURSELF!
     //Use ImGui-related functions to render fields and options in its Ui child form
     //Should return false only if anything was changed (unused ATM, but might be useful in future)
-    virtual bool onGui() {return false;}
+    virtual bool onGui(const std::string& _name) {return false;}
     
 private:
 

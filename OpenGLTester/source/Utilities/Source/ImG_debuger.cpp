@@ -6,7 +6,8 @@
 #include "BaseClasses/Nodes/Public/Node.h"
 #include "ImGUI/imgui_impl_opengl3.h"
 #include "ManagingClasses/Public/Renderer.h"
-#include "Utilities/Public/ImGuiUtils.h"
+#include "Utilities/Public/ImG_AutoDrawers.h"
+#include "Utilities/Public/ImG_Utils.h"
 
 ImG_debuger* ImG_debuger::m_instance = nullptr;
 
@@ -117,11 +118,11 @@ void ImG_debuger::renderHierarchy()
             [&selected_object, &indent, &indent_item_counter, this](const SPTR<Node>& _hierarchyObject, const std::string& _nameOverride = "")
             {
                 std::string name = (_nameOverride.empty()) ?
-                                    (_hierarchyObject->getName() + "_" + std::to_string(_hierarchyObject->getUID())) :
+                                    (_hierarchyObject->getUniqueName()) :
                                     _nameOverride;
-                std::cout << "========================\n";
-                std::cout << "Indent for " << name << "\n";
-                std::cout << "========================\n";
+                // std::cout << "========================\n";
+                // std::cout << "Indent for " << name << "\n";
+                // std::cout << "========================\n";
                 const std::string indentation_prefix = ImGuiUtils::formHierarchyIndentPrefix(indent_item_counter);
                 ImGui::Text("%s", indentation_prefix.c_str());
                 ImGui::SameLine();
@@ -161,7 +162,7 @@ void ImG_debuger::renderHierarchy()
     if (ImGui::BeginChild("Selected Item",ImGuiUtils::getSizeForChild(0.58f)))
     {
         if (selected_object)
-            selected_object->onGui();
+            selected_object->onGui(m_lastSelectedHierarchyItem);
     }
     ImGui::EndChild();
 }
@@ -342,7 +343,7 @@ bool ImG_debuger::folderExists(const std::string& _folderName) const
 
 void ImG_debuger::addFolder(std::string&& _folderName)
 {
-    m_imguiFolders.emplace(_folderName, ImGUI_folder());
+    m_imguiFolders.emplace(std::move(_folderName), ImGUI_folder());
 }
 
 void ImG_debuger::addMainMenuItem(const std::string& _menuName, std::function<void()>&& _menuActivationCB)
@@ -354,3 +355,17 @@ void ImG_debuger::addMainMenuItem(const std::string& _menuName, std::function<vo
     );
 }
 
+template <typename ... T>
+bool ImG_debuger::drawClassVariables(const std::string& _className,
+    std::pair<std::string, std::decay_t<T>*>... _namedVariablesPointers)
+{
+    bool result = false;
+   
+    if (ImGui::TreeNode(_className.c_str()))
+    {
+        result = result || (AutoDrawers::AutoDraw(_namedVariablesPointers.first, _namedVariablesPointers.second), ...);
+        ImGui::TreePop();
+    }
+
+    return result;
+}

@@ -30,7 +30,8 @@ protected:
     void addVertex(Vertex&& _vertex) override;
 
     void onTransformChange() override;
-    
+    bool onGui(const std::string& _name) override;
+
 private:
 
     void makeQuad();

@@ -128,7 +128,7 @@ struct vec2
     vec2(float _x, float _y) : x(_x), y(_y){}
     vec2(const float _oneSize) : x(_oneSize), y(_oneSize){}
     vec2(const vec2& _vec2) : x(_vec2.x), y(_vec2.y) {}
-    void operator= (const vec2& _vec2) { x = _vec2.x; y = _vec2.y;}
+    vec2& operator= (const vec2& _vec2) { x = _vec2.x; y = _vec2.y; return *this;}
     vec2() = default;
     float x = 0.f;
     float y = 0.f;
@@ -155,7 +155,7 @@ struct vec4
     vec4(const float _x, const float _y, const float _z, const float _a) : x(_x), y(_y), z(_z), a(_a){}
     explicit vec4(const glm::vec3& _vec3, const float _a) : x(_vec3.x), y(_vec3.y), z(_vec3.z), a(_a){}
     explicit vec4(const glm::vec4& _vec4) : x(_vec4.x), y(_vec4.y), z(_vec4.z), a(_vec4.a){}
-    void operator= (const vec4& _vec4) { x = _vec4.x; y = _vec4.y; z = _vec4.z; a = _vec4.a;}
+    vec4& operator= (const vec4& _vec4) { x = _vec4.x; y = _vec4.y; z = _vec4.z; a = _vec4.a; return *this;}
     vec4() = default;
     float x = 0.f;
     float y = 0.f;

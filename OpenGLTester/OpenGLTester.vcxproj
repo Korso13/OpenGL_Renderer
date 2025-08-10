@@ -792,7 +792,7 @@
     <ClCompile Include="source\Menu\Source\ClearColorTest.cpp" />
     <ClCompile Include="source\Menu\Source\MainMenuItem.cpp" />
     <ClCompile Include="source\Menu\Source\NewBatchPipelineTest.cpp" />
-    <ClCompile Include="source\Utilities\Source\ImGuiUtils.cpp">
+    <ClCompile Include="source\Utilities\Source\ImG_Utils.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <Optimization>Disabled</Optimization>
@@ -972,7 +972,9 @@
     <ClInclude Include="source\Menu\Public\ClearColorTest.h" />
     <ClInclude Include="source\Menu\Public\MainMenuItem.h" />
     <ClInclude Include="source\Menu\Public\NewBatchPipelineTest.h" />
-    <ClInclude Include="source\Utilities\Public\ImGuiUtils.h" />
+    <ClInclude Include="source\Utilities\Public\ImG_Utils.h" />
+    <ClInclude Include="source\Utilities\Public\ImG_AutoDrawers.h" />
+    <ClInclude Include="source\Utilities\Public\ImG_Defines.h" />
     <ClInclude Include="source\Utilities\Public\Math.h" />
     <ClInclude Include="source\Utilities\Public\Subscriber.h" />
     <ClInclude Include="source\Utilities\Public\Utilities.h" />
