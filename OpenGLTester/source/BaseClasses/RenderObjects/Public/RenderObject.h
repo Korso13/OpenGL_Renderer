@@ -45,6 +45,8 @@ public:
         return M_SPTR<ClonedType>(*static_cast<ClonedType*>(this));
     }
 
+    bool onGui(const std::string& _name) override;
+    
 protected:
 
     //Render-related methods (implemented and used by heir classes)
@@ -64,8 +66,6 @@ protected:
 
     void onTransformChange() override;
 
-    bool onGui(const std::string& _name) override;
-    
 private:
     
     bool m_isDirty = true; // set to "false" after being put in batch, reset to "true" after render parameters change

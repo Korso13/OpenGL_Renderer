@@ -43,6 +43,8 @@ public:
     virtual void setWorldScale(const vec3 _newScale);
     virtual void setLocalScale(const vec3 _newScale);
 
+    bool onGui(const std::string& _name) override;
+    
 protected:
     
     virtual void onTransformChange();

@@ -24,13 +24,14 @@ public:
     
     void setColor(glm::vec4 _newColor); //todo: add shader support for functionality? Better than uniform coloring!
 
+    bool onGui(const std::string& _name) override;
+
 protected:
 
     void addVertex(SPTR<Vertex>&& _vertex) override;
     void addVertex(Vertex&& _vertex) override;
 
     void onTransformChange() override;
-    bool onGui(const std::string& _name) override;
 
 private:
 

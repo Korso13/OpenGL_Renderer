@@ -50,7 +50,7 @@ enum class ShaderType
 //todo: once BOOST PP added to proj, use it and MAX_RENDER_BATCH_SIZE to assemble this enum
 enum class TextureId
 {
-    TEX_0,
+    TEX_0 = 0,
     TEX_1,
     TEX_2,
     TEX_3,
@@ -201,6 +201,8 @@ public:
     Transform operator*(const Transform& _other) const;
     Transform operator/(Transform& _other) const;
 
+    bool onGui(const std::string& _name);
+    
 private:
 
     vec3 m_translation = vec3(0.f);

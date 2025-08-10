@@ -1,4 +1,6 @@
 #include "../Public/Node.h"
+
+#include "Utilities/Public/ImG_AutoDrawers.h"
 #include "Utilities/Public/Math.h"
 
 Node::Node(const std::string& _name)
@@ -144,6 +146,19 @@ void Node::setLocalScale(const vec3 _newScale)
 {
     //todo: implement later!
     onTransformChange();
+}
+
+bool Node::onGui(const std::string& _name)
+{
+    bool result = false;
+    const size_t childCount = m_children.size();
+    result = result || AutoDrawers::DrawClassVariables("Node",
+        NamedVar<bool*>{"Is Enabled", &m_isEnabled},
+        NamedVar<const size_t*>{"Children count", &childCount},
+        NamedVar<Transform*>{"Transforms", &m_transform}
+    );
+    result = result || Object::onGui(_name);
+    return result;
 }
 
 void Node::onTransformChange()

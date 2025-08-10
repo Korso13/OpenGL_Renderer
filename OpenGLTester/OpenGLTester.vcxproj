@@ -972,6 +972,10 @@
     <ClInclude Include="source\Menu\Public\ClearColorTest.h" />
     <ClInclude Include="source\Menu\Public\MainMenuItem.h" />
     <ClInclude Include="source\Menu\Public\NewBatchPipelineTest.h" />
+    <ClInclude Include="source\Utilities\Public\ImG_AutoDrawCoreTypes.inl" />
+    <ClInclude Include="source\Utilities\Public\ImG_AutoDrawEngineTypes.inl" />
+    <ClInclude Include="source\Utilities\Public\ImG_AutoDrawContainers.inl" />
+    <ClInclude Include="source\Utilities\Public\ImG_AutoDrawExternalOnGui.inl" />
     <ClInclude Include="source\Utilities\Public\ImG_Utils.h" />
     <ClInclude Include="source\Utilities\Public\ImG_AutoDrawers.h" />
     <ClInclude Include="source\Utilities\Public\ImG_Defines.h" />

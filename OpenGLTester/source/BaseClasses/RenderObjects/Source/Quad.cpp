@@ -120,7 +120,7 @@ bool Quad::onGui(const std::string& _name)
 {
     bool result = false;
     result = result || AutoDrawers::DrawClassVariables("Quad",
-        NamedVar<const uvec2>{"Quad Size", &m_size}
+        NamedVar<const uvec2*>{"Quad Size", &m_size}
     );
     result = result || RenderObject::onGui(_name);
     return result;

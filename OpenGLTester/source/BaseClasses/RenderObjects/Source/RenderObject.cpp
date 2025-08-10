@@ -58,8 +58,13 @@ bool RenderObject::onGui(const std::string& _name)
 {
     bool result = false;
     result = result || AutoDrawers::DrawClassVariables("RenderObject",
-        NamedVar<bool>{"is Dirty", &m_isDirty},
-        NamedVar<bool>{"Is in Batch", &m_isInBatch}
+        NamedVar<bool*>{"is Dirty", &m_isDirty},
+        NamedVar<bool*>{"Is in Batch", &m_isInBatch},
+        NamedVar<uint32_t*>{"Render Order", &m_renderOrder},
+        NamedVar<MaterialInstance*>{"Material Instance", m_materialInstance.get()},
+        NamedVar<TextureId*>{"Object Texture", &m_objectTextureId},
+        NamedContainer<std::vector<SPTR<Vertex>>*>{"Verticies", &m_vertices},
+        NamedContainer<std::vector<size_t>*>{"Indices", &m_indices}
     );
     result = result || Node::onGui(_name);
     return result;

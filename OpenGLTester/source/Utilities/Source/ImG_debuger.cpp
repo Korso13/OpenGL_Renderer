@@ -120,7 +120,7 @@ void ImG_debuger::renderHierarchy()
     std::map<size_t, std::pair<size_t, size_t>> indent_item_counter; //indent level - current element in indent level - total elements in indent level
     indent_item_counter[0] = {0,0}; //root node is the only one on zero indent
     
-    if (ImGui::BeginChild("Hierarchy", ImGuiUtils::getSizeForChild(0.4f), ImGuiChildFlags_Border | ImGuiChildFlags_FrameStyle | ImGuiChildFlags_AutoResizeX))
+    if (ImGui::BeginChild("Hierarchy", ImVec2(-1.f, 200.f), ImGuiChildFlags_Border | ImGuiChildFlags_FrameStyle | ImGuiChildFlags_AutoResizeX))
     {
         static std::function<void(const SPTR<Node>&, const std::string&)> hierarchy_handler =
             [&selected_object, &indent, &indent_item_counter, this](const SPTR<Node>& _hierarchyObject, const std::string& _nameOverride = "")
@@ -167,7 +167,7 @@ void ImG_debuger::renderHierarchy()
     ImGui::EndChild();
     
     //Rendering selected item's exposed data
-    if (ImGui::BeginChild("Selected Item",ImGuiUtils::getSizeForChild(0.58f), ImGuiChildFlags_Border | ImGuiChildFlags_FrameStyle | ImGuiChildFlags_AutoResizeX))
+    if (ImGui::BeginChild("Selected Item",ImVec2(-1.f, -1.f), ImGuiChildFlags_Border | ImGuiChildFlags_FrameStyle | ImGuiChildFlags_AutoResizeX))
     {
         if (selected_object)
             selected_object->onGui(m_lastSelectedHierarchyItem);

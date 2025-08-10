@@ -28,7 +28,8 @@ namespace utils
 //Events: onNameChange (string payload - old name);
 class Object : public Subscriber
 {
-    friend ImG_debuger; //renders object's data into imGui 
+    friend ImG_debuger; //renders object's data into imGui
+    
 public:
     
     Object();
@@ -41,9 +42,7 @@ public:
     //Changes set Object name. Fires onNameChange event containing old name
     void setName(std::string _newName); 
     [[nodiscard]] uint32_t getUID() const {return m_id;}
-
-protected:
-
+    
     //Override this method to make the object renderable in ImGui debugger. DO NOT CALL IT YOURSELF!
     //Use ImGui-related functions to render fields and options in its Ui child form
     //Should return false only if anything was changed (unused ATM, but might be useful in future)
@@ -58,6 +57,8 @@ private:
 //Base class for engine entities that are not rendered on screen / not present in the level
 class EngineInternal
 {
+    friend ImG_debuger;
+    
 public:
     
     EngineInternal() = delete;
@@ -65,7 +66,13 @@ public:
     virtual ~EngineInternal() = default;
     
     [[nodiscard]] const std::string& getName() const {return m_name;}
+    [[nodiscard]] std::string getUniqueName() const {return m_name + "_" + std::to_string(getUID());}
     [[nodiscard]] uint32_t getUID() const {return m_id;}
+
+    //Override this method to make the object renderable in ImGui debugger. DO NOT CALL IT YOURSELF!
+    //Use ImGui-related functions to render fields and options in its Ui child form
+    //Should return false only if anything was changed (unused ATM, but might be useful in future)
+    virtual bool onGui(const std::string& _name) {return false;}
     
 private:
 
