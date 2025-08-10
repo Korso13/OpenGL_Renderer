@@ -1,5 +1,6 @@
 #include "../Public/Quad.h"
 #include "../Public/RenderPrimitive.h"
+#include "Utilities/Public/ImG_AutoDrawers.h"
 #include "Utilities/Public/Math.h"
 
 Quad::Quad(const uvec2& _size, const vec3& _position, const std::string& _name)
@@ -118,8 +119,10 @@ void Quad::onTransformChange()
 bool Quad::onGui(const std::string& _name)
 {
     bool result = false;
+    result = result || AutoDrawers::DrawClassVariables("Quad",
+        NamedVar<const uvec2>{"Quad Size", &m_size}
+    );
     result = result || RenderObject::onGui(_name);
-    
     return result;
 }
 

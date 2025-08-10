@@ -64,6 +64,7 @@ protected:
 
     void onTransformChange() override;
 
+    bool onGui(const std::string& _name) override;
     
 private:
     

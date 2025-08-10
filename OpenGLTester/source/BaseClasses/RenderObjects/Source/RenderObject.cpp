@@ -1,4 +1,6 @@
 #include "../Public/RenderObject.h"
+
+#include "Utilities/Public/ImG_AutoDrawers.h"
 #include "Utilities/Public/Math.h"
 
 RenderObject::RenderObject(const std::string& _name): Node(std::forward<const std::string&>(_name))
@@ -50,6 +52,17 @@ void RenderObject::onTransformChange()
         vertex->position = getWorldPos() + vertex->vCoord * getWorldScale();
     }
     Node::onTransformChange();
+}
+
+bool RenderObject::onGui(const std::string& _name)
+{
+    bool result = false;
+    result = result || AutoDrawers::DrawClassVariables("RenderObject",
+        NamedVar<bool>{"is Dirty", &m_isDirty},
+        NamedVar<bool>{"Is in Batch", &m_isInBatch}
+    );
+    result = result || Node::onGui(_name);
+    return result;
 }
 
 void RenderObject::addVertex(SPTR<Vertex>&& _vertex)

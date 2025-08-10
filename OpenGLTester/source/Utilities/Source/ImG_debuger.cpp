@@ -22,7 +22,11 @@ ImG_debuger::ImG_debuger()
 {
     (void)io;
     addFolder("Main menu");
-    m_scheduleBetweenFrames = [this](){loadFonts();};
+    m_scheduleBetweenFrames = [this]()
+    {
+        loadFonts();
+        loadStyle();
+    };
 }
 
 void ImG_debuger::loadFonts()
@@ -39,6 +43,10 @@ void ImG_debuger::loadFonts()
     io.Fonts->Build();
 }
 
+void ImG_debuger::loadStyle()
+{
+    ImGui::StyleColorsClassic(); //will do for now
+}
 
 void ImG_debuger::addDebugButtonToFolder(const std::string& _folder, const std::string& _buttonName, std::function<void()>&& _btnActivationCB)
 {
@@ -112,7 +120,7 @@ void ImG_debuger::renderHierarchy()
     std::map<size_t, std::pair<size_t, size_t>> indent_item_counter; //indent level - current element in indent level - total elements in indent level
     indent_item_counter[0] = {0,0}; //root node is the only one on zero indent
     
-    if (ImGui::BeginChild("Hierarchy", ImGuiUtils::getSizeForChild(0.4f)))
+    if (ImGui::BeginChild("Hierarchy", ImGuiUtils::getSizeForChild(0.4f), ImGuiChildFlags_Border | ImGuiChildFlags_FrameStyle | ImGuiChildFlags_AutoResizeX))
     {
         static std::function<void(const SPTR<Node>&, const std::string&)> hierarchy_handler =
             [&selected_object, &indent, &indent_item_counter, this](const SPTR<Node>& _hierarchyObject, const std::string& _nameOverride = "")
@@ -159,12 +167,12 @@ void ImG_debuger::renderHierarchy()
     ImGui::EndChild();
     
     //Rendering selected item's exposed data
-    if (ImGui::BeginChild("Selected Item",ImGuiUtils::getSizeForChild(0.58f)))
+    if (ImGui::BeginChild("Selected Item",ImGuiUtils::getSizeForChild(0.58f), ImGuiChildFlags_Border | ImGuiChildFlags_FrameStyle | ImGuiChildFlags_AutoResizeX))
     {
         if (selected_object)
             selected_object->onGui(m_lastSelectedHierarchyItem);
     }
-    ImGui::EndChild();
+    ImGui::EndChild(); //"Selected Item"
 }
 
 void ImG_debuger::handleFloatElement(const std::string& _folder, const std::string& _name)
@@ -353,19 +361,4 @@ void ImG_debuger::addMainMenuItem(const std::string& _menuName, std::function<vo
         _menuName,
         std::move(_menuActivationCB)
     );
-}
-
-template <typename ... T>
-bool ImG_debuger::drawClassVariables(const std::string& _className,
-    std::pair<std::string, std::decay_t<T>*>... _namedVariablesPointers)
-{
-    bool result = false;
-   
-    if (ImGui::TreeNode(_className.c_str()))
-    {
-        result = result || (AutoDrawers::AutoDraw(_namedVariablesPointers.first, _namedVariablesPointers.second), ...);
-        ImGui::TreePop();
-    }
-
-    return result;
 }

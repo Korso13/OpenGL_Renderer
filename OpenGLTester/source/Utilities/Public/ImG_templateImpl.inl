@@ -44,4 +44,3 @@ inline void ImG_debuger::addDebugValueToFolder(const std::string& _folderName, D
     size_t renderIndex = (FolderIt)->second.renderOrder.size();
     FolderIt->second.renderOrder.emplace(renderIndex, std::pair(_type, _debugValueCaption));
 }
-        

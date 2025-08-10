@@ -91,14 +91,12 @@ public:
         );
 
     void addDebugButtonToFolder(const std::string& _folder, const std::string& _buttonName, std::function<void()>&& _btnActivationCB);
-
-    template<typename ...T>
-    bool drawClassVariables(const std::string& _className, std::pair<std::string, std::decay_t<T>*>... _namedVariablesPointers);
     
 private:
     
     ImG_debuger();
     void loadFonts();
+    void loadStyle();
 
     void generateImGUIContent();
     void renderHierarchy();
