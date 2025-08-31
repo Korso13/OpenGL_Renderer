@@ -83,9 +83,14 @@ bool AutoDraw(const std::string& _name, std::unordered_map<K,V>* _object)
         {
             const auto& key = keyValuePair.first;
             auto& value = keyValuePair.second;
-            result = result || AutoDraw<K>(std::to_string(index++), &key);
-            ImGui::SameLine();
-            result = result || AutoDraw<V>(std::to_string(index++), &value);
+            if (ImGui::TreeNode(("Element " + STR(index)).c_str()))
+            {
+                result = result || AutoDraw<K>("<-Key", &key);
+                result = result || AutoDraw<V>("Value:", &value);
+                
+                ImGui::TreePop();
+            }
+            index++;
         }
         ImGui::TreePop();
     }
@@ -105,9 +110,14 @@ bool AutoDraw(const std::string& _name, std::unordered_map<K,SPTR<V>>* _object)
         {
             const auto& key = keyValuePair.first;
             auto& value = keyValuePair.second;
-            result = result || AutoDraw<K>(std::to_string(index++), &key);
-            ImGui::SameLine();
-            result = result || AutoDraw<V>(std::to_string(index++), value);
+            if (ImGui::TreeNode(("Element " + STR(index)).c_str()))
+            {
+                result = result || AutoDraw<K>("<-Key", &key);
+                result = result || AutoDraw<V>("Value:", value);
+                
+                ImGui::TreePop();
+            }
+            index++;
         }
         ImGui::TreePop();
     }
@@ -127,9 +137,14 @@ bool AutoDraw(const std::string& _name, std::unordered_map<K,UPTR<V>>* _object)
         {
             const auto& key = keyValuePair.first;
             auto& value = keyValuePair.second;
-            result = result || AutoDraw<K>(std::to_string(index++), &key);
-            ImGui::SameLine();
-            result = result || AutoDraw<V>(std::to_string(index++), value);
+            if (ImGui::TreeNode(("Element " + STR(index)).c_str()))
+            {
+                result = result || AutoDraw<K>("<-Key", &key);
+                result = result || AutoDraw<V>("Value:", value);
+                
+                ImGui::TreePop();
+            }
+            index++;
         }
         ImGui::TreePop();
     }
@@ -149,9 +164,14 @@ bool AutoDraw(const std::string& _name, std::unordered_map<K,WPTR<V>>* _object)
         {
             const K& key = keyValuePair.first;
             auto& value = keyValuePair.second;
-            result = result || AutoDraw<K>(std::to_string(index++), &key);
-            ImGui::SameLine();
-            result = result || AutoDraw<V>(std::to_string(index++), value);
+            if (ImGui::TreeNode(("Element " + STR(index)).c_str()))
+            {
+                result = result || AutoDraw<K>("<-Key", &key);
+                result = result || AutoDraw<V>("Value:", value);
+                
+                ImGui::TreePop();
+            }
+            index++;
         }
         ImGui::TreePop();
     }

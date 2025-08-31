@@ -75,9 +75,9 @@ bool RendererBatch::onGui(const std::string& _name)
         NamedContainer<std::unordered_map<uint32_t, WPTR<RenderObject>>*>{"Batch contents", &m_batch},
         NamedVar<VertexBuffer*>{"Perspective Near", m_vertexBuffer.get()},
         NamedVar<IndexBuffer*>{"Perspective Far", m_indexBuffer.get()},
-        NamedVar<MaterialInstance*>{"Material instance", m_batchMaterial.lock().get()}
+        NamedVar<MaterialInstance*>{"Material instance", m_batchMaterial.lock().get()},
+        SubMenu{_name, SUB_MENU_CALL(return result = result || EngineInternal::onGui(_name);)}
     );
-    result = result || EngineInternal::onGui(_name);
     return result;
 }
 

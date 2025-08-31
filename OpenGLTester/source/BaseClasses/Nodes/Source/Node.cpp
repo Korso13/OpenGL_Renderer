@@ -70,17 +70,21 @@ void Node::removeChild(const SPTR<Node>& _child)
 
 void Node::traversal(std::function<void(SPTR<Node>)> _nodeVisitor, bool _bEnabledOnly)
 {
+    //std::cout << "[Node::traversal] " << getUniqueName() << "\n"; //todo: remove debug
     if(!_nodeVisitor || (_bEnabledOnly && !m_isEnabled))
         return;
 
+    //std::cout << "[Node::traversal] " << getUniqueName() << " passed checks" << "\n"; //todo: remove debug
     _nodeVisitor(shared_from_this());
-    traverseChildren(std::move(_nodeVisitor), _bEnabledOnly);
+    traverseChildren(_nodeVisitor, _bEnabledOnly);
 }
 
 void Node::traverseChildren(std::function<void(SPTR<Node>)> _nodeVisitor, bool _bEnabledOnly)
 {
+    //std::cout << "[Node::traverseChildren] " << getUniqueName() << " has " << getAllChildren().size() << " children"<< "\n"; //todo: remove debug
     for(auto& [node_name, node] : getAllChildren())
     {
+        //std::cout << "[Node::traverseChildren] Checking child " << node_name << "\n"; //todo: remove debug
         recursiveVisitor(node, _nodeVisitor, _bEnabledOnly);
     }
 }
@@ -155,9 +159,9 @@ bool Node::onGui(const std::string& _name)
     result = result || AutoDrawers::DrawClassVariables("Node",
         NamedVar<bool*>{"Is Enabled", &m_isEnabled},
         NamedVar<const size_t*>{"Children count", &childCount},
-        NamedVar<Transform*>{"Transforms", &m_transform}
+        NamedVar<Transform*>{"Transforms", &m_transform},
+        SubMenu{_name, SUB_MENU_CALL(return result = result || Object::onGui(_name);)}
     );
-    result = result || Object::onGui(_name);
     return result;
 }
 
@@ -201,11 +205,14 @@ void Node::handleChildNameChange(const SubscriberEventPayload& _eventInfo)
 
 void Node::recursiveVisitor(SPTR<Node> _node, std::function<void(SPTR<Node>)>& _nodeVisitor, bool _bEnabledOnly)
 {
+    //std::cout << "[Node::recursiveVisitor] "<< _node->getUniqueName() <<"\n"; //todo: remove debug
     if(!_node->isEnabled() && _bEnabledOnly)
         return;
+    //std::cout << "[Node::recursiveVisitor] "<< _node->getUniqueName() << " passed checks. Checking " << _node->getAllChildren().size() << " children" <<"\n"; //todo: remove debug
     
     for(auto& [node_name, node] : _node->getAllChildren())
     {
         recursiveVisitor(node, _nodeVisitor);
     }
+    _nodeVisitor(_node);
 }

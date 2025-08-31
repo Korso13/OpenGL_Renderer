@@ -80,9 +80,10 @@ bool VertexBuffer::onGui(const std::string& _name)
     result = result || AutoDrawers::DrawClassVariables("VertexBuffer",
         NamedVar<size_t*>{"Vertices to draw", &m_verticesToDraw},
         NamedContainer<std::unordered_map<std::string, WPTR<RenderObject>>*>{"Render pool", &m_renderPool},
-        NamedContainer<std::vector<Vertex>*>{"Vertices", &m_verticesPool}
+        NamedContainer<std::vector<Vertex>*>{"Vertices", &m_verticesPool},
+        SubMenu{_name, SUB_MENU_CALL(return result = result || EngineInternal::onGui(_name);)}
     );
-    result = result || EngineInternal::onGui(_name);   
+    
     return result;
 }
 

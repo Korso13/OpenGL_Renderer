@@ -31,6 +31,7 @@ Renderer::Renderer()
 
 void Renderer::render()
 {
+    //std::cout << "[Renderer::render]\n"; //todo: remove debug
     clear(); //clearing buffer
     updateRenderBatches();
     m_rootNode->traversal(std::bind(&Renderer::checkNodeForRender, this, std::placeholders::_1), true);
@@ -83,14 +84,18 @@ void Renderer::drawBatch(UPTR<RendererBatch>& _batch)
 
 void Renderer::checkNodeForRender(const SPTR<Node>& _node)
 {
+    //std::cout << "[Renderer::checkNodeForRender]\n"; //todo: remove debug
     if(!_node || !_node->isEnabled() || !_node->isInFrustum())
         return;
+    //std::cout << "[Renderer::checkNodeForRender]" << _node->getName() << "\n"; //todo: remove debug
 
     float distance_to_camera = 0.f;
     //todo: add distance to camera check!
     SPTR<RenderObject> renderableObject = CAST_SPTR<RenderObject>(_node);
     if(!renderableObject || !renderableObject->getMatInst() || renderableObject->isInBatch())
         return;
+    
+    //std::cout << "[Renderer::checkNodeForRender]" << _node->getName() << " valid renderableObject and renderableObject. Not in batch" << "\n"; //todo: remove debug
 
     //placing RenderObject to an existing Renderer batch or creating a new batch in automatically sorting multi-layered container, based on suggested rendering order
     //Priorities: distance to camera, set render order of the object + division into separate instances of MaterialInstance (shaders)
@@ -106,20 +111,24 @@ void Renderer::checkNodeForRender(const SPTR<Node>& _node)
 
 void Renderer::updateRenderBatches()
 {
+    //std::cout << "[Renderer::updateRenderBatches]\n"; //todo: remove debug
+    size_t found = 0;
     for (auto&  [zDist, ro_container] : m_sortedRenderPriority)
     {
         for (auto& [RenderOrder, MIContainer] : ro_container)
         {
             for (auto& [MatInstUid, RenderObjContainer] : MIContainer)
             {
-                std::erase_if(RenderObjContainer, [](const UPTR<RendererBatch>& _batch) 
+                std::erase_if(RenderObjContainer, [&found](const UPTR<RendererBatch>& _batch) 
                 {
                     _batch->clearExpiredObjects(); //removes dirty and expired objects
+                    if (!_batch->isExpired()) found++; //todo: remove later
                     return _batch->isExpired(); //removes empty batches
                 });
             }
         }
     }
+    //std::cout << "[Renderer::updateRenderBatches]Found valid batches " + STR(found) + "\n"; //todo: remove debug
 }
 
 bool Renderer::onGui(const std::string& _name)
@@ -142,7 +151,6 @@ bool Renderer::onGui(const std::string& _name)
                     {
                         result = result || (AutoDrawers::AutoDraw("MaterialInstId: " + STR(MatInstUid), &RenderObjContainer));
                         elements_batched += RenderObjContainer.size();
-                        ImGui::TreePop();
                     }
                     ImGui::TreePop();
                 }

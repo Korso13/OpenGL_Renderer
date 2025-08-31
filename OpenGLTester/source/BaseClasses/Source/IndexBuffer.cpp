@@ -67,8 +67,8 @@ bool IndexBuffer::onGui(const std::string& _name)
     result = result || AutoDrawers::DrawClassVariables("IndexBuffer",
         NamedVar<size_t*>{"Vertices count", &m_count},
         NamedVar<size_t*>{"Index adjustment", &m_adjustment},
-        NamedContainer<std::vector<size_t>*>{"Indices pool", &m_vertexIndicesPool}
+        NamedContainer<std::vector<size_t>*>{"Indices pool", &m_vertexIndicesPool},
+        SubMenu{_name, SUB_MENU_CALL(return result = result || EngineInternal::onGui(_name);)}
     );
-    result = result || EngineInternal::onGui(_name);
     return result;
 }

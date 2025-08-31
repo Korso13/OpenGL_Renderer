@@ -1,3 +1,4 @@
+//file for out-of-header impls of onGui method, required for some classes
 #pragma once
 #include "Defines.h"
 #include "ImG_AutoDrawers.h"

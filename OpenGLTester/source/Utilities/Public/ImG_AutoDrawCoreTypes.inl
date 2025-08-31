@@ -92,6 +92,14 @@ inline bool AutoDraw(const std::string& _name, std::function<void()>* _object)
     return false;
 }
 
+//used for passing sub-calls to ImGui passed to AutoDrawers::DrawClassVariables
+template<>
+inline bool AutoDraw(const std::string& _name, std::function<bool(const std::string&)> _object)
+{
+    OBJ_CHECK
+    return _object(_name);
+}
+
 template<>
 inline bool AutoDraw(const std::string& _name, ivec2* _object)
 {

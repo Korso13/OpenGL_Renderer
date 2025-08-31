@@ -23,6 +23,8 @@ template<typename Y>
 using NamedVar = std::pair<std::string, Y>;
 template<typename ContainerType>
 using NamedContainer = std::pair<std::string, ContainerType>;
+using SubMenu = std::pair<std::string, std::function<bool(const std::string&)>>;
+#define SUB_MENU_CALL(contents) [&](const std::string& _name) -> bool {contents}
 
 #define OBJ_CHECK if (!_object) {ImGui::Text("%s pointer invalid!", _name.c_str()); return false;}
 
@@ -34,8 +36,11 @@ namespace AutoDrawers
     bool AutoDraw(const std::string& _name, T* _object);
     template<typename T>
     bool AutoDraw(const std::string& _name, const T* _object);
-    /*template<typename T>
-    bool AutoDraw(const std::string& _name, T&& _object);*/
+    //rarely used, avoid it
+    template<typename T>
+    bool AutoDraw(const std::string& _name, T _object);
+    // template<typename T>
+    // bool AutoDraw(const std::string& _name, T&& _object);
 
 #include "ImG_AutoDrawCoreTypes.inl"
 #include "ImG_AutoDrawEngineTypes.inl"

@@ -64,9 +64,9 @@ bool RenderObject::onGui(const std::string& _name)
         NamedVar<MaterialInstance*>{"Material Instance", m_materialInstance.get()},
         NamedVar<TextureId*>{"Object Texture", &m_objectTextureId},
         NamedContainer<std::vector<SPTR<Vertex>>*>{"Verticies", &m_vertices},
-        NamedContainer<std::vector<size_t>*>{"Indices", &m_indices}
+        NamedContainer<std::vector<size_t>*>{"Indices", &m_indices},
+        SubMenu{_name, SUB_MENU_CALL(return result = result || Node::onGui(_name);)}
     );
-    result = result || Node::onGui(_name);
     return result;
 }
 

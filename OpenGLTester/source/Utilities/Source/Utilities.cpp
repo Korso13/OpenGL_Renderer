@@ -34,7 +34,7 @@ void Object::setName(std::string _newName)
 bool Object::onGui(const std::string& _name)
 {
     bool result = false;
-    result = result || AutoDrawers::DrawClassVariables("Object",
+    result = result || AutoDrawers::DrawClassVariables("Object["+getUniqueName()+"]",
         NamedVar<const uint32_t*>{"Unique id", &m_id},
         NamedVar<std::string*>{"Name", &m_name}
     );
@@ -51,7 +51,7 @@ EngineInternal::EngineInternal(std::string _name)
 bool EngineInternal::onGui(const std::string& _name)
 {
     bool result = false;
-    result = result || AutoDrawers::DrawClassVariables("EngineInternal",
+    result = result || AutoDrawers::DrawClassVariables("EngineInternal["+getUniqueName()+"]",
         NamedVar<const uint32_t*>{"Unique id", &m_id},
         NamedVar<std::string*>{"Name", &m_name}
     );
