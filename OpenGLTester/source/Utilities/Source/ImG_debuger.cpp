@@ -3,6 +3,7 @@
 #include <ImGUI/imgui_impl_glfw.h>
 
 #include "Defines.h"
+#include "BaseClasses/Nodes/Public/Camera.h"
 #include "BaseClasses/Nodes/Public/Node.h"
 #include "ImGUI/imgui_impl_opengl3.h"
 #include "ManagingClasses/Public/Renderer.h"
@@ -108,7 +109,7 @@ void ImG_debuger::generateImGUIContent()
     }
 }
 
-void ImG_debuger::renderHierarchy()
+void ImG_debuger::drawHierarchyTab()
 {
     auto main_root = RENDERER->getRoot();
     if (main_root == nullptr) return;
@@ -173,6 +174,18 @@ void ImG_debuger::renderHierarchy()
             selected_object->onGui(m_lastSelectedHierarchyItem);
     }
     ImGui::EndChild(); //"Selected Item"
+}
+
+void ImG_debuger::drawCameraTab()
+{
+    auto camera = RENDERER->getCamera();
+    if (camera == nullptr) return;
+    camera->onGui("Camera");
+}
+
+void ImG_debuger::drawRendererTab()
+{
+    RENDERER->onGui("Renderer");
 }
 
 void ImG_debuger::handleFloatElement(const std::string& _folder, const std::string& _name)
@@ -320,9 +333,19 @@ void ImG_debuger::imGUI_Render()
             generateImGUIContent();
             ImGui::EndTabItem();
         }
+        if (ImGui::BeginTabItem("Renderer"))
+        {
+            drawRendererTab();
+            ImGui::EndTabItem();
+        }
+        if (ImGui::BeginTabItem("Camera"))
+        {
+            drawCameraTab();
+            ImGui::EndTabItem();
+        }
         if (ImGui::BeginTabItem("Node Hierarchy"))
         {
-            renderHierarchy();
+            drawHierarchyTab();
             ImGui::EndTabItem();
         }
         if (ImGui::BeginTabItem("General info"))

@@ -24,6 +24,10 @@
 #define M_SPTR std::make_shared
 #define M_UPTR std::make_unique
 #define CAST_SPTR std::dynamic_pointer_cast
+#define SCAST_SPTR std::static_pointer_cast
+
+#define STR(object) std::to_string(object)
+#define CSTR(object) std::to_string(object).c_str()
 
 #define CAST_I static_cast<int>
 #define CAST_SZ static_cast<size_t>

@@ -64,6 +64,21 @@ bool AutoDraw(const std::string& _name, const T* _object)
     return ImGui::InputFloat(_name.c_str(), &const_float_holder, 1.f, 1.f, FLOAT_PRECISION, ImGuiInputTextFlags_ReadOnly);
 }
 
+template<>
+inline bool AutoDraw(const std::string& _name, std::string* _object)
+{
+    OBJ_CHECK
+    return ImGui::InputText(_name.c_str(), _object->data(), _object->size());
+}
+
+template<>
+inline bool AutoDraw(const std::string& _name, const std::string* _object)
+{
+    OBJ_CHECK
+    ImGui::Text("%s", _name.c_str());
+    return false;
+}
+
 //easy maker of pressable button if you need it!
 template<>
 inline bool AutoDraw(const std::string& _name, std::function<void()>* _object)
@@ -179,6 +194,23 @@ inline bool AutoDraw(const std::string& _name, const vec3* _object)
 //switch to DragFloat4 after that
 template<>
 inline bool AutoDraw(const std::string& _name, vec4* _object)
+{
+    OBJ_CHECK
+    bool changed = false;
+    float v[4] = {_object->x, _object->y, _object->z, _object->a};
+    //changed = ImGui::DragFloat4(_name.c_str(), v, FLOAT_SLIDER_SPEED, MIN_FLOAT_SLIDER_VALUE, MAX_FLOAT_SLIDER_VALUE, FLOAT_PRECISION);
+    changed = ImGui::ColorPicker4(_name.c_str(), v);
+    if (changed)
+    {
+        _object->x = v[0];
+        _object->y = v[1];
+        _object->z = v[2];
+        _object->a = v[3];
+    }
+    return changed; 
+}
+template<>
+inline bool AutoDraw(const std::string& _name, glm::vec4* _object)
 {
     OBJ_CHECK
     bool changed = false;

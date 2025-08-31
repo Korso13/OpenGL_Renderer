@@ -1,6 +1,7 @@
 #include "../Public/Camera.h"
 
 #include "ManagingClasses/Public/Renderer.h"
+#include "Utilities/Public/ImG_AutoDrawers.h"
 
 Camera::Camera()
     :
@@ -41,6 +42,21 @@ void Camera::updateProjection()
     {
         m_projection = glm::perspective(m_fov, (CAST_F(m_windowSize.w)/CAST_F(m_windowSize.h)), m_perspectiveNear, m_perspectiveFar);
     }
+}
+
+bool Camera::onGui(const std::string& _name)
+{
+    bool result = false;
+    result = result || AutoDrawers::DrawClassVariables("Camera",
+        NamedVar<float*>{"FOV", &m_fov},
+        NamedVar<glm::vec4*>{"Clear color", &m_clearColor},
+        NamedVar<ivec2*>{"Window size", &m_windowSize},
+        NamedVar<float*>{"Perspective Near", &m_perspectiveNear},
+        NamedVar<float*>{"Perspective Far", &m_perspectiveFar}
+    );
+    if (result) updateProjection();
+    result = result || Node::onGui(_name);
+    return result;
 }
 
 void Camera::onTransformChange()

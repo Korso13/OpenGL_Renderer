@@ -6,9 +6,12 @@
 #include "BaseClasses/RenderObjects/Public/RenderObject.h"
 #include "Defines.h"
 #include "BaseClasses/Nodes/Public/Camera.h"
+#include "Utilities/Public/ImG_AutoDrawers.h"
 
 RendererBatch::RendererBatch(const GLint _maxBatchSize)
-    : m_batchMaxSize(_maxBatchSize) 
+    :
+EngineInternal("RenderBatch"),
+m_batchMaxSize(_maxBatchSize) 
 {
     m_batch.reserve(_maxBatchSize);
     m_vertexBuffer = M_UPTR<VertexBuffer>();
@@ -61,6 +64,21 @@ ShaderType RendererBatch::getBatchShader() const
         return m_batchMaterial.lock()->getShaderType();
 
     return ShaderType::NONE;
+}
+
+bool RendererBatch::onGui(const std::string& _name)
+{
+    bool result = false;
+    result = result || AutoDrawers::DrawClassVariables("RendererBatch",
+        NamedVar<const int*>{"Max batch size ", &m_batchMaxSize},
+        NamedVar<int*>{"Held Textures", &m_heldTextures},
+        NamedContainer<std::unordered_map<uint32_t, WPTR<RenderObject>>*>{"Batch contents", &m_batch},
+        NamedVar<VertexBuffer*>{"Perspective Near", m_vertexBuffer.get()},
+        NamedVar<IndexBuffer*>{"Perspective Far", m_indexBuffer.get()},
+        NamedVar<MaterialInstance*>{"Material instance", m_batchMaterial.lock().get()}
+    );
+    result = result || EngineInternal::onGui(_name);
+    return result;
 }
 
 void RendererBatch::clearExpiredObjects()

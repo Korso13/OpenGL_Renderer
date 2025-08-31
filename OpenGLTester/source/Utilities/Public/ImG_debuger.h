@@ -99,7 +99,9 @@ private:
     void loadStyle();
 
     void generateImGUIContent();
-    void renderHierarchy();
+    void drawHierarchyTab();
+    void drawCameraTab();
+    void drawRendererTab();
     void handleFloatElement(const std::string& _folder, const std::string& _name);
     void handleIntElement(const std::string& _folder, const std::string& _name);
     void handleColorElement(const std::string& _folder, const std::string& _name);

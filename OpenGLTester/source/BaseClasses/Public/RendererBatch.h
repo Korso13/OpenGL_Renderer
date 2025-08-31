@@ -1,5 +1,6 @@
 #pragma once
 #include "Defines.h"
+#include "Utilities/Public/Utilities.h"
 
 class MaterialInstance;
 class IndexBuffer;
@@ -7,7 +8,7 @@ class VertexAO;
 class VertexBuffer;
 class RenderObject;
 
-class RendererBatch
+class RendererBatch : public EngineInternal
 {
     friend class Renderer;
 public:
@@ -27,6 +28,8 @@ public:
     
     UPTR<VertexAO>& getBatchVAO() { return m_vertexAOtoRender; }
     ShaderType getBatchShader() const;
+
+    bool onGui(const std::string& _name) override;
     
 private:
 

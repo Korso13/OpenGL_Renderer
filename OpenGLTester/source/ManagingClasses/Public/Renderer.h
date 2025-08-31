@@ -44,6 +44,8 @@ public:
     SPTR<Camera> getCamera();
     GLint getMaxBatchSize() const {return m_maxBatchSize;}
     
+    bool onGui(const std::string& _name);
+    
 private:
 
     ~Renderer() = default; //prevents calling delete() on Renderer pointer
@@ -51,7 +53,7 @@ private:
     void checkNodeForRender(const SPTR<Node>& _node);
     //updates existing batches' content and removes expired batches
     void updateRenderBatches();
-    
+
 private:
 
     GLint m_maxBatchSize = 1;

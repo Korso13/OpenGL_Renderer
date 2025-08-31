@@ -40,6 +40,8 @@ public:
     void setWorldScale(const vec3 _newScale) override {} //NOTE: scale is always 1. Probably correct, but might affect HUD elements' scaling
     void setLocalScale(const vec3 _newScale) override {}
 
+    bool onGui(const std::string& _name) override;
+
 protected:
     
     void onTransformChange() override;

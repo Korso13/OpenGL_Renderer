@@ -1,7 +1,11 @@
 #include "../Public/VertexBuffer.h"
 #include "Utilities/Public/GLErrorCatcher.h"
+#include "Utilities/Public/ImG_AutoDrawers.h"
+#include "BaseClasses/RenderObjects/Public/RenderObject.h"
 
 VertexBuffer::VertexBuffer(const void* _data, const unsigned int _size, GLenum _memUsageType)
+:
+EngineInternal("VertexBuffer")
 {
     GLCall(glGenBuffers(1, &m_rendererId));
     GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_rendererId));
@@ -9,6 +13,8 @@ VertexBuffer::VertexBuffer(const void* _data, const unsigned int _size, GLenum _
 }
 
 VertexBuffer::VertexBuffer(const unsigned int _size)
+:
+EngineInternal("VertexBuffer")
 {
     GLCall(glGenBuffers(1, &m_rendererId));
     GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_rendererId));
@@ -66,6 +72,18 @@ void VertexBuffer::clear()
 {
     m_renderPool.clear();
     m_verticesToDraw = 0;
+}
+
+bool VertexBuffer::onGui(const std::string& _name)
+{
+    bool result = false;
+    result = result || AutoDrawers::DrawClassVariables("VertexBuffer",
+        NamedVar<size_t*>{"Vertices to draw", &m_verticesToDraw},
+        NamedContainer<std::unordered_map<std::string, WPTR<RenderObject>>*>{"Render pool", &m_renderPool},
+        NamedContainer<std::vector<Vertex>*>{"Vertices", &m_verticesPool}
+    );
+    result = result || EngineInternal::onGui(_name);   
+    return result;
 }
 
 void VertexBuffer::updateVerticesPool()

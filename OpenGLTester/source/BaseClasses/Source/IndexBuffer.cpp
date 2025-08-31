@@ -5,9 +5,11 @@
 #include "Defines.h"
 #include "Utilities/Public/GLErrorCatcher.h"
 #include "BaseClasses/RenderObjects/Public/RenderObject.h"
+#include "Utilities/Public/ImG_AutoDrawers.h"
 
 IndexBuffer::IndexBuffer(const unsigned int* _data, const size_t _count, const GLenum _memUsageType)
-    : m_count(_count)
+    :
+EngineInternal("IndexBuffer"), m_count(_count)
 {
     GLCall(glGenBuffers(1, &m_rendererId));
     GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_rendererId));
@@ -15,7 +17,8 @@ IndexBuffer::IndexBuffer(const unsigned int* _data, const size_t _count, const G
 }
 
 IndexBuffer::IndexBuffer(const size_t _count)
-    : m_count(_count)
+    :
+EngineInternal("IndexBuffer"), m_count(_count)
 {
     GLCall(glGenBuffers(1, &m_rendererId));
     GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_rendererId));
@@ -56,4 +59,16 @@ void IndexBuffer::bind() const
 void IndexBuffer::unbind() const
 {
     GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
+}
+
+bool IndexBuffer::onGui(const std::string& _name)
+{
+    bool result = false;
+    result = result || AutoDrawers::DrawClassVariables("IndexBuffer",
+        NamedVar<size_t*>{"Vertices count", &m_count},
+        NamedVar<size_t*>{"Index adjustment", &m_adjustment},
+        NamedContainer<std::vector<size_t>*>{"Indices pool", &m_vertexIndicesPool}
+    );
+    result = result || EngineInternal::onGui(_name);
+    return result;
 }

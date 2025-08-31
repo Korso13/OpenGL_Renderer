@@ -46,7 +46,7 @@ public:
     //Override this method to make the object renderable in ImGui debugger. DO NOT CALL IT YOURSELF!
     //Use ImGui-related functions to render fields and options in its Ui child form
     //Should return false only if anything was changed (unused ATM, but might be useful in future)
-    virtual bool onGui(const std::string& _name) {return false;}
+    virtual bool onGui(const std::string& _name);
     
 private:
 
@@ -72,7 +72,7 @@ public:
     //Override this method to make the object renderable in ImGui debugger. DO NOT CALL IT YOURSELF!
     //Use ImGui-related functions to render fields and options in its Ui child form
     //Should return false only if anything was changed (unused ATM, but might be useful in future)
-    virtual bool onGui(const std::string& _name) {return false;}
+    virtual bool onGui(const std::string& _name);
     
 private:
 

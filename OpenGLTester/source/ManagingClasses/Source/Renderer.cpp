@@ -7,6 +7,8 @@
 #include "../Public/ShaderMachine.h"
 #include "BaseClasses/Nodes/Public/Node.h"
 #include "BaseClasses/Nodes/Public/Camera.h"
+#include "BaseClasses/RenderObjects/Public/RenderObject.h"
+#include "Utilities/Public/ImG_AutoDrawers.h"
 
 #ifdef SINGLERENDER
 Renderer* Renderer::m_instance = nullptr;
@@ -118,4 +120,37 @@ void Renderer::updateRenderBatches()
             }
         }
     }
+}
+
+bool Renderer::onGui(const std::string& _name)
+{
+    bool result = false;
+    result = result || (AutoDrawers::AutoDraw("Max batch size", &m_maxBatchSize));
+    
+    //std::map<float, std::map<uint32_t, std::unordered_map<uint32_t, std::vector<UPTR<RendererBatch>>>>> m_sortedRenderPriority;
+    size_t elements_batched = 0;
+    const size_t z_layers_count = m_sortedRenderPriority.size();
+    for (auto&  [zDist, ro_container] : m_sortedRenderPriority)
+    {
+        if (ImGui::TreeNode(("Distance: " + STR(zDist)).c_str()))
+        {
+            for (auto& [RenderOrder, MIContainer] : ro_container)
+            {
+                if (ImGui::TreeNode(("RO: " + STR(RenderOrder)).c_str()))
+                {
+                    for (auto& [MatInstUid, RenderObjContainer] : MIContainer)
+                    {
+                        result = result || (AutoDrawers::AutoDraw("MaterialInstId: " + STR(MatInstUid), &RenderObjContainer));
+                        elements_batched += RenderObjContainer.size();
+                        ImGui::TreePop();
+                    }
+                    ImGui::TreePop();
+                }
+            }
+            ImGui::TreePop();
+        }
+    }
+    AutoDrawers::AutoDraw("Elements batched", &elements_batched);
+    AutoDrawers::AutoDraw("Z layers: ", &z_layers_count);
+    return result;
 }
