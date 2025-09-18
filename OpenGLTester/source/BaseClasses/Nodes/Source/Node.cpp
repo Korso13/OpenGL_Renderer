@@ -162,6 +162,10 @@ bool Node::onGui(const std::string& _name)
         NamedVar<Transform*>{"Transforms", &m_transform},
         SubMenu{_name, SUB_MENU_CALL(return result = result || Object::onGui(_name);)}
     );
+    if(result)
+    {
+        onTransformChange();
+    }
     return result;
 }
 

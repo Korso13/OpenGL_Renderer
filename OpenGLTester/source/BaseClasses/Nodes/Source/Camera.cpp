@@ -54,7 +54,11 @@ bool Camera::onGui(const std::string& _name)
         NamedVar<float*>{"Perspective Near", &m_perspectiveNear},
         NamedVar<float*>{"Perspective Far", &m_perspectiveFar}
     );
-    if (result) updateProjection();
+    if (result)
+    {
+        updateProjection();
+        GLCall(glClearColor(m_clearColor.r, m_clearColor.g, m_clearColor.b, m_clearColor.a));
+    }
     result = result || Node::onGui(_name);
     return result;
 }

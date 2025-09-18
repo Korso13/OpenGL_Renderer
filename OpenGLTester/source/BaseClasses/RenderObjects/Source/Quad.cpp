@@ -123,6 +123,10 @@ bool Quad::onGui(const std::string& _name)
         NamedVar<const uvec2*>{"Quad Size", &m_size}
     );
     result = result || RenderObject::onGui(_name);
+    if(result)
+    {
+        onTransformChange();
+    }
     return result;
 }
 

@@ -108,7 +108,7 @@ namespace AutoDrawers
    
         if (ImGui::TreeNode(_className.c_str()))
         {
-            result = result || (AutoDraw(_namedVariablesPointers.first, _namedVariablesPointers.second), ...);
+            ((result =  result || AutoDraw(_namedVariablesPointers.first, _namedVariablesPointers.second)), ...);
             ImGui::TreePop();
         }
 

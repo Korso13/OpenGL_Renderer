@@ -144,7 +144,7 @@ struct vec3
     vec3(const float _x, const float _y, const float _z) : x(_x), y(_y), z(_z){}
     vec3(const float _oneSize) : x(_oneSize), y(_oneSize), z(_oneSize){}
     explicit vec3(const glm::vec3& _vec3) : x(_vec3.x), y(_vec3.y), z(_vec3.z) {}
-    vec3& operator=(const vec3& _vec3) { return *this;}
+    vec3& operator=(const vec3& _vec3) { x = _vec3.x; y = _vec3.y; z = _vec3.z; return *this;}
     vec3() = default;
 
     [[nodiscard]] glm::vec3 glmFormat() const {return {x, y, z};}

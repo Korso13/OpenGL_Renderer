@@ -67,6 +67,10 @@ bool RenderObject::onGui(const std::string& _name)
         NamedContainer<std::vector<size_t>*>{"Indices", &m_indices},
         SubMenu{_name, SUB_MENU_CALL(return result = result || Node::onGui(_name);)}
     );
+    if(result)
+    {
+        onTransformChange();
+    }
     return result;
 }
 
