@@ -64,8 +64,13 @@ void RendererBatch::prepareForDraw() const
 {
     ASSERT(!m_batchMaterial.expired()) //need the batch to have material
 
-    m_batchMaterial.lock()->inputUniformParamsToShader();
+    //m_vertexBuffer->bind(); //todo: checking for possible fix
     m_batchMaterial.lock()->setMVP(RENDERER->getCamera()->getMvp()); 
+    m_batchMaterial.lock()->inputUniformParamsToShader();
+
+    //todo: checking for possible fix
+    m_vertexAOtoRender->clear();
+    m_vertexAOtoRender->addBufferTyped<Vertex>(m_vertexBuffer, m_indexBuffer);
 }
 
 ShaderType RendererBatch::getBatchShader() const
@@ -89,6 +94,8 @@ bool RendererBatch::onGui(const std::string& _name)
         NamedVar<MaterialInstance*>{"Material instance", m_batchMaterial.lock().get()},
         SubMenu{_name, SUB_MENU_CALL(return result = result || EngineInternal::onGui(_name);)}
     );
+    if(result)
+        recalculateBuffers();
     return result;
 }
 

@@ -62,6 +62,53 @@ static void GLGetAllErrors(const char* _funcName, const int _line)
     }
 }
 
+static void APIENTRY GLDebugOutput(GLenum source, 
+                            GLenum type, 
+                            unsigned int id, 
+                            GLenum severity, 
+                            GLsizei length, 
+                            const char *message, 
+                            const void *userParam)
+{
+    // ignore non-significant error/warning codes
+    if(id == 131169 || id == 131185 || id == 131218 || id == 131204) return; 
+
+    std::cout << "---------------" << std::endl;
+    std::cout << "[OpenGL] Debug message (" << id << "): " <<  message << std::endl;
+
+    switch (source)
+    {
+        case GL_DEBUG_SOURCE_API:             std::cout << "[OpenGL]Source: API"; break;
+        case GL_DEBUG_SOURCE_WINDOW_SYSTEM:   std::cout << "[OpenGL]Source: Window System"; break;
+        case GL_DEBUG_SOURCE_SHADER_COMPILER: std::cout << "[OpenGL]Source: Shader Compiler"; break;
+        case GL_DEBUG_SOURCE_THIRD_PARTY:     std::cout << "[OpenGL]Source: Third Party"; break;
+        case GL_DEBUG_SOURCE_APPLICATION:     std::cout << "[OpenGL]Source: Application"; break;
+        case GL_DEBUG_SOURCE_OTHER:           std::cout << "[OpenGL]Source: Other"; break;
+    } std::cout << std::endl;
+
+    switch (type)
+    {
+        case GL_DEBUG_TYPE_ERROR:               std::cout << "[OpenGL]Type: Error"; break;
+        case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR: std::cout << "[OpenGL]Type: Deprecated Behaviour"; break;
+        case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:  std::cout << "[OpenGL]Type: Undefined Behaviour"; break; 
+        case GL_DEBUG_TYPE_PORTABILITY:         std::cout << "[OpenGL]Type: Portability"; break;
+        case GL_DEBUG_TYPE_PERFORMANCE:         std::cout << "[OpenGL]Type: Performance"; break;
+        case GL_DEBUG_TYPE_MARKER:              std::cout << "[OpenGL]Type: Marker"; break;
+        case GL_DEBUG_TYPE_PUSH_GROUP:          std::cout << "[OpenGL]Type: Push Group"; break;
+        case GL_DEBUG_TYPE_POP_GROUP:           std::cout << "[OpenGL]Type: Pop Group"; break;
+        case GL_DEBUG_TYPE_OTHER:               std::cout << "[OpenGL]Type: Other"; break;
+    } std::cout << std::endl;
+    
+    switch (severity)
+    {
+        case GL_DEBUG_SEVERITY_HIGH:         std::cout << "[OpenGL]Severity: high"; break;
+        case GL_DEBUG_SEVERITY_MEDIUM:       std::cout << "[OpenGL]Severity: medium"; break;
+        case GL_DEBUG_SEVERITY_LOW:          std::cout << "[OpenGL]Severity: low"; break;
+        case GL_DEBUG_SEVERITY_NOTIFICATION: std::cout << "[OpenGL]Severity: notification"; break;
+    } std::cout << std::endl;
+    std::cout << std::endl;
+}
+
 #define PRINT_ERRS GLGetAllErrors(__FUNCSIG__, __LINE__ - 1)
 
 #ifdef DEBUG 

@@ -22,6 +22,15 @@ inline bool operator>(const ivec2& _first,const ivec2& _second)
     return _first.x + _first.y > _second.x + _second.y;
 }
 
+inline vec3 operator-(const vec3& _first)
+{
+    vec3 result;
+    result.x = -_first.x;
+    result.y = -_first.y;
+    result.z = -_first.z;
+    return result;
+}
+
 inline vec3 operator+(const vec3& _first, const vec3& _second)
 {
     vec3 result;

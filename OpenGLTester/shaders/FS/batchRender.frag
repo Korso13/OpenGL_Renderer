@@ -16,4 +16,6 @@ void main()
     texColor = texture(u_Textures[index], v_TexCoord);
 
     o_Color = texColor*v_Color;
+    if(index == 0)
+        o_Color = v_Color;
 };

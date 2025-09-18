@@ -51,7 +51,7 @@ void IndexBuffer::bind() const
     GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_rendererId));
     if(!m_vertexIndicesPool.empty())
     {
-        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, static_cast<GLsizeiptr>(m_vertexIndicesPool.size()) * sizeof(GLuint), m_vertexIndicesPool.data());
+        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, (static_cast<GLsizeiptr>(m_vertexIndicesPool.size())) * sizeof(GLuint), m_vertexIndicesPool.data());
     }
 
 }
@@ -70,7 +70,7 @@ bool IndexBuffer::onGui(const std::string& _name)
 {
     bool result = false;
     result = result || AutoDrawers::DrawClassVariables("IndexBuffer",
-        NamedVar<size_t*>{"Vertices count", &m_count},
+        NamedVar<size_t*>{"Indices count", &m_count},
         NamedVar<size_t*>{"Index adjustment", &m_adjustment},
         NamedContainer<std::vector<size_t>*>{"Indices pool", &m_vertexIndicesPool},
         SubMenu{_name, SUB_MENU_CALL(return result = result || EngineInternal::onGui(_name);)}

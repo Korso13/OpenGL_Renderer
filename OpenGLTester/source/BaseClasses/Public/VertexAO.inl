@@ -1,7 +1,7 @@
 #pragma once
 #include "Utilities/Public/GLErrorCatcher.h"
 
-//can be later rewritten via BOOST macro as an inline template function (not method) + Vertex struct declaration
+//todo: can be later rewritten via BOOST macro as an inline template function (not method) + Vertex struct declaration
 template <>
 inline void VertexAO::setVertexAttributesTyped<Vertex>()
 {

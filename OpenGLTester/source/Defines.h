@@ -179,6 +179,7 @@ struct Uniforms
     std::unordered_map<std::string, std::pair<GLint, int32_t>> ivUniforms;
 };
 
+//NOTE: update VertexAO::setVertexAttributesTyped<Vertex>() after changing fields of Vertex!!
 struct Vertex
 {
     vec3 vCoord = vec3(0.f); //vertex local coord

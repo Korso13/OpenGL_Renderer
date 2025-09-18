@@ -3,6 +3,7 @@
 #include "Defines.h"
 #include "MainMenuItem.h"
 
+class RenderPrimitive;
 class Quad;
 
 class NewBatchPipelineTest : public MainMenuItem
@@ -19,4 +20,5 @@ private:
     SPTR<Node> m_root = nullptr;
     SPTR<Quad> m_quad1 = nullptr;
     SPTR<Quad> m_quad2 = nullptr;
+    SPTR<RenderPrimitive> m_testPrimitive = nullptr;
 };

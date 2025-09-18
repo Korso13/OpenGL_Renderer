@@ -33,7 +33,6 @@ void VertexBuffer::addRenderObject(const std::string& _name, const SPTR<RenderOb
     for(auto& vertex : _objRef->getVertices())
     {
         m_verticesPool.push_back(*vertex);
-        m_verticesPool.back().textureId += CAST_F(m_verticesPool.size() - 1); //offsets renderObject textureId
     }
 }
 
@@ -60,6 +59,16 @@ void VertexBuffer::bind() const
             return;
         }
         GLCall(glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(Vertex) * m_verticesToDraw, m_verticesPool.data()));
+
+        //todo: checking for possible fix
+        // Vertex* vertices = new Vertex[m_verticesToDraw];
+        // size_t VertexCounter = 0;
+        // for(auto& vert : m_verticesPool)
+        // {
+        //     vertices[VertexCounter] = vert;
+        //     VertexCounter++;
+        // }
+        // GLCall(glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(Vertex) * m_verticesToDraw, &vertices[0]));
     }
 }
 
@@ -84,7 +93,8 @@ bool VertexBuffer::onGui(const std::string& _name)
         NamedContainer<std::vector<Vertex>*>{"Vertices", &m_verticesPool},
         SubMenu{_name, SUB_MENU_CALL(return result = result || EngineInternal::onGui(_name);)}
     );
-    
+    if(result)
+        updateVerticesPool();
     return result;
 }
 

@@ -76,13 +76,16 @@ SPTR<Camera> Renderer::getCamera()
 
 void Renderer::drawBatch(UPTR<RendererBatch>& _batch)
 {
-    const UPTR<VertexAO>& vao = _batch->getBatchVAO();
+    _batch->prepareForDraw(); 
     if(!ShaderMachine::get()->setShader(_batch->getBatchShader()))
     {
         std::cout << "[Renderer::drawBatch] error - shader "<< std::to_string(CAST_I(_batch->getBatchShader()))<< " not found!\n";
         return;
     }
-    _batch->prepareForDraw(); 
+
+    ShaderMachine::get()->getShader(_batch->getBatchShader())->bind(); //todo: checking for possible fix
+    
+    const UPTR<VertexAO>& vao = _batch->getBatchVAO();
     vao->bind(); //binds vertex buffer, index buffer and vertex attributes
     const size_t index_size = (vao->getIndexCount() == 0) ? (6) : (vao->getIndexCount()); //precaution against vertexAO without index buffer
     GLCall(glDrawElements(GL_TRIANGLES, CAST_I(index_size), GL_UNSIGNED_INT, 0));

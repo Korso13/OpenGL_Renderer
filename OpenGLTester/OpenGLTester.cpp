@@ -5,6 +5,7 @@
 
 #include <ImGUI/imgui.h>
 #include <ImGUI/imgui_impl_glfw.h>
+
 #include "ImGUI/imgui_impl_opengl3.h"
 #include "ManagingClasses/Public/Renderer.h"
 #include "ManagingClasses/Public/ResourceLibrary.h"
@@ -70,6 +71,7 @@ int main(void)
     //Init thingies
 
     GLFWwindow* window;
+    
 
     /* Initialize the library */
     if (!glfwInit())
@@ -79,6 +81,20 @@ int main(void)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
+    
+    //NOTE: used in debugging
+#ifdef _DEBUG
+    glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
+    GLint flags; glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
+    if (flags & GL_CONTEXT_FLAG_DEBUG_BIT) //returning false for some reason :(
+    {
+        // initialize debug output
+        glEnable(GL_DEBUG_OUTPUT);
+        glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS); 
+        glDebugMessageCallback(GLDebugOutput, nullptr);
+        glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
+    }
+#endif
     
     /* Create a windowed mode window and its OpenGL context */
     window = glfwCreateWindow(START_RESOLUTION, "OpenGL Test", NULL, NULL);
