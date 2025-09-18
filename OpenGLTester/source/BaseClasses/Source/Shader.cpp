@@ -94,7 +94,7 @@ void Shader::setUniform(const std::string& _uniformName, int* _value, int count)
     {
         if(m_uniforms.ivUniforms.at(_uniformName).second < count)
         {
-            std::cout << "Passed too many values for uniform " << _uniformName << "!" << std::endl;
+            std::cout << "Passed too many values for uniform " << _uniformName << "!" << count << " vs " << m_uniforms.ivUniforms.at(_uniformName).second << " available in shader\n";
             return;
         }
         

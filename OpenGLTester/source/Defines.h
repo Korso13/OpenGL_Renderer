@@ -7,7 +7,7 @@
 //uncomment one of two. Determines whether Renderer class is singleton or allows multiple instances.
 //#define MULTIRENDER
 #define SINGLERENDER
-#define MAX_RENDER_BATCH_SIZE 32768 //need for std::array in MaterialInst. Limits maximum batch size. 
+#define MAX_RENDER_BATCH_SIZE 32 //need for std::array in MaterialInst. Limits maximum batch size. 
 #define RESERVE_SAME_LEVEL_BATCHES 30 //when a new std::vector of batches is added in Renderer, reserve memory for this many batches
 #define USE_BATCH_RENDERER_PIPELINE
 #define START_RESOLUTION 1280, 980

@@ -28,9 +28,11 @@ void RendererBatch::addRenderObject(const SPTR<RenderObject>& _object)
     _object->setIsDirty(false);
     m_batch[_object->getUID()] = _object;
     if (m_batchMaterial.expired())
+    {
         m_batchMaterial = _object->getMatInst();
+        m_heldTextures = static_cast<GLint>(_object->getMatInst()->getTexturesCount());
+    }
     
-    m_heldTextures += static_cast<GLint>(_object->getMatInst()->getTexturesCount());
     m_vertexBuffer->addRenderObject(_object->getName(), _object);
     m_indexBuffer->addRenderObject(_object);
     m_vertexAOtoRender->addBufferTyped<Vertex>(m_vertexBuffer, m_indexBuffer);
@@ -110,7 +112,8 @@ void RendererBatch::recalculateBuffers()
     m_vertexBuffer->clear();
     m_indexBuffer->clear();
     m_vertexAOtoRender->clear();
-    m_heldTextures = 0;
+    if(!m_batchMaterial.expired())
+        m_heldTextures = static_cast<GLint>(m_batchMaterial.lock()->getTexturesCount());
     
     for (const auto& [name, objectWptr] : m_batch)
     {
@@ -119,7 +122,6 @@ void RendererBatch::recalculateBuffers()
 
         auto object = objectWptr.lock();
         object->m_isInBatch = true;
-        m_heldTextures += static_cast<GLint>(object->getMatInst()->getTexturesCount());
         m_vertexBuffer->addRenderObject(object->getName(), object);
         m_indexBuffer->addRenderObject(object);
         m_vertexAOtoRender->addBufferTyped<Vertex>(m_vertexBuffer, m_indexBuffer);

@@ -56,7 +56,7 @@ void VertexBuffer::bind() const
     {
         if (m_verticesPool.size() != m_verticesToDraw)
         {
-            std::cerr << "[VertexBuffer::bind()] vertices pool and verticesToDraw size mismatch!";
+            std::cerr << "[VertexBuffer::bind()] vertices pool and verticesToDraw size mismatch!\n";
             return;
         }
         GLCall(glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(Vertex) * m_verticesToDraw, m_verticesPool.data()));

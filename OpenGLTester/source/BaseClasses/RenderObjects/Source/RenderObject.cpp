@@ -12,6 +12,7 @@ RenderObject::RenderObject(const RenderObject& _copiedObj)
     m_isDirty(true),
     m_isInBatch(false),
     m_renderOrder(_copiedObj.m_renderOrder),
+    m_objectTextureId(_copiedObj.m_objectTextureId),
     m_materialInstance(_copiedObj.m_materialInstance), //common MaterialInstance is ok in some cases
     m_indices(_copiedObj.m_indices)
 {
