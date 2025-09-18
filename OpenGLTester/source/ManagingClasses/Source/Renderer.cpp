@@ -33,6 +33,12 @@ void Renderer::render()
 {
     //std::cout << "[Renderer::render]\n"; //todo: remove debug
     clear(); //clearing buffer
+
+    //todo: remove after adding functionality to the MaterialInst
+    //setting blend functions
+    GLCall(glEnable(GL_BLEND));
+    GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+    
     updateRenderBatches();
     m_rootNode->traversal(std::bind(&Renderer::checkNodeForRender, this, std::placeholders::_1), true);
 
@@ -112,17 +118,15 @@ void Renderer::checkNodeForRender(const SPTR<Node>& _node)
 void Renderer::updateRenderBatches()
 {
     //std::cout << "[Renderer::updateRenderBatches]\n"; //todo: remove debug
-    size_t found = 0;
     for (auto&  [zDist, ro_container] : m_sortedRenderPriority)
     {
         for (auto& [RenderOrder, MIContainer] : ro_container)
         {
             for (auto& [MatInstUid, RenderObjContainer] : MIContainer)
             {
-                std::erase_if(RenderObjContainer, [&found](const UPTR<RendererBatch>& _batch) 
+                std::erase_if(RenderObjContainer, [](const UPTR<RendererBatch>& _batch) 
                 {
                     _batch->clearExpiredObjects(); //removes dirty and expired objects
-                    if (!_batch->isExpired()) found++; //todo: remove later
                     return _batch->isExpired(); //removes empty batches
                 });
             }

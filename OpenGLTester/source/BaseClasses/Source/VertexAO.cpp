@@ -2,6 +2,7 @@
 
 #include "BaseClasses/Public/VertexAttributes.h"
 #include "Utilities/Public/GLErrorCatcher.h"
+#include "Utilities/Public/ImG_AutoDrawers.h"
 
 VertexAO::VertexAO()
 {
@@ -30,4 +31,13 @@ void VertexAO::clear()
     unbind();
     GLCall(glDeleteVertexArrays(1, &m_rendererId));
     GLCall(glGenVertexArrays(1, &m_rendererId));
+}
+
+bool VertexAO::onGui(const std::string& _name)
+{
+    bool result = false;
+    result = result || AutoDrawers::DrawClassVariables("VertexAO",
+        NamedVar<size_t*>{"Indices in AO", &m_indicesCount}
+    );
+    return result;
 }

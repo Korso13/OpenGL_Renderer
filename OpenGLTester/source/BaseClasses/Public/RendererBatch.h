@@ -18,7 +18,7 @@ public:
     ~RendererBatch() = default;
 
     void addRenderObject(const SPTR<RenderObject>& _object);
-    void removeRenderObject(uint32_t _objectUid);
+    void removeRenderObject(uint32_t _objectUid, bool _recalculateBuffers = true);
 
     bool isFull(GLint _texturesForInsertion) const;
     bool isExpired() const {return m_batch.empty();}

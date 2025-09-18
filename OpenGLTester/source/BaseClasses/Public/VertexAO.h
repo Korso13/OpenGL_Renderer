@@ -23,6 +23,8 @@ public:
     void unbind() const;
     void clear();
 
+    bool onGui(const std::string& _name);
+    
 private:
     
     template<typename T>

@@ -32,19 +32,27 @@ void RendererBatch::addRenderObject(const SPTR<RenderObject>& _object)
         m_batchMaterial = _object->getMatInst();
         m_heldTextures = static_cast<GLint>(_object->getMatInst()->getTexturesCount());
     }
-    
+
+    //recalculateBuffers(); //NOTE: less optimized than adding, but more readable and not prone to bugs (need to either modify VertexAO::addBufferTyped or reassemble it each time batch is changed to fix it!)
     m_vertexBuffer->addRenderObject(_object->getName(), _object);
     m_indexBuffer->addRenderObject(_object);
+    m_vertexAOtoRender->clear(); //since we use batching, index and vertex buffers are common and we need to recreate VAO every time
     m_vertexAOtoRender->addBufferTyped<Vertex>(m_vertexBuffer, m_indexBuffer);
 }
 
-void RendererBatch::removeRenderObject(uint32_t _objectUid)
+void RendererBatch::removeRenderObject(uint32_t _objectUid, bool _recalculateBuffers)
 {
-    if (m_batch.contains(_objectUid) && !m_batch[_objectUid].expired())
+    if (m_batch.contains(_objectUid))
     {
-        m_batch[_objectUid].lock()->m_isInBatch = false;
+        if(!m_batch[_objectUid].expired())
+            m_batch[_objectUid].lock()->m_isInBatch = false;
+        m_batch.erase(_objectUid);
     }
-    recalculateBuffers();
+    else
+        return;
+
+    if(_recalculateBuffers)
+        recalculateBuffers();
 }
 
 bool RendererBatch::isFull(const GLint _texturesForInsertion) const
@@ -75,8 +83,9 @@ bool RendererBatch::onGui(const std::string& _name)
         NamedVar<const int*>{"Max batch size ", &m_batchMaxSize},
         NamedVar<int*>{"Held Textures", &m_heldTextures},
         NamedContainer<std::unordered_map<uint32_t, WPTR<RenderObject>>*>{"Batch contents", &m_batch},
-        NamedVar<VertexBuffer*>{"Perspective Near", m_vertexBuffer.get()},
-        NamedVar<IndexBuffer*>{"Perspective Far", m_indexBuffer.get()},
+        NamedVar<VertexBuffer*>{"Vertices", m_vertexBuffer.get()},
+        NamedVar<IndexBuffer*>{"Indices", m_indexBuffer.get()},
+        NamedVar<VertexAO*>{"Vertex AO", m_vertexAOtoRender.get()},
         NamedVar<MaterialInstance*>{"Material instance", m_batchMaterial.lock().get()},
         SubMenu{_name, SUB_MENU_CALL(return result = result || EngineInternal::onGui(_name);)}
     );
@@ -86,23 +95,17 @@ bool RendererBatch::onGui(const std::string& _name)
 void RendererBatch::clearExpiredObjects()
 {
     bool need_to_recalculate_buffers = false;
-    std::erase_if(m_batch, [&need_to_recalculate_buffers](const std::pair<uint32_t, WPTR<RenderObject>>& _batchPair)
+    std::set<uint32_t> deletionQueue;
+    for(const auto& [uid, ObjectWeak] : m_batch)
     {
-        if (_batchPair.second.expired())
+        if (ObjectWeak.expired() || ObjectWeak.lock()->isDirty())
         {
             need_to_recalculate_buffers = true;
-            return true;
+            deletionQueue.insert(uid);
         }
-        if (_batchPair.second.lock()->isDirty())
-        {
-            _batchPair.second.lock()->m_isInBatch = false;
-            need_to_recalculate_buffers = true;
-            return true;
-        }
-        
-        return false;
-    });
-
+    }
+    for(const uint32_t& uid : deletionQueue)
+        removeRenderObject(uid, false);
     if (need_to_recalculate_buffers) recalculateBuffers();
 }
 
@@ -124,6 +127,6 @@ void RendererBatch::recalculateBuffers()
         object->m_isInBatch = true;
         m_vertexBuffer->addRenderObject(object->getName(), object);
         m_indexBuffer->addRenderObject(object);
-        m_vertexAOtoRender->addBufferTyped<Vertex>(m_vertexBuffer, m_indexBuffer);
     }
+    m_vertexAOtoRender->addBufferTyped<Vertex>(m_vertexBuffer, m_indexBuffer);
 }

@@ -71,6 +71,7 @@ void VertexBuffer::unbind() const
 void VertexBuffer::clear()
 {
     m_renderPool.clear();
+    m_verticesPool.clear();
     m_verticesToDraw = 0;
 }
 

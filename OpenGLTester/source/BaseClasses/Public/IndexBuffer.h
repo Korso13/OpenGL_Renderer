@@ -19,7 +19,7 @@ public:
 
     void bind() const;
     void unbind() const;
-    void clear() {m_vertexIndicesPool.clear();}
+    void clear();
     size_t getCount() const { return m_count; }
 
     bool onGui(const std::string& _name) override;

@@ -13,6 +13,7 @@ Camera::Camera()
     //auto resizeFunHolder = this->Camera::onWindowSizeChanged;
     glfwSetWindowSizeCallback(glfwGetCurrentContext(), &Camera::onWindowSizeChanged);
     setProjectionMode(m_projectionMode);
+    setWorldPos(vec3(0.f));
 }
 
 Camera::~Camera()
@@ -68,7 +69,7 @@ void Camera::onTransformChange()
     Node::onTransformChange();
     
     const vec3 worldPos = getWorldPos();
-    m_view = glm::translate(glm::mat4(1.f), glm::vec3(worldPos.x, worldPos.y, worldPos.z));
+    m_view = glm::translate(glm::mat4(1.f), worldPos.glmFormat());
 }
 
 void Camera::setProjectionMode(const ProjectionMode _mode)

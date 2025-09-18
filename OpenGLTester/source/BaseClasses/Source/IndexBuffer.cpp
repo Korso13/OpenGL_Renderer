@@ -61,6 +61,11 @@ void IndexBuffer::unbind() const
     GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
 }
 
+void IndexBuffer::clear()
+{
+    m_vertexIndicesPool.clear(); m_adjustment = 0; m_count = 0;
+}
+
 bool IndexBuffer::onGui(const std::string& _name)
 {
     bool result = false;
