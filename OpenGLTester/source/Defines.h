@@ -156,6 +156,19 @@ public:
     float z = 0.f;
 };
 
+//todo: reuse when adding logger functions
+static auto vec3Str = [](const vec3& _vec) -> std::string
+{
+    std::string out = "{ x: ";
+    out += std::to_string(_vec.x);
+    out += ", y: ";
+    out += std::to_string(_vec.y);
+    out += ", z: ";
+    out += std::to_string(_vec.z);
+    out += "}";
+    return out;
+};
+
 struct vec4
 {
     vec4(const float _x, const float _y, const float _z, const float _a) : x(_x), y(_y), z(_z), a(_a){}

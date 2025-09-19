@@ -5,8 +5,6 @@
 #include "BaseClasses/Public/IndexBuffer.h"
 #include "BaseClasses/Public/VertexBuffer.h"
 
-class VertexAttributes;
-
 class VertexAO
 {
 public:
@@ -34,9 +32,6 @@ private:
 
     GLuint m_rendererId;
     size_t m_indicesCount = 0; //mostly for checks and debugging
-
-    //todo: old impl, to be removed
-    std::vector<VertexAttributes*> m_aBuffer;
 };
 
 //template functions implementations

@@ -559,7 +559,6 @@
       <AdditionalOptions>/FS</AdditionalOptions>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
-    <ClCompile Include="source\BaseClasses\Source\VertexAttributes.cpp" />
     <ClCompile Include="source\BaseClasses\Source\VertexBuffer.cpp" />
     <ClCompile Include="source\ManagingClasses\Source\MaterialLibrary.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
@@ -788,7 +787,6 @@
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
     <ClCompile Include="source\ManagingClasses\Source\ShaderMachine.cpp" />
-    <ClCompile Include="source\Menu\Source\BatchRenderTest.cpp" />
     <ClCompile Include="source\Menu\Source\ClearColorTest.cpp" />
     <ClCompile Include="source\Menu\Source\MainMenuItem.cpp" />
     <ClCompile Include="source\Menu\Source\NewBatchPipelineTest.cpp" />
@@ -956,7 +954,6 @@
     <ClInclude Include="source\BaseClasses\Public\Texture.h" />
     <ClInclude Include="source\BaseClasses\Public\VertexAO.h" />
     <ClInclude Include="source\BaseClasses\Public\VertexAO.inl" />
-    <ClInclude Include="source\BaseClasses\Public\VertexAttributes.h" />
     <ClInclude Include="source\BaseClasses\Public\VertexBuffer.h" />
     <ClInclude Include="source\BaseClasses\RenderObjects\Public\Multipolygon.h" />
     <ClInclude Include="source\BaseClasses\RenderObjects\Public\Quad.h" />
@@ -968,7 +965,6 @@
     <ClInclude Include="source\ManagingClasses\Public\Renderer.h" />
     <ClInclude Include="source\ManagingClasses\Public\ResourceLibrary.h" />
     <ClInclude Include="source\ManagingClasses\Public\ShaderMachine.h" />
-    <ClInclude Include="source\Menu\Public\BatchRenderTest.h" />
     <ClInclude Include="source\Menu\Public\ClearColorTest.h" />
     <ClInclude Include="source\Menu\Public\MainMenuItem.h" />
     <ClInclude Include="source\Menu\Public\NewBatchPipelineTest.h" />

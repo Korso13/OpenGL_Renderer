@@ -10,7 +10,7 @@ class IndexBuffer : public EngineInternal
 {
 public:
 
-    IndexBuffer(const unsigned int* _data, const size_t _count, GLenum _memUsageType = GL_STATIC_DRAW);
+    IndexBuffer(const unsigned int* _data, const size_t _count, GLenum _memUsageType = GL_STATIC_DRAW); //deprecated ctor
     IndexBuffer(const size_t _count = 1024); //todo: make 1024 a global constexpr or a macro + add it to VertexBuffer
     ~IndexBuffer() override;
 
@@ -30,7 +30,7 @@ private:
     
     GLuint m_rendererId;
     size_t m_count;
-    GLuint m_adjustment = 0;
+    size_t m_adjustment = 0;
 
-    std::vector<GLuint> m_vertexIndicesPool; 
+    std::vector<GLuint> m_vertexIndicesPool; //NEVER replace type GLuint with something different! OpenGL mandates it!
 };

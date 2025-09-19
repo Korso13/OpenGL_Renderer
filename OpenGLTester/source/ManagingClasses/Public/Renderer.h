@@ -32,9 +32,7 @@ public:
 //end of constructor definitions
     
 public:
-    //todo: depricated. Remove after Batch rendering is done
-    void draw(const VertexAO* _vertexArray, const ShaderType _shaderType, GLint _renderPrimitiveType = GL_TRIANGLES) const{};
-    
+
     //Main rendering function - assembles all batches and renders them.
     //Do not call yourself! Should only be called from main program loop (todo: consider making private, adding friendly iGame and impl to call it)
     void render();

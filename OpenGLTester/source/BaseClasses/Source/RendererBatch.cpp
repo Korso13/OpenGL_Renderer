@@ -32,12 +32,9 @@ void RendererBatch::addRenderObject(const SPTR<RenderObject>& _object)
         m_batchMaterial = _object->getMatInst();
         m_heldTextures = static_cast<GLint>(_object->getMatInst()->getTexturesCount());
     }
-
-    //recalculateBuffers(); //NOTE: less optimized than adding, but more readable and not prone to bugs (need to either modify VertexAO::addBufferTyped or reassemble it each time batch is changed to fix it!)
+    
     m_vertexBuffer->addRenderObject(_object->getName(), _object);
     m_indexBuffer->addRenderObject(_object);
-    m_vertexAOtoRender->clear(); //since we use batching, index and vertex buffers are common and we need to recreate VAO every time
-    m_vertexAOtoRender->addBufferTyped<Vertex>(m_vertexBuffer, m_indexBuffer);
 }
 
 void RendererBatch::removeRenderObject(uint32_t _objectUid, bool _recalculateBuffers)
@@ -63,12 +60,11 @@ bool RendererBatch::isFull(const GLint _texturesForInsertion) const
 void RendererBatch::prepareForDraw() const
 {
     ASSERT(!m_batchMaterial.expired()) //need the batch to have material
-
-    //m_vertexBuffer->bind(); //todo: checking for possible fix
+    
     m_batchMaterial.lock()->setMVP(RENDERER->getCamera()->getMvp()); 
     m_batchMaterial.lock()->inputUniformParamsToShader();
 
-    //todo: checking for possible fix
+    //todo: consider optimizing via some flag, when you need to recalculate the batch
     m_vertexAOtoRender->clear();
     m_vertexAOtoRender->addBufferTyped<Vertex>(m_vertexBuffer, m_indexBuffer);
 }
@@ -121,7 +117,6 @@ void RendererBatch::recalculateBuffers()
     //todo: needs thread safety
     m_vertexBuffer->clear();
     m_indexBuffer->clear();
-    m_vertexAOtoRender->clear();
     if(!m_batchMaterial.expired())
         m_heldTextures = static_cast<GLint>(m_batchMaterial.lock()->getTexturesCount());
     
@@ -135,5 +130,4 @@ void RendererBatch::recalculateBuffers()
         m_vertexBuffer->addRenderObject(object->getName(), object);
         m_indexBuffer->addRenderObject(object);
     }
-    m_vertexAOtoRender->addBufferTyped<Vertex>(m_vertexBuffer, m_indexBuffer);
 }

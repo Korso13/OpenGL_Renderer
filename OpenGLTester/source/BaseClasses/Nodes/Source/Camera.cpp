@@ -98,8 +98,7 @@ void Camera::setClearColor(const glm::vec4 _newClColor)
 
 glm::mat4 Camera::getMvp() const
 {
-    const glm::mat4 model = glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.f, 0.f)); //trying to build mvp without moving model for easier support of batch rendering (instead we shift vertices' coordinates)
-    //const glm::mat4 model = glm::translate(glm::mat4(1.f), getWorldPos().glmFormat()); //todo: checking for possible fix
+    const glm::mat4 model = glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.f, 0.f)); //instead of shifting the entire model plane, we shift vertices' coordinates
     const glm::mat4 mvp =  m_projection * m_view * model;
 
     return mvp;
@@ -108,8 +107,7 @@ glm::mat4 Camera::getMvp() const
 glm::mat4 Camera::getMvpForRender(const Node& _nodeToRender) const
 {
     const vec3 world_pos = _nodeToRender.getWorldPos();
-    const glm::mat4 model = glm::translate(glm::mat4(1.f), glm::vec3 (world_pos.x, world_pos.y, world_pos.z));
-    //const glm::mat4 model = glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.f, 0.f)); //trying to build mvp without moving model for easier support of batch rendering (instead we shift vertices' coordinates)
+    const glm::mat4 model = glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.f, 0.f)); //instead of shifting the entire model plane, we shift vertices' coordinates
     const glm::mat4 mvp =  m_projection * m_view * model;
 
     return mvp;

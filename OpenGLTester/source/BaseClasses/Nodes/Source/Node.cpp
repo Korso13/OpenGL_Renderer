@@ -70,21 +70,17 @@ void Node::removeChild(const SPTR<Node>& _child)
 
 void Node::traversal(std::function<void(SPTR<Node>)> _nodeVisitor, bool _bEnabledOnly)
 {
-    //std::cout << "[Node::traversal] " << getUniqueName() << "\n"; //todo: remove debug
     if(!_nodeVisitor || (_bEnabledOnly && !m_isEnabled))
         return;
-
-    //std::cout << "[Node::traversal] " << getUniqueName() << " passed checks" << "\n"; //todo: remove debug
+    
     _nodeVisitor(shared_from_this());
     traverseChildren(_nodeVisitor, _bEnabledOnly);
 }
 
 void Node::traverseChildren(std::function<void(SPTR<Node>)> _nodeVisitor, bool _bEnabledOnly)
 {
-    //std::cout << "[Node::traverseChildren] " << getUniqueName() << " has " << getAllChildren().size() << " children"<< "\n"; //todo: remove debug
     for(auto& [node_name, node] : getAllChildren())
     {
-        //std::cout << "[Node::traverseChildren] Checking child " << node_name << "\n"; //todo: remove debug
         recursiveVisitor(node, _nodeVisitor, _bEnabledOnly);
     }
 }
@@ -209,10 +205,8 @@ void Node::handleChildNameChange(const SubscriberEventPayload& _eventInfo)
 
 void Node::recursiveVisitor(SPTR<Node> _node, std::function<void(SPTR<Node>)>& _nodeVisitor, bool _bEnabledOnly)
 {
-    //std::cout << "[Node::recursiveVisitor] "<< _node->getUniqueName() <<"\n"; //todo: remove debug
     if(!_node->isEnabled() && _bEnabledOnly)
         return;
-    //std::cout << "[Node::recursiveVisitor] "<< _node->getUniqueName() << " passed checks. Checking " << _node->getAllChildren().size() << " children" <<"\n"; //todo: remove debug
     
     for(auto& [node_name, node] : _node->getAllChildren())
     {

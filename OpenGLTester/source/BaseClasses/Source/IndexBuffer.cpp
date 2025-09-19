@@ -33,22 +33,9 @@ IndexBuffer::~IndexBuffer()
 
 void IndexBuffer::addRenderObject(const SPTR<RenderObject>& _renderObject)
 {
-    std::vector<size_t> new_indices = _renderObject->getIndices(); //copying intended!
-    //adjusting indices values
-    std::transform(new_indices.begin(), new_indices.end(), new_indices.begin(),
-        [this](const size_t _index)
-            {
-                return _index + m_adjustment;
-            });
-    
-    //todo: checking for possible fix
-    //updating adjustment
-    // m_adjustment += _renderObject->getVertexCount();
-    // m_vertexIndicesPool.insert(m_vertexIndicesPool.end(), new_indices.begin(), new_indices.end());
-    
     for(auto& index : _renderObject->getIndices())
     {
-        m_vertexIndicesPool.push_back(GLuint(index) + m_adjustment);
+        m_vertexIndicesPool.push_back(GLuint(index) + GLuint(m_adjustment));
     }
     //updating adjustment
     m_adjustment += _renderObject->getVertexCount();
@@ -61,7 +48,7 @@ void IndexBuffer::bind() const
     GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_rendererId));
     if(!m_vertexIndicesPool.empty())
     {
-        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, static_cast<GLsizeiptr>(m_vertexIndicesPool.size()) * sizeof(GLuint), m_vertexIndicesPool.data());
+        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, m_vertexIndicesPool.size() * sizeof(GLuint), m_vertexIndicesPool.data());
     }
 
 }
@@ -81,7 +68,7 @@ bool IndexBuffer::onGui(const std::string& _name)
     bool result = false;
     result = result || AutoDrawers::DrawClassVariables("IndexBuffer",
         NamedVar<size_t*>{"Indices count", &m_count},
-        NamedVar<GLuint*>{"Index adjustment", &m_adjustment},
+        NamedVar<size_t*>{"Index adjustment", &m_adjustment},
         NamedContainer<std::vector<GLuint>*>{"Indices pool", &m_vertexIndicesPool},
         SubMenu{_name, SUB_MENU_CALL(return result = result || EngineInternal::onGui(_name);)}
     );

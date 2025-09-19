@@ -89,7 +89,7 @@ bool MaterialInstance::removeTexture(TextureId _slotId)
 void MaterialInstance::inputUniformParamsToShader()
 {
     ASSERT(m_shader)
-    //if(ShaderMachine::get()->getSelectedShaderType() != m_shaderType)
+    if(ShaderMachine::get()->getSelectedShaderType() != m_shaderType)
         ASSERT(ShaderMachine::get()->setShader(m_shaderType))
 
     //binding MaterialInst textures to specified slots 
@@ -144,7 +144,7 @@ void MaterialInstance::inputUniformParamsToShader()
 void MaterialInstance::setMVP(const glm::mat4& _mvp)
 {
     ASSERT(m_shader)
-    //if(ShaderMachine::get()->getSelectedShaderType() != m_shaderType)
+    if(ShaderMachine::get()->getSelectedShaderType() != m_shaderType)
         ASSERT(ShaderMachine::get()->setShader(m_shaderType))
     m_shader->setUniform("u_MVP", _mvp);
 }

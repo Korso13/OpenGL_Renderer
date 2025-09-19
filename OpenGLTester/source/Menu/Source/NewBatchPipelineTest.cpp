@@ -25,11 +25,11 @@ NewBatchPipelineTest::NewBatchPipelineTest()
     
     std::vector<SPTR<Vertex>> vecticesForPrimitive;
     std::vector<size_t> indicesForPrimitive = {0,1,2};
-    vecticesForPrimitive.emplace_back(CreateVertex(vec3(10.f, 0.f, 0.f), vec2(0.f, 0.f), 0, vec3(0.f), 0));
+    vecticesForPrimitive.emplace_back(CreateVertex(vec3(10.f, 0.f, 0.f), vec2(0.f, 0.f), 0, vec3(0.f), 33));
     vecticesForPrimitive.back()->color = vec4(1,0,0,1);
-    vecticesForPrimitive.emplace_back(CreateVertex(vec3(250.f, 100.f, 0.f), vec2(1.f, 1.f), 1, vec3(0.f), 0));
+    vecticesForPrimitive.emplace_back(CreateVertex(vec3(250.f, 100.f, 0.f), vec2(1.f, 1.f), 1, vec3(0.f), 33));
     vecticesForPrimitive.back()->color = vec4(0,1,0,1);
-    vecticesForPrimitive.emplace_back(CreateVertex(vec3(100.f, 0.f, 0.f), vec2(1.f, 0.f), 2, vec3(0.f), 0));
+    vecticesForPrimitive.emplace_back(CreateVertex(vec3(100.f, 0.f, 0.f), vec2(1.f, 0.f), 2, vec3(0.f), 33));
     vecticesForPrimitive.back()->color = vec4(0,0,1,1);
     m_testPrimitive = M_SPTR<RenderPrimitive>(
         "Test_Primitive",
@@ -37,10 +37,9 @@ NewBatchPipelineTest::NewBatchPipelineTest()
        std::move(indicesForPrimitive)
     );
     
-    m_testPrimitive->setMatInst(MAT_LIB.getMaterial(ShaderType::BATCH_RENDER)->createInstance(), TextureId::TEX_0);
-    m_testPrimitive->getMatInst()->setTexture(RL_TEXTURE("logo"));
+    m_testPrimitive->setMatInst(MAT_LIB.getMaterial(ShaderType::BATCH_RENDER)->createInstance());
     
-    m_testPrimitive->setRenderOrder(1);
+    m_testPrimitive->setRenderOrder(2);
     m_root->addChild(m_testPrimitive);
     
     //adding values to debug

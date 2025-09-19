@@ -9,7 +9,6 @@
 #include "ImGUI/imgui_impl_opengl3.h"
 #include "ManagingClasses/Public/Renderer.h"
 #include "ManagingClasses/Public/ResourceLibrary.h"
-#include "Menu/Public/BatchRenderTest.h"
 #include "Menu/Public/ClearColorTest.h"
 #include "Menu/Public/NewBatchPipelineTest.h"
 #include "source/Utilities/Public/GLErrorCatcher.h"
@@ -18,16 +17,14 @@ enum class MMSelector
 {
     NONE,
     CLEAR_COLOR,
-    BATCH_RENDER,
     NEW_PIPELINE
 };
 
 static MMSelector RenderSelector = MMSelector::NONE;
 static ClearColorTest* ClearColor = nullptr;
-static BatchRenderTest* BatchRender = nullptr;
 static NewBatchPipelineTest* NewRender = nullptr;
 
-static void switchTesters(MMSelector tester)
+static void SwitchTesters(MMSelector _tester)
 {
     switch (RenderSelector)
     {
@@ -36,27 +33,19 @@ static void switchTesters(MMSelector tester)
     case MMSelector::CLEAR_COLOR:
         delete ClearColor;
         break;
-    case MMSelector::BATCH_RENDER:
-        delete BatchRender;
-        break;
     case MMSelector::NEW_PIPELINE:
         delete NewRender;
         break;
-    default:
-        break;
     }
 
-    RenderSelector = tester;
+    RenderSelector = _tester;
     
-    switch (tester)
+    switch (_tester)
     {
     case MMSelector::NONE:
         break;
     case MMSelector::CLEAR_COLOR:
         ClearColor = new ClearColorTest();
-        break;
-    case MMSelector::BATCH_RENDER:
-        BatchRender = new BatchRenderTest();
         break;
     case MMSelector::NEW_PIPELINE:
         NewRender = new NewBatchPipelineTest();
@@ -116,7 +105,7 @@ int main(void)
     }
     else
     {
-        std::cout << "OpenGL ver: " << glGetString(GL_VERSION) << std::endl;
+        std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
     }
     PRINT_ERRS;
 
@@ -137,17 +126,12 @@ int main(void)
     DEBUG_UI->addMainMenuItem("Clear color tester",
     []()
     {
-        switchTesters(MMSelector::CLEAR_COLOR);
-    });
-    DEBUG_UI->addMainMenuItem("Batch render tester",
-    []()
-    {
-        switchTesters(MMSelector::BATCH_RENDER);
+        SwitchTesters(MMSelector::CLEAR_COLOR);
     });
     DEBUG_UI->addMainMenuItem("New Batch Render Pipeline tester",
     []()
     {
-        switchTesters(MMSelector::NEW_PIPELINE);
+        SwitchTesters(MMSelector::NEW_PIPELINE);
     });
 //============================================================================================================
  
@@ -161,15 +145,10 @@ int main(void)
         case MMSelector::CLEAR_COLOR:
             if(ClearColor)ClearColor->onRender();
             break;
-        case MMSelector::BATCH_RENDER:
-            if(BatchRender)BatchRender->onRender();
-            break;
         case MMSelector::NEW_PIPELINE:
             if(NewRender)NewRender->onRender();
             break;
         case MMSelector::NONE:
-            break;
-        default:
             break;
         }
         

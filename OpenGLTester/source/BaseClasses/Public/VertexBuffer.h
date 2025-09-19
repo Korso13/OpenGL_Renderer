@@ -7,9 +7,8 @@ class RenderObject;
 class VertexBuffer : public EngineInternal
 {
 public:
-
-    //VertexBuffer();
-    VertexBuffer(const void* _data, const unsigned int _size, GLenum _memUsageType = GL_STATIC_DRAW);
+    
+    VertexBuffer(const void* _data, const unsigned int _size, GLenum _memUsageType = GL_STATIC_DRAW); //deprecated ctor
     VertexBuffer(const unsigned int _size = sizeof(Vertex)*1024); //todo: probably should be templated vertex type + make Vertex interface class + requires std::is_base_v check 
     ~VertexBuffer() override;
 

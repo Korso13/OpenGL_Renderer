@@ -1,6 +1,5 @@
 #include "../Public/VertexAO.h"
 
-#include "BaseClasses/Public/VertexAttributes.h"
 #include "Utilities/Public/GLErrorCatcher.h"
 #include "Utilities/Public/ImG_AutoDrawers.h"
 
@@ -26,7 +25,6 @@ void VertexAO::unbind() const
 
 void VertexAO::clear()
 {
-    m_aBuffer.clear();
     m_indicesCount = 0;
     unbind();
     GLCall(glDeleteVertexArrays(1, &m_rendererId));

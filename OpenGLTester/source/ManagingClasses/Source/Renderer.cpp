@@ -31,7 +31,6 @@ Renderer::Renderer()
 
 void Renderer::render()
 {
-    //std::cout << "[Renderer::render]\n"; //todo: remove debug
     clear(); //clearing buffer
 
     //todo: remove after adding functionality to the MaterialInst
@@ -83,30 +82,23 @@ void Renderer::drawBatch(UPTR<RendererBatch>& _batch)
         std::cout << "[Renderer::drawBatch] error - shader "<< std::to_string(CAST_I(_batch->getBatchShader()))<< " not found!\n";
         return;
     }
-
-    ShaderMachine::get()->getShader(_batch->getBatchShader())->bind(); //todo: checking for possible fix
     
     const UPTR<VertexAO>& vao = _batch->getBatchVAO();
     vao->bind(); //binds vertex buffer, index buffer and vertex attributes
     const size_t index_size = (vao->getIndexCount() == 0) ? (6) : (vao->getIndexCount()); //precaution against vertexAO without index buffer
     GLCall(glDrawElements(GL_TRIANGLES, CAST_I(index_size), GL_UNSIGNED_INT, 0)); //drawing the batch
-    //_batch->getVertexBuffer()->bind(); //todo: checking for possible fix
 }
 
 void Renderer::checkNodeForRender(const SPTR<Node>& _node)
 {
-    //std::cout << "[Renderer::checkNodeForRender]\n"; //todo: remove debug
     if(!_node || !_node->isEnabled() || !_node->isInFrustum())
         return;
-    //std::cout << "[Renderer::checkNodeForRender]" << _node->getName() << "\n"; //todo: remove debug
 
     float distance_to_camera = 0.f;
     //todo: add distance to camera check!
     SPTR<RenderObject> renderableObject = CAST_SPTR<RenderObject>(_node);
     if(!renderableObject || !renderableObject->getMatInst() || renderableObject->isInBatch())
         return;
-    
-    //std::cout << "[Renderer::checkNodeForRender]" << _node->getName() << " valid renderableObject and renderableObject. Not in batch" << "\n"; //todo: remove debug
 
     //placing RenderObject to an existing Renderer batch or creating a new batch in automatically sorting multi-layered container, based on suggested rendering order
     //Priorities: distance to camera, set render order of the object + division into separate instances of MaterialInstance (shaders)
@@ -117,12 +109,10 @@ void Renderer::checkNodeForRender(const SPTR<Node>& _node)
         renderBatches.emplace_back(M_UPTR<RendererBatch>(m_maxBatchSize));
     }
     renderBatches.back()->addRenderObject(renderableObject);
-    //m_sortedRenderPriority[distance_to_camera][renderableObject->getRenderOrder()][renderableObject->getMatInst()->getUID()].push_back(renderableObject);
 }
 
 void Renderer::updateRenderBatches()
 {
-    //std::cout << "[Renderer::updateRenderBatches]\n"; //todo: remove debug
     for (auto&  [zDist, ro_container] : m_sortedRenderPriority)
     {
         for (auto& [RenderOrder, MIContainer] : ro_container)
@@ -137,7 +127,6 @@ void Renderer::updateRenderBatches()
             }
         }
     }
-    //std::cout << "[Renderer::updateRenderBatches]Found valid batches " + STR(found) + "\n"; //todo: remove debug
 }
 
 bool Renderer::onGui(const std::string& _name)
