@@ -39,11 +39,12 @@ void Renderer::render()
     GLCall(glEnable(GL_BLEND));
     GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
     
+    //todo: add alternative, togglable batch assembly pipelines that ignore RenderOrders or z pos (2 std::function for checkNodeForRender and code below, that are switched on pipeline changes)
+    //assembling m_sortedRenderPriority into ordered Renderer Batches
     updateRenderBatches();
     m_rootNode->traversal(std::bind(&Renderer::checkNodeForRender, this, std::placeholders::_1), true);
 
-    //todo: add alternative, togglable batch assembly pipelines that ignore RenderOrders or z pos (2 std::function for checkNodeForRender and code below, that are switched on pipeline changes)
-    //assembling m_sortedRenderPriority into ordered Renderer Batches
+    //rendering batches
     for (auto&  [zDist, ro_container] : m_sortedRenderPriority)
     {
         for (auto& [RenderOrder, MIContainer] : ro_container)
@@ -88,7 +89,8 @@ void Renderer::drawBatch(UPTR<RendererBatch>& _batch)
     const UPTR<VertexAO>& vao = _batch->getBatchVAO();
     vao->bind(); //binds vertex buffer, index buffer and vertex attributes
     const size_t index_size = (vao->getIndexCount() == 0) ? (6) : (vao->getIndexCount()); //precaution against vertexAO without index buffer
-    GLCall(glDrawElements(GL_TRIANGLES, CAST_I(index_size), GL_UNSIGNED_INT, 0));
+    GLCall(glDrawElements(GL_TRIANGLES, CAST_I(index_size), GL_UNSIGNED_INT, 0)); //drawing the batch
+    //_batch->getVertexBuffer()->bind(); //todo: checking for possible fix
 }
 
 void Renderer::checkNodeForRender(const SPTR<Node>& _node)

@@ -30,6 +30,9 @@ public:
     ShaderType getBatchShader() const;
 
     bool onGui(const std::string& _name) override;
+
+    //todo: checking for possible fix
+    UPTR<VertexBuffer>& getVertexBuffer() { return m_vertexBuffer; }
     
 private:
 

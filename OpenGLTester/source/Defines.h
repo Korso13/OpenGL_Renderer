@@ -10,7 +10,8 @@
 #define MAX_RENDER_BATCH_SIZE 32 //need for std::array in MaterialInst. Limits maximum batch size. 
 #define RESERVE_SAME_LEVEL_BATCHES 30 //when a new std::vector of batches is added in Renderer, reserve memory for this many batches
 #define USE_BATCH_RENDERER_PIPELINE
-#define START_RESOLUTION 1280, 980
+//#define START_RESOLUTION 1280, 980
+#define START_RESOLUTION 2465, 1140
 
 //Shortcuts
 #ifdef SINGLERENDER
@@ -87,7 +88,7 @@ enum class TextureId
     TEX_30,
     TEX_31,
     TEX_32,
-    SIZE
+    SIZE //if set to this, default shader will use vertex color instead
 };
 
 //structs
@@ -170,6 +171,7 @@ struct vec4
 
 struct Uniforms
 {
+    //std::string - uniform name, GLint - uniform location, int32_t (for vectors) - max size of uniform vector
     std::unordered_map<std::string, GLint> iUniforms;
     std::unordered_map<std::string, GLint> fUniforms;
     std::unordered_map<std::string, GLint> v2Uniforms;

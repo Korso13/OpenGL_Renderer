@@ -69,7 +69,7 @@ private:
     const ShaderType m_shaderType;
     SPTR<Shader> m_shader = nullptr;
     std::map<TextureId, SPTR<Texture>> m_textures; //different RenderObjects may use the same MaterialInst, but have different textures
-    std::unordered_map<std::string, variable_uniform> m_materialParams; //list of shader settings
+    std::unordered_map<std::string, variable_uniform> m_materialParams; //list of shader (uniform) settings
 };
 
 //Template definitions

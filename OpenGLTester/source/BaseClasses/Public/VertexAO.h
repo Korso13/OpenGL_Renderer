@@ -33,9 +33,9 @@ private:
 private:
 
     GLuint m_rendererId;
-    size_t m_indicesCount = 0;
+    size_t m_indicesCount = 0; //mostly for checks and debugging
 
-    //old impl
+    //todo: old impl, to be removed
     std::vector<VertexAttributes*> m_aBuffer;
 };
 

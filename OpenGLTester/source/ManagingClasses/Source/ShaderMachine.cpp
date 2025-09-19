@@ -14,8 +14,9 @@ bool ShaderMachine::setShader(ShaderType _shaderType)
         return false;
     else
     {
-        if(m_selectedShader == _shaderType)
-            return true; //for optimization purposes
+        //todo: checking for possible fix
+        // if(m_selectedShader == _shaderType)
+        //     return true; //for optimization purposes
         
         m_shaders.at(_shaderType)->bind();
         m_selectedShader = _shaderType;

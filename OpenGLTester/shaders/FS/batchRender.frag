@@ -14,8 +14,6 @@ void main()
     int index = int(v_TexIndex);
     
     texColor = texture(u_Textures[index], v_TexCoord);
-
-    o_Color = texColor*v_Color;
-    if(index == 0)
-        o_Color = v_Color;
+    float texToColorSwitch = ceil(index % 33);
+    o_Color = texColor * texToColorSwitch + v_Color * (1.0 - texToColorSwitch);
 };

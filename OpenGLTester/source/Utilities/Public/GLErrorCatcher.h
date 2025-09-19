@@ -111,9 +111,9 @@ static void APIENTRY GLDebugOutput(GLenum source,
 
 #define PRINT_ERRS GLGetAllErrors(__FUNCSIG__, __LINE__ - 1)
 
-#ifdef DEBUG 
-    #define GLCall(func) PRINT_ERRS; func; PRINT_ERRS
-#else DEBUG
+#ifdef _DEBUG 
+    #define GLCall(func) /*PRINT_ERRS;*/ func; PRINT_ERRS
+#else
     #define GLCall(func) func
 #endif
 

@@ -8,7 +8,7 @@ inline void VertexAO::setVertexAttributesTyped<Vertex>()
     //vec3 position;
     GLCall(glEnableVertexAttribArray(0)); //setting new vertex attributes array
     GLCall(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, vCoord)));
-    //vec3 position;
+    //vec3 position final(after offsetting);
     GLCall(glEnableVertexAttribArray(1)); //setting new vertex attributes array
     GLCall(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, position)));
     //vec4 color; 

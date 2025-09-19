@@ -58,17 +58,46 @@ void VertexBuffer::bind() const
             std::cerr << "[VertexBuffer::bind()] vertices pool and verticesToDraw size mismatch!\n";
             return;
         }
-        GLCall(glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(Vertex) * m_verticesToDraw, m_verticesPool.data()));
+        // GLCall(glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(Vertex) * m_verticesToDraw, m_verticesPool.data()));
 
         //todo: checking for possible fix
-        // Vertex* vertices = new Vertex[m_verticesToDraw];
-        // size_t VertexCounter = 0;
-        // for(auto& vert : m_verticesPool)
+        Vertex* vertices = new Vertex[m_verticesToDraw];
+        size_t vertex_counter = 0;
+
+        static auto vec3Str = [](const vec3& _vec) -> std::string
+        {
+            std::string out = "{ x: ";
+            out += std::to_string(_vec.x);
+            out += ", y: ";
+            out += std::to_string(_vec.y);
+            out += ", z: ";
+            out += std::to_string(_vec.z);
+            out += "}";
+            return out;
+        };
+        
+        //std::cout << "====================================================\n";
+
+        //for(auto& vert : m_verticesPool)
+        for(auto& [obj_name, obj_weak] : m_renderPool)
+        {
+            if(obj_weak.expired()) continue;
+            for(auto& vert : obj_weak.lock()->getVertices())
+            {
+                vertices[vertex_counter] = *vert; //todo: if we keep this code - abolish copying!
+                // std::cout << "[" << vertex_counter << "]\n";
+                // std::cout << "Vertex original idx: " << vert.vertexIndex << " - vertex copied: " << vertices[vertex_counter].vertexIndex <<"\n";
+                // std::cout << "Vertex original coord: " << vec3Str(vert.position) << " - vertex copied coord: " << vec3Str(vertices[vertex_counter].position) <<"\n";
+                vertex_counter++;
+            }
+        }
+        // std::cout << "-|-\n";
+        // for (size_t i = 0; i < vertex_counter; ++i)
         // {
-        //     vertices[VertexCounter] = vert;
-        //     VertexCounter++;
+        //     std::cout << "Vertex " << vertices[i].vertexIndex <<"\n";
         // }
-        // GLCall(glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(Vertex) * m_verticesToDraw, &vertices[0]));
+        // std::cout << "====================================================\n";
+        GLCall(glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(Vertex) * m_verticesToDraw, vertices));
     }
 }
 

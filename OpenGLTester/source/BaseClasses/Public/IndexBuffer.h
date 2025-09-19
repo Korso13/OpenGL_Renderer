@@ -30,7 +30,7 @@ private:
     
     GLuint m_rendererId;
     size_t m_count;
-    size_t m_adjustment = 0;
+    GLuint m_adjustment = 0;
 
-    std::vector<size_t> m_vertexIndicesPool; 
+    std::vector<GLuint> m_vertexIndicesPool; 
 };
